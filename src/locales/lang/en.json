@@ -1,0 +1,17 @@
+{
+    "nav": {
+        "home": "Home",
+        "collapseMenu1": {
+            "collapseMenu1": "Teams",
+            "item1": "Frontend Team",
+            "item2": "Backend Team",
+            "item3": "Testing Team"
+        },
+        "collapseMenu2": {
+            "collapseMenu2": "Projects",
+            "item1": "Project1",
+            "item2": "Project2",
+            "item3": "Project3"
+        }
+    }
+}
