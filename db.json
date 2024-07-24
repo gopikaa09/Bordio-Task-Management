@@ -1,52 +1,66 @@
 {
   "taskList": [
     {
-      "id": 1,
-      "title": "🎬 Watch a short demo video",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 2,
-      "title": "🔁 Create recurring tasks and events",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 3,
-      "title": "📲 Download Bordio's mobile app on your phone",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 4,
-      "title": "💼 Create projects and add teammates",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 5,
-      "title": "✅ Assign tasks to your teammates",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 6,
-      "title": "📞 Book a call with Jacob (Bordio's founder)",
-      "status": "New Task",
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": 7,
+      "id": "eb4a",
       "title": "🔗 Connect your Google Calendar",
-      "status": "New Task",
+      "status": 10,
       "type": "Financial",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "aa99",
+      "title": "🔗 Connect your Google Calendar",
+      "status": 10,
+      "type": "Financial",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "d58d",
+      "title": "🔗 Connect your Google Calendar",
+      "status": 10,
+      "type": "Financial",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "62ee",
+      "title": "📲 Download Bordio's mobile app on your phone",
+      "status": 40,
+      "type": "Technical",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "95de",
+      "title": "📲 Download Bordio's mobile app on your phone",
+      "status": 40,
+      "type": "Technical",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "4133",
+      "title": "📲 Download Bordio's mobile app on your phone",
+      "status": 30,
+      "type": "Technical",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "4d16",
+      "title": "📲 Download Bordio's mobile app on your phone",
+      "status": 30,
+      "type": "Technical",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "e858",
+      "title": "✅ Assign tasks to your teammates",
+      "status": 20,
+      "type": "Technical",
+      "dueDate": "12-6-2024"
+    },
+    {
+      "id": "0744",
+      "title": "✅ Assign tasks to your teammates",
+      "status": 20,
+      "type": "Technical",
       "dueDate": "12-6-2024"
     }
   ]

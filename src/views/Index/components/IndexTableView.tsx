@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { DataTable, OnSortParam } from "@/components/shared";
 import { MdWarningAmber } from "react-icons/md";
-import CustomDataTable from '@/components/custom/CustomDataTable';
 
 const IndexTableView = ({ data, query, columns, loading }: any) => {
 
@@ -29,12 +28,12 @@ const IndexTableView = ({ data, query, columns, loading }: any) => {
       return data;
     }
   }, [sort, data]);
-  
-  
 
-  
+
+
+
   const handleSort = ({ order, key }: OnSortParam) => {
-      setSort({ order, key });
+    setSort({ order, key });
   };
 
 
@@ -45,23 +44,23 @@ const IndexTableView = ({ data, query, columns, loading }: any) => {
           <DataTable
             columns={columns}
             data={sortedData}
-            pagingData={{
-                total: data?.length,
-                pageIndex : query?.pageNumber,
-                pageSize:query?.pageSize
-            }}
-            showPagination={false}
+            // pagingData={{
+            //     total: data?.length,
+            //     pageIndex : query?.pageNumber,
+            //     pageSize:query?.pageSize
+            // }}
+            // showPagination={false}
             onSort={handleSort}
           />
         </div>
-      
+
       ) : (
         <div className="text-center ">
-                    <h5 className="flex gap-3 items-center my-10">
-                        <MdWarningAmber className='text-xl' />
-                        No Data Available
-                    </h5>
-                </div>
+          <h5 className="flex gap-3 items-center my-10">
+            <MdWarningAmber className='text-xl' />
+            No Data Available
+          </h5>
+        </div>
       )}
     </div>
   );

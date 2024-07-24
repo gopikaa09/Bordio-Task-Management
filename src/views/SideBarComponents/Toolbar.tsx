@@ -8,7 +8,11 @@ import useResponsive from '@/utils/hooks/useResponsive'
 
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { groupList } from './constants'
+import { toggleMobileSidebar, updateSelectedCategory } from '../store/toolBarSlice'
+import { CgCheckR, CgNotes } from 'react-icons/cg'
+import { IoCalendarNumberOutline } from 'react-icons/io5'
+import { HiOutlineUser } from 'react-icons/hi'
+import { MdOutlineSettings } from 'react-icons/md'
 
 
 type MenuBase = {
@@ -32,32 +36,76 @@ const ToolBarContent = () => {
 
     const dispatch = useAppDispatch()
 
-    // const selectedCategory = useAppSelector(
-    //     (state) => state.crmMail.data.selectedCategory
-    // )
+    const selectedCategory = useAppSelector(
+        (state) => state.toolBar.data.selectedCategory
+    )
 
+    const ToolBarList = [
+        {
+            "name": "Tasks",
+            "id": "tasks",
+            "isDisplay": true
+        },
+        {
+            "name": "Calender",
+            "id": "calender",
+            "isDisplay": true
+        },
+        {
+            "name": "Notes",
+            "id": "notes",
+            "isDisplay": true
+        },
+        {
+            "name": "People",
+            "id": "people",
+            "isDisplay": true
+        },
+        {
+            "name": "Settings",
+            "id": "setting",
+            "isDisplay": true
+        },
+    ]
+
+    const ToolsIcon = {
+        "tasks": <CgCheckR />,
+        "calender": <IoCalendarNumberOutline />,
+        "notes": <CgNotes />,
+        "people": <HiOutlineUser />,
+        "setting": <MdOutlineSettings />
+    }
+    const defaultIcon = <CgCheckR size={20} />;
+
+    const ToolsList = ToolBarList
+        ?.filter(folder => folder.isDisplay)
+        .map(role => ({
+            label: role.name,
+            value: role.id,
+            icon: ToolsIcon[role.id] || defaultIcon
+        }));
     const direction = useAppSelector((state) => state.theme.direction)
 
     const onMenuClick = (category: Group | Label) => {
-        console.log('====================================');
-        console.log(category);
-        console.log('====================================');
         // dispatch(updateMailId(''))
-        // dispatch(updateSelectedCategory(getCategory(category.value)))
+        dispatch(updateSelectedCategory(getCategory(category.value)))
         navigate(`/frontEndTeam/${category.value}`, { replace: true })
     }
 
     useEffect(() => {
-        const path = location.pathname.substring(
-            location.pathname.lastIndexOf('/') + 1
+        const newUrl = window.location.origin + window.location.pathname;
+
+        const path = newUrl.substring(
+            newUrl.lastIndexOf('/') + 1
         )
         const selected = getCategory(path)
-        // dispatch(updateSelectedCategory(selected))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch(updateSelectedCategory(selected))
+        navigate(`/mail/${selected.value}`, { replace: true })
+
     }, [])
 
     const getCategory = (value: string) => {
-        const categories = [...groupList]
+        const categories = [...ToolsList]
         let category = value
         if (category === 'mail') {
             category = 'inbox'
@@ -76,15 +124,14 @@ const ToolBarContent = () => {
                         <h3>Tools</h3>
                     </div>
                     <Menu variant="transparent" className="mx-2 mb-10">
-                        {groupList.map((menu) => (
+                        {ToolsList.map((menu) => (
                             <MenuItem
                                 key={menu.value}
                                 eventKey={menu.value}
-                                // className={`mb-2 ${
-                                //     selectedCategory.value === menu.value
-                                //         ? 'bg-gray-100 dark:bg-gray-700'
-                                //         : ''
-                                // }`}
+                                className={`mb-2 ${selectedCategory.value === menu.value
+                                    ? 'bg-gray-100 dark:bg-gray-700'
+                                    : ''
+                                    }`}
                                 onSelect={() => onMenuClick(menu)}
                             >
                                 <span className="text-2xl ltr:mr-2 rtl:ml-2">
@@ -95,38 +142,36 @@ const ToolBarContent = () => {
                         ))}
                     </Menu>
                 </div>
-                <div className="mx-4 mb-4">
-                    {/* <MainCompose /> */}
-                </div>
+
             </div>
         </ScrollBar>
     )
 }
 
 const ToolBar = () => {
-    // const sideBarExpand = useAppSelector(
-    //     // (state) => state.crmMail.data.sideBarExpand
-    // )
+    const sideBarExpand = useAppSelector(
+        (state) => state.toolBar.data.sideBarExpand
+    )
 
-    // const mobileSideBarExpand = useAppSelector(
-    //     // (state) => state.crmMail.data.mobileSideBarExpand
-    // )
+    const mobileSideBarExpand = useAppSelector(
+        (state) => state.toolBar.data.mobileSideBarExpand
+    )
 
     const dispatch = useAppDispatch()
 
     const { smaller } = useResponsive()
 
     const onMobileSideBarClose = () => {
-        // dispatch(toggleMobileSidebar(false))
+        dispatch(toggleMobileSidebar(false))
     }
 
     return smaller.xl ? (
         <Drawer
             bodyClass="p-0"
-            title="Mail"
-            isOpen={true}
+            title="Tools"
+            isOpen={mobileSideBarExpand}
             placement="left"
-            width={280}
+            drawerClass={'w-full md:w-[300px]'}
             onClose={onMobileSideBarClose}
             onRequestClose={onMobileSideBarClose}
         >
@@ -136,7 +181,7 @@ const ToolBar = () => {
         <div
             className={classNames(
                 'w-[280px] absolute top-0 bottom-0 ease-in-out duration-300 bg-white dark:bg-gray-800 ltr:border-r rtl:border-l border-gray-200 dark:border-gray-600 z-10',
-                true
+                sideBarExpand
                     ? 'ltr:left-0 rtl:right-0'
                     : 'ltr:left-[-280px] rtl:right-[-280px]'
             )}

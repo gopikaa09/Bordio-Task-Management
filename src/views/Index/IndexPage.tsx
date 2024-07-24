@@ -10,14 +10,20 @@ import {
     HiOutlineViewList,
 } from 'react-icons/hi'
 import { Button, Drawer, Pagination, Select } from '@/components/ui'
-import SelectDropdown from '@/components/custom/SelectDropdown'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { IndexGridSkeleton } from '@/views/Index/components/IndexGridSkeleton'
 import { IndexListSkeleton } from '@/views/Index/components/IndexListSkeleton'
 import IndexBoardSkeleton from '@/views/Index/components/IndexBoardSkeleton'
 import { injectReducer } from '@/store'
-import { ComponentType, FunctionComponent, useEffect, useState } from 'react'
-
+import { ComponentType, FunctionComponent } from 'react'
+// import reducer, {
+//     indexInitialState,
+//     IndexPageState,
+//     setIndexInitialState,
+//     setIndexQueryParam,
+//     setIndexView,
+//     useAppSelector,
+// } from '@/store/slices/IndexPage'
 import { IndexTableSkeleton } from '@/views/Index/components/IndexTableSkeleton'
 import IndexGridView from '@/views/Index/components/IndexGridView'
 import IndexListView from '@/views/Index/components/IndexListView'
@@ -28,13 +34,16 @@ import IndexUsageView from '@/views/Index/components/IndexUsageView'
 import { HiOutlineTableCells } from 'react-icons/hi2'
 import useResponsive from '@/utils/hooks/useResponsive'
 import { TbNotes } from 'react-icons/tb'
-import reducer,  { IndexPageState,
+import reducer, {
+    IndexPageState,
     indexInitialState,
     setIndexInitialState,
     setIndexQueryParam,
     setIndexView,
     useAppSelector
- } from "@/store/slices/IndexPage";
+} from "@/store/slices/IndexPage";
+import { useEffect, useState } from "react";
+import SelectDropdown from "@/components/custom/SelectDropdown";
 
 type IndexPageProps = {
     indexKey: string
@@ -49,7 +58,7 @@ type IndexPageProps = {
 
     isSelectable?: boolean
     handleSelected?: any
-    queryFn: Function
+    queryFn: Array<any>
     addBtn?: string
     dropdownItem?: any
     gridItemComponent?: ComponentType<any>
@@ -77,7 +86,6 @@ type IndexPageProps = {
     queryParamsShow?: boolean
     displayGraph?: any
     paginationShow?: boolean
-
     productUsage?: boolean
 }
 type Option = {
@@ -142,7 +150,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
     const userAuthority = useAppSelector((store) => store.auth.user.authority)
     const setView = setGenericView(indexKey)
     async function parseQueryStringToObject(search: any) {
-        const params =  new URLSearchParams(search)
+        const params = new URLSearchParams(search)
         const result: any = {}
         params.forEach((value, key) => {
             if (result[key] !== undefined) {
@@ -181,15 +189,15 @@ function IndexPage(indexPageProps: IndexPageProps) {
         (state) => state.indexPage?.data[indexKey]?.view
     )
     const queryKey = queryParams || state.query
-    const {
-        isPending,
-        data: response,
-        isError,
-        error,
-    } = useQuery({
-        queryKey: [indexKey, queryKey],
-        queryFn: () => queryFn(queryKey, { params: params }),
-    })
+    // const {
+    //     isPending,
+    //     data: response,
+    //     isError,
+    //     error,
+    // } = useQuery({
+    //     queryKey: [indexKey, queryKey],
+    //     queryFn: () => queryFn(queryKey, { params: params }),
+    // })
     const setGenericQuery = (key) => (query) => {
         dispatch(
             setIndexQueryParam({
@@ -242,7 +250,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
     }, [])
     useEffect(() => {
         if (
-            response?.data?.length === 0 &&
+            queryFn?.length === 0 &&
             queryParams?.pageNumber.toString() !== '1'
         ) {
             dispatch(
@@ -252,7 +260,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
                 })
             )
         }
-    }, [response])
+    }, [queryFn])
 
     const viewOptions: ViewOptions[] = []
     if (GridItem)
@@ -342,268 +350,264 @@ function IndexPage(indexPageProps: IndexPageProps) {
     return (
         <>
             <div className="h-full relative">
-                {!isPending &&
-                response?.data?.length === 0 &&
-                areObjectsEqual(queryParams, initialState.query) ? (
-                    <div className="flex emptyPageBlock flex-col gap-5 justify-center items-center">
-                        {noDataMainTitle && <h5 className="text-center mb-2">{noDataMainTitle}</h5>}
-                        {noDataSubTitle && <h6 className="text-center">{noDataSubTitle}</h6>}
-                        <div className="text-center flex flex-wrap gap-2">
-                            {addBtnLabel && (
-                                <Link to={addBtnUrl}>
-                                    <Button
-                                        variant="solid"
-                                        icon={<HiOutlinePlusCircle />}
-                                        size="sm"
-                                    >
-                                        {addBtnLabel}
-                                    </Button>
-                                </Link>
-                            )}
+                {
+                    queryFn?.length === 0 &&
+                        areObjectsEqual(queryParams, initialState.query) ? (
+                        <div className="flex emptyPageBlock flex-col gap-5 justify-center items-center">
+                            {noDataMainTitle && <h5 className="text-center mb-2">{noDataMainTitle}</h5>}
+                            {noDataSubTitle && <h6 className="text-center">{noDataSubTitle}</h6>}
+                            <div className="text-center flex flex-wrap gap-2">
+                                {addBtnLabel && (
+                                    <Link to={addBtnUrl}>
+                                        <Button
+                                            variant="solid"
+                                            icon={<HiOutlinePlusCircle />}
+                                            size="sm"
+                                        >
+                                            {addBtnLabel}
+                                        </Button>
+                                    </Link>
+                                )}
 
-                            {addBtnLabelDropdown && (
-                                 dropdownItem(response?.data,
-                                    queryParams,
-                                    initialState.query)
-                            )}
-                            {multiButtonShow && multiButton()} 
-                        </div>
-                    </div>
-                ) : (
-                    <div className="mb-4">
-                        {
-                            <div className="flex items-center mb-4 gap-2 flex-wrap justify-between">
-                                <h3>{title}</h3>
-                                <div className="flex gap-3 items-center">
-                                    <div>
-                                        <SelectDropdown
-                                            labelWithIcon={true}
-                                            iconOnly={true}
-                                            value={view}
-                                            handleChange={(value: any) =>
-                                                setView(value)
-                                            }
-                                            options={viewOptions}
-                                        />
-                                    </div>
-                                    {addBtnLabel && (
-                                        <Link to={addBtnUrl}>
-                                            <Button
-                                                variant="solid"
-                                                icon={<HiOutlinePlusCircle />}
-                                                size="sm"
-                                            >
-                                                {addBtnLabel}
-                                            </Button>
-                                        </Link>
-                                    )}
-                                    {addBtnLabelDropdown && (
-                                 dropdownItem(response?.data,
-                                    queryParams,
-                                    initialState.query)
-                            )}
-                                </div>
+                                {addBtnLabelDropdown && (
+                                    dropdownItem(queryFn,
+                                        queryParams,
+                                        initialState.query)
+                                )}
+                                {multiButtonShow && multiButton()}
                             </div>
-                        }
-
-                        <div>{displayGraph}</div>
-
-                        {Filter && (
-                            <>
-                                <div className="hidden md:block">
-                                    <Filter
-                                        query={queryParams}
-                                        setQuery={setQuery}
-                                        initialState={initialState}
-                                    />
+                        </div>
+                    ) : (
+                        <div className="mb-4">
+                            {
+                                <div className="flex items-center mb-4 gap-2 flex-wrap justify-between">
+                                    <h3>{title}</h3>
+                                    <div className="flex gap-3 items-center">
+                                        <div>
+                                            <SelectDropdown
+                                                labelWithIcon={true}
+                                                iconOnly={true}
+                                                value={view}
+                                                handleChange={(value: any) => setView(value)}
+                                                options={viewOptions} defaultValue={null} />
+                                        </div>
+                                        {addBtnLabel && (
+                                            <Link to={addBtnUrl}>
+                                                <Button
+                                                    variant="solid"
+                                                    icon={<HiOutlinePlusCircle />}
+                                                    size="sm"
+                                                >
+                                                    {addBtnLabel}
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        {addBtnLabelDropdown && (
+                                            dropdownItem(queryFn,
+                                                queryParams,
+                                                initialState.query)
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="block md:hidden print:hidden">
-                                    <Button
-                                        size="sm"
-                                        className="block w-full md:inline-block ltr:md:ml-2 rtl:md:mr-2 md:mb-0 mb-4"
-                                        icon={<HiOutlineFilter />}
-                                        onClick={openDrawer}
-                                    >
-                                        Filter
-                                    </Button>
-                                    <Drawer
-                                        title="Filter"
-                                        isOpen={isOpen}
-                                        drawerClass={' w-full xs:w-[350px]'}
-                                        onClose={onDrawerClose}
-                                        onRequestClose={onDrawerClose}
-                                    >
+                            }
+
+                            <div>{displayGraph}</div>
+
+                            {Filter && (
+                                <>
+                                    <div className="hidden md:block">
                                         <Filter
                                             query={queryParams}
                                             setQuery={setQuery}
                                             initialState={initialState}
                                         />
-                                        <div className="text-right w-full">
-                                            {/* <Button
+                                    </div>
+                                    <div className="block md:hidden print:hidden">
+                                        <Button
+                                            size="sm"
+                                            className="block w-full md:inline-block ltr:md:ml-2 rtl:md:mr-2 md:mb-0 mb-4"
+                                            icon={<HiOutlineFilter />}
+                                            onClick={openDrawer}
+                                        >
+                                            Filter
+                                        </Button>
+                                        <Drawer
+                                            title="Filter"
+                                            isOpen={isOpen}
+                                            drawerClass={' w-full xs:w-[350px]'}
+                                            onClose={onDrawerClose}
+                                            onRequestClose={onDrawerClose}
+                                        >
+                                            <Filter
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                initialState={initialState}
+                                            />
+                                            <div className="text-right w-full">
+                                                {/* <Button
                                                 size="sm"
                                                 className="mr-2"
                                                 onClick={onDrawerClose}
                                             >
                                                 Cancel
                                             </Button> */}
-                                            <Button
-                                                size="sm"
-                                                variant="solid"
-                                                onClick={onDrawerClose}
-                                            >
-                                                Submit
-                                            </Button>
-                                        </div>
-                                    </Drawer>
-                                </div>
-                            </>
-                        )}
-
-                        {isPending && view === 'grid' && <IndexGridSkeleton />}
-                        {isPending && view === 'list' && <IndexListSkeleton />}
-                        {isPending && view === 'board' && (
-                            <IndexBoardSkeleton />
-                        )}
-                        {isPending && view === 'table' && (
-                            <IndexTableSkeleton />
-                        )}
-
-                        {isPending && view === 'usage' && <IndexListSkeleton />}
-
-                        {isError && <span>Error: {error.message}</span>}
-
-                        {response?.data &&
-                            !isPending &&
-                            viewOptions.length > 0 && (
-                                <>
-                                    {view == 'grid' && (
-                                        <IndexGridView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            item={GridItem}
-                                            grid={grid}
-                                            gap={gap}
-                                            isSelectable={isSelectable}
-                                        />
-                                    )}
-                                    {view == 'list' && ListItem && (
-                                        <IndexListView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            item={ListItem}
-                                        />
-                                    )}
-                                    {view == 'list' && ListView && (
-                                        <ListView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            item={ListItem}
-                                        />
-                                    )}
-                                    {view == 'board' && (
-                                        <BoardView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                        />
-                                    )}
-                                    {view == 'table' && tableColumns && (
-                                        <IndexTableView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            columns={tableColumns}
-                                            loading={loading}
-                                        />
-                                    )}
-                                    {view == 'table' && TableView && (
-                                        <TableView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            columns={tableColumns}
-                                        />
-                                    )}
-                                    {view == 'usage' && UsageItem && (
-                                        // <UsageView />
-                                        <IndexUsageView
-                                            data={response.data}
-                                            query={queryParams}
-                                            setQuery={setQuery}
-                                            item={UsageItem}
-                                        />
-                                    )}
+                                                <Button
+                                                    size="sm"
+                                                    variant="solid"
+                                                    onClick={onDrawerClose}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            </div>
+                                        </Drawer>
+                                    </div>
                                 </>
                             )}
-                        {paginationShow && (
-                            <div className="footer flex flex-auto items-center mt-2 print:hidden">
-                                <div className="flex flex-col md:flex-row items-center justify-between flex-auto gap-3">
-                                    <div className="w-full md:w-auto flex flex-wrap justify-center sm:justify-start items-center md:mb-0">
-                                        <Pagination
-                                            total={
-                                                response?.pagination?.pages || 0
-                                            }
-                                            currentPage={Number(
-                                                queryParams?.pageNumber
+
+                            {/* {isPending && view === 'grid' && <IndexGridSkeleton />}
+                            {isPending && view === 'list' && <IndexListSkeleton />}
+                            {isPending && view === 'board' && (
+                                <IndexBoardSkeleton />
+                            )}
+                            {isPending && view === 'table' && (
+                                <IndexTableSkeleton />
+                            )}
+
+                            {isPending && view === 'usage' && <IndexListSkeleton />}
+
+                            {isError && <span>Error: {error.message}</span>} */}
+
+                            {queryFn &&
+                                viewOptions.length > 0 && (
+                                    <>
+                                        {view == 'grid' && (
+                                            <IndexGridView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                item={GridItem}
+                                                grid={grid}
+                                                gap={gap}
+                                                isSelectable={isSelectable}
+                                            />
+                                        )}
+                                        {view == 'list' && ListItem && (
+                                            <IndexListView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                item={ListItem}
+                                            />
+                                        )}
+                                        {view == 'list' && ListView && (
+                                            <ListView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                item={ListItem}
+                                            />
+                                        )}
+                                        {view == 'board' && (
+                                            <BoardView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                            />
+                                        )}
+                                        {view == 'table' && tableColumns && (
+                                            <IndexTableView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                columns={tableColumns}
+                                                loading={loading}
+                                            />
+                                        )}
+                                        {view == 'table' && TableView && (
+                                            <TableView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                columns={tableColumns}
+                                            />
+                                        )}
+                                        {view == 'usage' && UsageItem && (
+                                            // <UsageView />
+                                            <IndexUsageView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                                item={UsageItem}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                            {/* {paginationShow && (
+                                <div className="footer flex flex-auto items-center mt-2 print:hidden">
+                                    <div className="flex flex-col md:flex-row items-center justify-between flex-auto gap-3">
+                                        <div className="w-full md:w-auto flex flex-wrap justify-center sm:justify-start items-center md:mb-0">
+                                            <Pagination
+                                                total={
+                                                    response?.pagination?.pages || 0
+                                                }
+                                                currentPage={Number(
+                                                    queryParams?.pageNumber
+                                                )}
+                                                onChange={(page) =>
+                                                    setQuery({ pageNumber: page })
+                                                }
+                                            />
+                                            {unitsCount && (
+                                                <div>
+                                                    <strong className="mr-1">
+                                                        {
+                                                            response?.pagination
+                                                                ?.rowsNumber
+                                                        }
+                                                    </strong>{' '}
+                                                    Products Found (
+                                                    <strong className="mr-1">
+                                                        {
+                                                            response?.pagination
+                                                                ?.unitsCount
+                                                        }
+                                                    </strong>{' '}
+                                                    RFID Tags)
+                                                </div>
                                             )}
-                                            onChange={(page) =>
-                                                setQuery({ pageNumber: page })
-                                            }
-                                        />
-                                        {unitsCount && (
-                                            <div>
-                                                <strong className="mr-1">
-                                                    {
-                                                        response?.pagination
-                                                            ?.rowsNumber
-                                                    }
-                                                </strong>{' '}
-                                                Products Found (
-                                                <strong className="mr-1">
-                                                    {
-                                                        response?.pagination
-                                                            ?.unitsCount
-                                                    }
-                                                </strong>{' '}
-                                                RFID Tags)
+                                        </div>
+
+                                        {response?.pagination?.rowsNumber > 10 && (
+                                            <div className="w-full md:w-auto flex justify-center md:justify-end">
+                                                <div style={{ minWidth: 120 }}>
+                                                    <Select
+                                                        size="sm"
+                                                        menuPlacement="auto"
+                                                        isSearchable={false}
+                                                        options={options}
+                                                        value={options.find(
+                                                            (option) =>
+                                                                option.value ===
+                                                                Number(
+                                                                    queryParams?.pageSize
+                                                                )
+                                                        )}
+                                                        onChange={(selected) =>
+                                                            setQuery({
+                                                                pageSize:
+                                                                    selected?.value,
+                                                                // pageNumber: 1,
+                                                            })
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                     </div>
-
-                                    {response?.pagination?.rowsNumber > 10 && (
-                                        <div className="w-full md:w-auto flex justify-center md:justify-end">
-                                            <div style={{ minWidth: 120 }}>
-                                                <Select
-                                                    size="sm"
-                                                    menuPlacement="auto"
-                                                    isSearchable={false}
-                                                    options={options}
-                                                    value={options.find(
-                                                        (option) =>
-                                                            option.value ===
-                                                            Number(
-                                                                queryParams?.pageSize
-                                                            )
-                                                    )}
-                                                    onChange={(selected) =>
-                                                        setQuery({
-                                                            pageSize:
-                                                                selected?.value,
-                                                            // pageNumber: 1,
-                                                        })
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                )}
+                            )} */}
+                        </div>
+                    )}
             </div>
         </>
     )

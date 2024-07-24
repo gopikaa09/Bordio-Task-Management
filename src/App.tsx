@@ -29,12 +29,12 @@ function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <BrowserRouter>
                         <Theme>
-                                <Layout />
+                            <Layout />
                         </Theme>
                     </BrowserRouter>
                 </PersistGate>
             </Provider>
-            <ReactQueryDevtools/>
+            <ReactQueryDevtools />
         </QueryClientProvider>
     )
 }

@@ -18,6 +18,8 @@ export interface DrawerProps extends ReactModal.Props {
     showBackdrop?: boolean
     title?: string | ReactNode
     width?: string | number
+    drawerClass?: string
+
 }
 
 const Drawer = (props: DrawerProps) => {
@@ -41,6 +43,7 @@ const Drawer = (props: DrawerProps) => {
         showBackdrop = true,
         title,
         width = 400,
+        drawerClass,
         ...rest
     } = props
 
@@ -65,9 +68,8 @@ const Drawer = (props: DrawerProps) => {
                 dimensionClass: 'vertical',
                 contentStyle: { width },
                 motionStyle: {
-                    [placement]: `-${width}${
-                        typeof width === 'number' && 'px'
-                    }`,
+                    [placement]: `-${width}${typeof width === 'number' && 'px'
+                        }`,
                 },
             }
         }
@@ -77,9 +79,8 @@ const Drawer = (props: DrawerProps) => {
                 dimensionClass: 'horizontal',
                 contentStyle: { height },
                 motionStyle: {
-                    [placement]: `-${height}${
-                        typeof height === 'number' && 'px'
-                    }`,
+                    [placement]: `-${height}${typeof height === 'number' && 'px'
+                        }`,
                 },
             }
         }
@@ -119,7 +120,7 @@ const Drawer = (props: DrawerProps) => {
             {...rest}
         >
             <motion.div
-                className={classNames('drawer-content', dimensionClass)}
+                className={classNames('drawer-content', dimensionClass, drawerClass)}
                 style={contentStyle}
                 initial={motionStyle}
                 animate={{

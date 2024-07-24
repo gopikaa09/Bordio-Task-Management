@@ -1,3 +1,3 @@
-    import TeamMainPage from "./TeamsMainPage"
+import TeamMainPage from "./TeamsMainPage"
 
 export default TeamMainPage

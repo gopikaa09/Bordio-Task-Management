@@ -3,7 +3,6 @@ import { BaseQuery } from './BaseQuery'
 
 
 export class TaskListQuery extends BaseQuery {
-  path ='/taskList'
-
+  path = 'http://localhost:4000/taskList'
 }
 
