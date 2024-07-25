@@ -10,7 +10,7 @@ import {
     HiOutlineViewList,
 } from 'react-icons/hi'
 import { Button, Drawer, Pagination, Select } from '@/components/ui'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { IndexGridSkeleton } from '@/views/Index/components/IndexGridSkeleton'
 import { IndexListSkeleton } from '@/views/Index/components/IndexListSkeleton'
 import IndexBoardSkeleton from '@/views/Index/components/IndexBoardSkeleton'

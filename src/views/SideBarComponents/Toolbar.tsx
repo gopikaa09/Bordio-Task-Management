@@ -100,15 +100,15 @@ const ToolBarContent = () => {
         )
         const selected = getCategory(path)
         dispatch(updateSelectedCategory(selected))
-        navigate(`/mail/${selected.value}`, { replace: true })
+        navigate(`/frontEndTeam/${selected.value}`, { replace: true })
 
     }, [])
 
     const getCategory = (value: string) => {
         const categories = [...ToolsList]
         let category = value
-        if (category === 'mail') {
-            category = 'inbox'
+        if (category === 'frontEndTeam') {
+            category = 'tasks'
         }
         return {
             value: category,

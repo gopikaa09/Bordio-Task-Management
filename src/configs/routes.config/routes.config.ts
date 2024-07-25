@@ -12,27 +12,37 @@ export const protectedRoutes = [
         authority: [],
     },
     /** Example purpose only, please remove */
+    // {
+    //     key: 'appsAccount.toolbar',
+    //     path: `/frontEndTeam`,
+    //     component: lazy(() => import('@/views/TeamsComponents')),
+    //     authority: [],
+    //     meta: {
+    //         // header: 'Toolbar',
+    //         headerContainer: true,
+    //     },
+
+
+    // },
     {
         key: 'appsAccount.toolbar',
-        path: `/frontEndTeam`,
-        component: lazy(() => import('@/views/TeamsComponents')),
-        authority: [],
-        meta: {
-            header: 'Toolbar',
-            headerContainer: true,
-        },
-        children: [
-        ]
-    },
-    {
-        key: 'appsAccount.mail',
         path: `/frontEndTeam/:category`,
         component: lazy(() => import('@/views/TeamsComponents')),
         authority: [],
-        meta: {
-            pageContainerType: 'gutterless',
-            footer: false,
-        },
+        // meta: {
+        //     pageContainerType: 'gutterless',
+        //     footer: false,
+        // },
+        children: [
+            {
+
+                key: 'add-tasks',
+                path: `add`,
+                component: lazy(() => import('@/views/TeamsComponents/TaskCrudRoutes')),
+                authority: [],
+
+            },
+        ]
     },
 
 ]

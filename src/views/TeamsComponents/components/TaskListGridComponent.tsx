@@ -1,12 +1,9 @@
 import { Card } from "@/components/ui"
 
-const TaskListGridComponent = ({ data: tasks }: any) => {
-  console.log('====================================');
-  console.log(tasks);
-  console.log('====================================');
+const TaskListGridComponent = ({ item: task }: any) => {
   return (
-    <Card>
-      <p>{tasks?.title}</p>
+    <Card id={task?.id}>
+      <p>{task?.title}</p>
     </Card>
   )
 }

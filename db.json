@@ -24,7 +24,7 @@
     {
       "id": "62ee",
       "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 40,
+      "status": 10,
       "type": "Technical",
       "dueDate": "12-6-2024"
     },
@@ -62,6 +62,104 @@
       "status": 20,
       "type": "Technical",
       "dueDate": "12-6-2024"
+    }
+  ],
+  "notes": [
+    {
+      "id": "318f",
+      "title": "Note1",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "6114",
+      "title": "Note2",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "b2e8",
+      "title": "Note3",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "9ee1",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "187f",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "1864",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "2a32",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "cd81",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    },
+    {
+      "id": "8796",
+      "title": "Note4",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    }
+  ],
+  "peoples": [
+    {
+      "id": "6981",
+      "name": "Gopika",
+      "email": "gopika@gmail.com",
+      "isActive": true,
+      "Role": "Team Leader"
+    },
+    {
+      "id": "19d3",
+      "name": "Sowmya",
+      "email": "gopika123@gmail.com",
+      "isActive": false,
+      "Role": "Team Member"
+    },
+    {
+      "id": "f248",
+      "name": "Naveena",
+      "email": "gopika123@gmail.com",
+      "isActive": true,
+      "Role": "Team Member"
+    },
+    {
+      "id": "7d99",
+      "name": "Sagar",
+      "email": "gopika123@gmail.com",
+      "isActive": true,
+      "Role": "Team Member"
+    },
+    {
+      "id": "1196",
+      "name": "Raghu",
+      "email": "gopika123@gmail.com",
+      "isActive": false,
+      "Role": "Team Member"
+    },
+    {
+      "id": "4cd7",
+      "name": "Prudhvi",
+      "email": "gopika123@gmail.com",
+      "isActive": false,
+      "Role": "Team Member"
+    },
+    {
+      "id": "95c9",
+      "name": "Uday",
+      "email": "gopika123@gmail.com",
+      "isActive": false,
+      "Role": "Team Member"
     }
   ]
 }

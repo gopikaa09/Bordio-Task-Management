@@ -27,7 +27,7 @@ const navigationConfig: NavigationTree[] = [
         subMenu: [
             {
                 key: 'collapseMenu1.item1',
-                path: '/frontEndTeam',
+                path: '/frontEndTeam/tasks',
                 title: 'FrontEnd Team',
                 translateKey: 'nav.collapseMenu1.item1',
                 icon: '',
