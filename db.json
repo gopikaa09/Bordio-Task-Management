@@ -3,7 +3,7 @@
     {
       "id": "eb4a",
       "title": "🔗 Connect your Google Calendar",
-      "status": 10,
+      "status": 40,
       "type": "Financial",
       "dueDate": "12-6-2024"
     },
@@ -24,14 +24,14 @@
     {
       "id": "62ee",
       "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 10,
+      "status": 20,
       "type": "Technical",
       "dueDate": "12-6-2024"
     },
     {
       "id": "95de",
       "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 40,
+      "status": 30,
       "type": "Technical",
       "dueDate": "12-6-2024"
     },
@@ -45,23 +45,45 @@
     {
       "id": "4d16",
       "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 30,
+      "status": 40,
       "type": "Technical",
       "dueDate": "12-6-2024"
     },
     {
       "id": "e858",
       "title": "✅ Assign tasks to your teammates",
-      "status": 20,
+      "status": 30,
       "type": "Technical",
       "dueDate": "12-6-2024"
     },
     {
       "id": "0744",
       "title": "✅ Assign tasks to your teammates",
-      "status": 20,
+      "status": 10,
       "type": "Technical",
       "dueDate": "12-6-2024"
+    },
+    {
+      "id": "3ff1",
+      "title": "sdsd",
+      "description": "sdsdf"
+    },
+    {
+      "title": "Task262325",
+      "description": "fsdfds",
+      "id": "9a30"
+    },
+    {
+      "id": "bbe6",
+      "title": "csdsd",
+      "description": "asdas",
+      "status": 2
+    },
+    {
+      "id": "53d9",
+      "title": "xczxcsds",
+      "description": "",
+      "status": 10
     }
   ],
   "notes": [
