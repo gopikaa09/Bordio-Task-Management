@@ -75,7 +75,7 @@ const TaskListBoardComponent = ({ data: initialTasks }: any) => {
           <h6 className="pb-4 break-words">
             {status.name}
           </h6>
-          <div className='bg-slate-100 p-2 dark:bg-slate-700 w-72' style={{ height: 'calc(100% - 50px)' }}>
+          <div className='p-2 dark:bg-slate-700 w-96' style={{ height: 'calc(100% - 50px)' }}>
             {ordered[status.value]?.map((task: Task) => (
               <div
                 className="mb-3"

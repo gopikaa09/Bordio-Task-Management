@@ -1,90 +1,48 @@
 {
   "taskList": [
     {
-      "id": "eb4a",
-      "title": "🔗 Connect your Google Calendar",
-      "status": 40,
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "aa99",
-      "title": "🔗 Connect your Google Calendar",
-      "status": 10,
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "d58d",
-      "title": "🔗 Connect your Google Calendar",
-      "status": 10,
-      "type": "Financial",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "62ee",
-      "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 20,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "95de",
-      "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 30,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "4133",
-      "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 30,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "4d16",
-      "title": "📲 Download Bordio's mobile app on your phone",
-      "status": 40,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "e858",
-      "title": "✅ Assign tasks to your teammates",
-      "status": 30,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "0744",
-      "title": "✅ Assign tasks to your teammates",
-      "status": 10,
-      "type": "Technical",
-      "dueDate": "12-6-2024"
-    },
-    {
-      "id": "3ff1",
-      "title": "sdsd",
-      "description": "sdsdf"
-    },
-    {
-      "title": "Task262325",
-      "description": "fsdfds",
-      "id": "9a30"
-    },
-    {
-      "id": "bbe6",
-      "title": "csdsd",
+      "id": "dcad",
+      "title": "Task23",
       "description": "asdas",
-      "status": 2
+      "status": 40,
+      "priority": 2,
+      "assignes": "Sowmya",
+      "lables": 30,
+      "modules": "Projects",
+      "startDate": "2024-07-23T18:30:00.000Z",
+      "dueDate": "2024-07-23T18:30:00.000Z",
+      "estimates": 1,
+      "attachements": ""
     },
     {
-      "id": "53d9",
-      "title": "xczxcsds",
+      "id": "fbc1",
+      "title": "Task1",
       "description": "",
-      "status": 10
+      "status": 10,
+      "priority": 2,
+      "assignes": "Sowmya",
+      "lables": 10,
+      "modules": "Projects",
+      "startDate": "2024-07-09T18:30:00.000Z",
+      "dueDate": "2024-07-10T18:30:00.000Z",
+      "estimates": 2,
+      "attachements": ""
+    },
+    {
+      "id": "a3ca",
+      "title": "Task45",
+      "description": "",
+      "status": 20,
+      "priority": 2,
+      "assignes": "Gopika",
+      "lables": 20,
+      "modules": "Projects",
+      "startDate": "2024-07-01T18:30:00.000Z",
+      "dueDate": "2024-07-23T18:30:00.000Z",
+      "estimates": 5,
+      "attachements": ""
     }
+    
   ],
   "notes": [
     {
@@ -182,6 +140,28 @@
       "email": "gopika123@gmail.com",
       "isActive": false,
       "Role": "Team Member"
+    }
+  ],
+  "modules": [
+    {
+      "id": "2b8c",
+      "name": "Projects"
+    },
+    {
+      "id": "0db6",
+      "name": "Client Portal"
+    },
+    {
+      "id": "6e33",
+      "name": "Dashboard"
+    },
+    {
+      "id": "d87e",
+      "name": "Finance"
+    },
+    {
+      "id": "f930",
+      "name": "CRM"
     }
   ]
 }

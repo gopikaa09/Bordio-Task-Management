@@ -10,18 +10,28 @@ import TaskListBoardComponent from './components/TaskListBoardComponent';
 import { Outlet, useParams } from 'react-router-dom';
 import { Button, Drawer } from '@/components/ui';
 import AddTask from './components/AddTask';
+import { HiOutlinePlus, HiOutlinePlusCircle } from 'react-icons/hi';
+import { LabelsEnum, PriorityEnum, TaskStatus } from '@/@types/tasks';
+import dayjs from 'dayjs';
 type Tasks = {
   title: string,
-  status: string,
-  dueDate: string,
-  type: string
+  description: string,
+  status: number,
+  priority: number
+  assignes: string,
+  lables: string
+  modules: string
+  startDate: string
+  dueDate: string
+  estimates: string,
+  attachements: string
 }
 
 const TaskList = () => {
   const TaskListUrl = 'http://localhost:4000/taskList';
   const [isOpen, setIsOpen] = useState(false)
 
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['tasklist'],
     queryFn: async () => {
       const response = await axios.get(TaskListUrl);
@@ -59,35 +69,91 @@ const TaskList = () => {
         cell: (props) => {
           return (
             <>
-              {props.row.original.status}
+              {TaskStatus[props.row.original.status]}
             </>
           )
         },
       },
       {
-        header: 'Title',
-        accessorKey: 'type',
+        header: 'Priority',
+        accessorKey: 'priority',
         cell: (props) => {
           return (
             <>
-              {props.row.original.type}
+              {PriorityEnum[props.row.original.priority]}
             </>
           )
         },
       },
       {
-        header: 'Title',
+        header: 'Assignes',
+        accessorKey: 'assignes',
+        cell: (props) => {
+          return (
+            <>
+              {props.row.original.assignes}
+            </>
+          )
+        },
+      },
+      {
+        header: 'Labels',
+        accessorKey: 'labels',
+        cell: (props) => {
+          return (
+            <>
+              {LabelsEnum[props.row.original.lables]}
+            </>
+          )
+        },
+      },
+      {
+        header: 'Modules',
+        accessorKey: 'modules',
+        cell: (props) => {
+          return (
+            <>
+              {props.row.original.modules}
+            </>
+          )
+        },
+      },
+      {
+        header: 'Start Date',
+        accessorKey: 'startDate',
+        cell: (props) => {
+          return (
+            props.row.original.dueDate &&
+            dayjs(props.row.original.startDate).format(
+              'MM/DD/YYYY'
+            )
+          )
+        },
+      },
+      {
+        header: 'Due Date',
         accessorKey: 'dueDate',
         cell: (props) => {
           return (
-            <>
-              {props.row.original.dueDate}
-            </>
+            props.row.original.dueDate &&
+            dayjs(props.row.original.dueDate).format(
+              'MM/DD/YYYY'
+            )
           )
         },
       },
 
-
+      {
+        header: 'Estimates',
+        accessorKey: 'estimates',
+        cell: (props) => {
+          return (
+            <>
+              {props.row.original.estimates}
+            </>
+          )
+        },
+      },
 
 
     ],
@@ -102,6 +168,8 @@ const TaskList = () => {
     return (
       <>
         <Button
+          icon={<HiOutlinePlusCircle />}
+          variant='solid'
           onClick={openAddTaskDrawer}
         >Add Task</Button>
       </>

@@ -13,6 +13,7 @@
     "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.2.1",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@floating-ui/react": "^0.26.4",
     "@fullcalendar/daygrid": "^6.1.8",
@@ -61,6 +62,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.11.1",
     "redux-persist": "^6.0.0",
+    "tiny-invariant": "^1.3.3",
     "twin.macro": "^3.4.0",
     "yup": "^1.1.1"
   },
