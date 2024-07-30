@@ -480,6 +480,13 @@ function IndexPage(indexPageProps: IndexPageProps) {
                             {queryFn &&
                                 viewOptions.length > 0 && (
                                     <>
+                                        {view == 'board' && (
+                                            <BoardView
+                                                data={queryFn}
+                                                query={queryParams}
+                                                setQuery={setQuery}
+                                            />
+                                        )}
                                         {view == 'grid' && (
                                             <IndexGridView
                                                 data={queryFn}
@@ -507,13 +514,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                                 item={ListItem}
                                             />
                                         )}
-                                        {view == 'board' && (
-                                            <BoardView
-                                                data={queryFn}
-                                                query={queryParams}
-                                                setQuery={setQuery}
-                                            />
-                                        )}
+
                                         {view == 'table' && tableColumns && (
                                             <IndexTableView
                                                 data={queryFn}

@@ -37,6 +37,7 @@ const TaskList = () => {
       const response = await axios.get(TaskListUrl);
       return response.data;
     }
+
   });
 
   const TasklistQuery = new TaskListQuery()
@@ -193,7 +194,7 @@ const TaskList = () => {
         tableColumns={columns}
         queryFn={data}
         gridItemComponent={TaskListGridComponent}
-        grid={{ std: 250, xl: 250, lg: 250, md: 250, sm: 250, xs: 250 }}
+        // grid={{ std: 250, xl: 250, lg: 250, md: 250, sm: 250, xs: 250 }}
         // isSelectable={true}
         boardViewComponent={TaskListBoardComponent}
         queryParamsShow={false}

@@ -45,7 +45,8 @@ const TaskListBoardComponent = ({ data: initialTasks }: any) => {
       setTasks(prevTasks => prevTasks.map((t: Task) =>
         t.id === updatedTask.id ? updatedTask : t
       ));
-      queryClient.invalidateQueries(['tasklist']);
+      queryClient.invalidateQueries(['tasklistQuery']);
+
     },
   });
 
@@ -71,14 +72,15 @@ const TaskListBoardComponent = ({ data: initialTasks }: any) => {
           className='p-2'
           onDrop={(e) => handleDrop(e, status.value)}
           onDragOver={(e) => e.preventDefault()}
+
         >
-          <h6 className="pb-4 break-words">
+          <h6 className="pb-4 break-words text-center">
             {status.name}
           </h6>
           <div className='p-2 dark:bg-slate-700 w-96' style={{ height: 'calc(100% - 50px)' }}>
             {ordered[status.value]?.map((task: Task) => (
               <div
-                className="mb-3"
+                className="mb-3   "
                 key={task.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, task)}

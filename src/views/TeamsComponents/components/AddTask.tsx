@@ -1,3 +1,4 @@
+import { LabelOptions, PriorityOptions, statusOptions } from "@/@types/tasks"
 import { Button, DatePicker, FormContainer, FormItem, Input, Select, TimeInput } from "@/components/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -63,7 +64,7 @@ const AddTask = ({ drawerClose }) => {
       console.error("Error adding task:", error);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["tasklist"])
+      queryClient.invalidateQueries(["tasklistQuery"])
     }
   })
   const MembersURl = 'http://localhost:4000/peoples'; // Ensure this is the correct URL
@@ -86,19 +87,7 @@ const AddTask = ({ drawerClose }) => {
     }
   })
 
-  const statusOptions = [
-    { value: 10, label: 'New Task' },
-    { value: 20, label: 'Scheduled' },
-    { value: 30, label: 'In Progress' },
-    { value: 40, label: 'Completed' },
-  ]
-  const PriorityOptions = [
-    { value: 1, label: 'Urgent' },
-    { value: 2, label: 'High' },
-    { value: 3, label: 'Medium' },
-    { value: 4, label: 'Low' },
-    { value: 5, label: 'None' },
-  ]
+
   const memberOPtions =
     peoples &&
     peoples?.map((item: { uid: any; name: any; children: any }) => ({
@@ -113,13 +102,7 @@ const AddTask = ({ drawerClose }) => {
       label: item.name,
     }))
 
-  const LabelOptions = [
-    { value: 10, label: 'UI_Fixes' },
-    { value: 20, label: 'Enhancement' },
-    { value: 30, label: 'Functional' },
-    { value: 40, label: 'Back-End' },
-    { value: 50, label: 'Fronts-End' },
-  ]
+
   return (
     <>
 
