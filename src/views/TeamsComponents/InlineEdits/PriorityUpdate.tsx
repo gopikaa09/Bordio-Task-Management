@@ -3,7 +3,11 @@ import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAppSelector } from '@/store';
 import axios from 'axios';
-import { TaskStatus } from '@/@types/tasks';
+import BadgeIcon from '@/components/common/BadgeIcon';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { MdOutlineBarChart } from 'react-icons/md';
+import { FaRegCircle } from 'react-icons/fa';
+import { PriorityOptions } from '@/@types/tasks';
 
 const PriorityUpdate = ({ id, priorityStatus, task }: any) => {
   const [priority, setPriority] = useState(priorityStatus);
@@ -25,24 +29,21 @@ const PriorityUpdate = ({ id, priorityStatus, task }: any) => {
     await changeStatusMutation({ id: id, priority: selectedStatus.value });
   };
 
-  const PriorityOptions = [
-    { value: 1, label: 'Urgent' },
-    { value: 2, label: 'High' },
-    { value: 3, label: 'Medium' },
-    { value: 4, label: 'Low' },
-    { value: 5, label: 'None' },
-  ]
 
   return (
     <div>
       <span className="flex items-center gap-2">
         <Dropdown
           renderTitle={
-            <span className='cursor-pointer text-gray-400'>
-              {PriorityOptions.find(option => option.value === priority)?.label}
-            </span>
+            <BadgeIcon icon={task?.priority === 1 ? <HiOutlineExclamationCircle />
+              : task?.priority === 2 ? <MdOutlineBarChart /> : task?.priority === 3 ? <MdOutlineBarChart /> :
+                task?.priority === 4 ? <MdOutlineBarChart /> : <FaRegCircle />
+            }
+              text={PriorityOptions.find(option => option.value === priority)?.label}
+            />
+
           }
-          menuStyle={{ minWidth: 180 }}
+          menuStyle={{ minWidth: 100 }}
           placement="bottom-start"
         >
           {PriorityOptions.filter(option => option.value !== priority).map(option => (

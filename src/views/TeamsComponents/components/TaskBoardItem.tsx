@@ -14,6 +14,7 @@ import StatusUpdate from "../InlineEdits/StatusUpdate"
 import PriorityUpdate from "../InlineEdits/PriorityUpdate"
 import ModuleUpdate from "../InlineEdits/ModuleUpdate"
 import StartDateUpdate from "../InlineEdits/StartDateUpdate"
+import DueDateUpdate from "../InlineEdits/DueDateUpdate"
 
 const TaskBoardItem = (tasks: Task) => {
   return (
@@ -46,7 +47,6 @@ const TaskBoardItem = (tasks: Task) => {
               text={PriorityEnum[tasks?.priority]}
             /> */}
             <PriorityUpdate task={tasks} id={tasks?.id} priorityStatus={tasks?.priority} />
-
           </Tooltip>
           <Tooltip title={'Start Date'}>
             {/* <BadgeIcon icon={<LuCalendarClock />} text={dayjs(tasks?.startDate).format(
@@ -59,7 +59,7 @@ const TaskBoardItem = (tasks: Task) => {
             } text={dayjs(tasks?.dueDate).format(
               'MM/DD/YYYY'
             )} /> */}
-            <StartDateUpdate task={tasks} id={tasks?.id} startDate={tasks?.startDate} />
+            <DueDateUpdate task={tasks} id={tasks?.id} DueDate={tasks?.dueDate} />
 
           </Tooltip>
           <Tooltip title={'Module'}>

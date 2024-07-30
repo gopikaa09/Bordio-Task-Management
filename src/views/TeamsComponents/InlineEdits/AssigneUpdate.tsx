@@ -6,16 +6,16 @@ import axios from 'axios';
 import { TaskStatus } from '@/@types/tasks';
 import BadgeIcon from '@/components/common/BadgeIcon';
 import { MdOutlineViewModule } from 'react-icons/md';
+import { getInitials } from '@/utils/getInitials';
 
-const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
-  console.log(moduleStatus);
-  const [module, setModule] = useState(moduleStatus);
+const AssigneeUpdate = ({ id, assigneName, task }: any) => {
+  const [assignes, setAssigne] = useState(assigneName);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['moduleStatus', id],
     mutationFn: async (data: any) => {
       const url = `http://localhost:4000/taskList/${id}`;
-      const response = await axios.put(url, { ...task, modules: data.modules });
+      const response = await axios.put(url, { ...task, assignes: data.modules });
       return response.data;
     },
     onSuccess: () => {
@@ -24,24 +24,23 @@ const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
   });
 
   const handleStatusChange = async (selectedStatus: any) => {
-    setModule(selectedStatus.value);
-    await changeStatusMutation({ id: id, modules: selectedStatus.value });
+    setAssigne(selectedStatus.value);
+    await changeStatusMutation({ id: id, assignes: selectedStatus.value });
   };
 
+  const MembersURl = 'http://localhost:4000/peoples'; // Ensure this is the correct URL
 
-  const ModulesURL = 'http://localhost:4000/modules'; // Ensure this is the correct URL
-
-  const { data: Modules } = useQuery({
-    queryKey: ['Modules'],
+  const { data: peoples } = useQuery({
+    queryKey: ['Peoples'],
     queryFn: async () => {
-      const response = await axios.get(ModulesURL)
+      const response = await axios.get(MembersURl)
       return response.data
     }
   })
 
-  const ModuleOptions =
-    Modules &&
-    Modules?.map((item: { uid: any; name: any; children: any }) => ({
+  const memberOPtions =
+    peoples &&
+    peoples?.map((item: { uid: any; name: any; children: any }) => ({
       value: item.name,
       label: item.name,
     }))
@@ -50,14 +49,17 @@ const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
       <span className="flex items-center gap-2 indent-1">
         <Dropdown
           renderTitle={
-            <BadgeIcon icon={<MdOutlineViewModule />} text={ModuleOptions?.find(option => option.value === module)?.label} />
-
+            memberOPtions >
+            <div className="bg-gray-400 pl-1.5 pr-2 py-1.5 rounded-full text-white text-xs font-semibold">
+              <span>{getInitials(task?.assignes)}</span>
+            </div>
+            // <BadgeIcon icon={<MdOutlineViewModule />} text={memberOPtions?.find(option => option.value === assignes)?.label} />
           }
           menuStyle={{ minWidth: 130 }}
           placement="auto"
 
         >
-          {ModuleOptions?.filter(option => option.value !== module).map(option => (
+          {memberOPtions?.filter(option => option.value !== assignes).map(option => (
             <Dropdown.Item
               key={option.value}
               eventKey={option.label}
@@ -74,4 +76,4 @@ const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
   );
 };
 
-export default ModuleUpdate;
+export default AssigneeUpdate;

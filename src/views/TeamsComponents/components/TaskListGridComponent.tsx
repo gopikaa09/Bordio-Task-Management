@@ -10,6 +10,13 @@ import { HiOutlineExclamationCircle } from "react-icons/hi"
 import { MdOutlineBarChart, MdOutlineViewModule } from "react-icons/md"
 import BadgeIcon from "@/components/common/BadgeIcon"
 import { PriorityEnum, TaskStatus } from "@/@types/tasks"
+import StatusUpdate from "../InlineEdits/StatusUpdate"
+import PriorityUpdate from "../InlineEdits/PriorityUpdate"
+import StartDateUpdate from "../InlineEdits/StartDateUpdate"
+import DueDateUpdate from "../InlineEdits/DueDateUpdate"
+import ModuleUpdate from "../InlineEdits/ModuleUpdate"
+import TimeEstimatesUpdate from "../InlineEdits/TimeEstimatesUpdate"
+import AssigneeUpdate from "../InlineEdits/AssigneUpdate"
 const TaskListGridComponent = ({ item: tasks }: any) => {
   return (
     <Card bodyClass="p-4" className={`hover:shadow-lg rounded-lg dark:bg-gray-700 
@@ -18,6 +25,7 @@ const TaskListGridComponent = ({ item: tasks }: any) => {
         <p className="font-semibold">{tasks?.title}</p>
         <div className="bg-gray-400 px-3 py-2 rounded-full text-white text-xs font-semibold">
           <Tooltip title={tasks?.assignes}>
+            {/* <AssigneeUpdate task={tasks} id={tasks?.id} assigneName={tasks?.assignes} /> */}
             <span>{getInitials(tasks?.assignes)}</span>
           </Tooltip>
         </div>
@@ -25,32 +33,24 @@ const TaskListGridComponent = ({ item: tasks }: any) => {
       <div className="flex gap-2 flex-wrap">
 
         <Tooltip title={'Status'}>
-          <BadgeIcon icon={
-            tasks?.status === 10 ?
-              <FaRegCircle /> : tasks?.status === 20 ? <TbAlarm /> : tasks?.status === 30 ? <LuCircleDashed /> : <FaRegCircleCheck />} text={TaskStatus[tasks?.status]}></BadgeIcon>
+          <StatusUpdate task={tasks} id={tasks?.id} taskStatus={tasks?.status} />
+
         </Tooltip>
         <Tooltip title={'Priority'}>
-          <BadgeIcon icon={tasks?.priority === 1 ? <HiOutlineExclamationCircle />
-            : tasks?.priority === 2 ? <MdOutlineBarChart /> : tasks?.priority === 3 ? <MdOutlineBarChart /> :
-              tasks?.priority === 4 ? <MdOutlineBarChart /> : <FaRegCircle />
+          <PriorityUpdate task={tasks} id={tasks?.id} priorityStatus={tasks?.priority} />
 
-          }
-            text={PriorityEnum[tasks?.priority]}
-          />
         </Tooltip>
         <Tooltip title={'Start Date'}>
-          <BadgeIcon icon={<LuCalendarClock />} text={dayjs(tasks?.startDate).format(
-            'MM/DD/YYYY'
-          )} />
+          <StartDateUpdate task={tasks} id={tasks?.id} startDate={tasks?.startDate} />
         </Tooltip>
-        <Tooltip title={'Start Date'}>
-          <BadgeIcon icon={<LuCalendarCheck2 />
-          } text={dayjs(tasks?.dueDate).format(
-            'MM/DD/YYYY'
-          )} />
+        <Tooltip title={'Due Date'}>
+          <DueDateUpdate task={tasks} id={tasks?.id} DueDate={tasks?.dueDate} />
         </Tooltip>
         <Tooltip title={'Module'}>
-          <BadgeIcon icon={<MdOutlineViewModule />} text={tasks?.modules} />
+          <ModuleUpdate task={tasks} id={tasks?.id} moduleStatus={tasks?.modules} />
+        </Tooltip>
+        <Tooltip title={'Estimated Time'}>
+          <TimeEstimatesUpdate task={tasks} id={tasks?.id} timeEstimates={tasks?.estimates} />
         </Tooltip>
       </div>
     </Card>

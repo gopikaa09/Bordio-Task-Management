@@ -4,6 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAppSelector } from '@/store';
 import axios from 'axios';
 import { statusOptions, TaskStatus } from '@/@types/tasks';
+import BadgeIcon from '@/components/common/BadgeIcon';
+import { FaRegCircle } from 'react-icons/fa';
+import { TbAlarm } from 'react-icons/tb';
+import { LuCircleDashed } from 'react-icons/lu';
+import { FaRegCircleCheck } from 'react-icons/fa6';
 
 const StatusUpdate = ({ id, taskStatus, task }: any) => {
   const [status, setStatus] = useState(taskStatus);
@@ -32,11 +37,11 @@ const StatusUpdate = ({ id, taskStatus, task }: any) => {
       <span className="flex items-center gap-2">
         <Dropdown
           renderTitle={
-            <span className='cursor-pointer text-gray-400'>
-              {statusOptions.find(option => option.value === status)?.label}
-            </span>
+            <BadgeIcon icon={
+              task?.status === 10 ?
+                <FaRegCircle /> : task?.status === 20 ? <TbAlarm /> : task?.status === 30 ? <LuCircleDashed /> : <FaRegCircleCheck />} text={statusOptions.find(option => option.value === status)?.label}></BadgeIcon>
           }
-          menuStyle={{ minWidth: 180 }}
+          menuStyle={{ minWidth: 120 }}
           placement="bottom-start"
         >
           {statusOptions.filter(option => option.value !== status).map(option => (
