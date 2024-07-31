@@ -8,7 +8,6 @@ import BadgeIcon from '@/components/common/BadgeIcon';
 import { MdOutlineViewModule } from 'react-icons/md';
 
 const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
-  console.log(moduleStatus);
   const [module, setModule] = useState(moduleStatus);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({

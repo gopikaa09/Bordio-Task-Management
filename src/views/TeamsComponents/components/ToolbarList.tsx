@@ -27,9 +27,9 @@ import { useAppDispatch, useAppSelector } from '@/store'
 import { toggleMobileSidebar, toggleSidebar } from '@/views/store'
 import axios from 'axios'
 import TaskList from '../TaskList'
-import Calendar from './TasksCalender'
 import TaskNotes from './TaskNotes'
 import TaskPeople from './TaskPeoples'
+import ListExample from './TasksCalender'
 
 
 type ToggleButtonProps = {
@@ -150,7 +150,7 @@ const ToolbarList = () => {
                 selectedCategory?.value === 'tasks' && <TaskList />
               }
               {
-                selectedCategory?.value === 'calender' && <Calendar />
+                selectedCategory?.value === 'calender' && <ListExample />
 
               }
               {
