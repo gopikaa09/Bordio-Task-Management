@@ -19,7 +19,8 @@ type FormModel = {
   attachements: string
 }
 
-const AddTask = ({ drawerClose }) => {
+const AddTask = ({ drawerClose, status }) => {
+  console.log(status);
   const initialValues = {
     title: '',
     description: '',
@@ -38,6 +39,7 @@ const AddTask = ({ drawerClose }) => {
     title: Yup.string().trim().required("Title Required"),
     status: Yup.number().required("Status Required")
   })
+
 
   const TaskListUrl = 'http://localhost:4000/taskList'; // Ensure this is the correct URL
   const queryClient = useQueryClient();

@@ -30,6 +30,7 @@ import TaskList from '../TaskList'
 import TaskNotes from './TaskNotes'
 import TaskPeople from './TaskPeoples'
 import ListExample from './TasksCalender'
+import DrawingExample from './TaskNotes'
 
 
 type ToggleButtonProps = {

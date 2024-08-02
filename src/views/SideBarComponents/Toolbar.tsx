@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import Menu from '@/components/ui/Menu'
 import Badge from '@/components/ui/Badge'
@@ -13,7 +13,11 @@ import { CgCheckR, CgNotes } from 'react-icons/cg'
 import { IoCalendarNumberOutline } from 'react-icons/io5'
 import { HiOutlineUser } from 'react-icons/hi'
 import { MdOutlineSettings } from 'react-icons/md'
-
+import invariant from 'tiny-invariant'
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
+import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
 
 type MenuBase = {
     value: string
@@ -84,25 +88,23 @@ const ToolBarContent = () => {
             value: role.id,
             icon: ToolsIcon[role.id] || defaultIcon
         }));
+
     const direction = useAppSelector((state) => state.theme.direction)
 
     const onMenuClick = (category: Group | Label) => {
-        // dispatch(updateMailId(''))
         dispatch(updateSelectedCategory(getCategory(category.value)))
         navigate(`/frontEndTeam/${category.value}`, { replace: true })
     }
 
     useEffect(() => {
         const newUrl = window.location.origin + window.location.pathname;
-
         const path = newUrl.substring(
             newUrl.lastIndexOf('/') + 1
         )
         const selected = getCategory(path)
         dispatch(updateSelectedCategory(selected))
         navigate(`/frontEndTeam/${selected.value}`, { replace: true })
-
-    }, [])
+    }, [dispatch, navigate])
 
     const getCategory = (value: string) => {
         const categories = [...ToolsList]
@@ -116,12 +118,76 @@ const ToolBarContent = () => {
         }
     }
 
+    const widths = {
+        start: 260,
+        min: 150,
+        max: 450,
+    };
+
+    type State =
+        | {
+            type: "idle";
+        }
+        | {
+            type: "dragging";
+        };
+
+    const dividerRef = useRef<HTMLDivElement | null>(null);
+    const contentRef = useRef<HTMLDivElement | null>(null);
+    const [initialWidth, setInitialWidth] = useState(widths.start);
+    const [state, setState] = useState<State>({
+        type: "idle",
+    });
+
+    function getProposedWidth({
+        initialWidth,
+        location,
+    }: {
+        initialWidth: number;
+        location: DragLocationHistory;
+    }): number {
+        const diffX = location.current.input.clientX - location.initial.input.clientX;
+        const proposedWidth = initialWidth + diffX;
+        return Math.min(Math.max(widths.min, proposedWidth), widths.max);
+    }
+
+    useEffect(() => {
+        const divider = dividerRef.current;
+        if (!divider) {
+            console.error('Divider reference is null');
+            return;
+        }
+
+        return draggable({
+            element: divider,
+            onGenerateDragPreview: ({ nativeSetDragImage }) => {
+                disableNativeDragPreview({ nativeSetDragImage });
+                preventUnhandled.start();
+            },
+            onDragStart() {
+                setState({ type: 'dragging' });
+            },
+            onDrag({ location }) {
+                contentRef.current?.style.setProperty(
+                    '--local-resizing-width',
+                    `${getProposedWidth({ initialWidth, location })}px`,
+                );
+            },
+            onDrop({ location }) {
+                preventUnhandled.stop();
+                setState({ type: 'idle' });
+                setInitialWidth(getProposedWidth({ initialWidth, location }));
+                contentRef.current?.style.removeProperty('--local-resizing-width');
+            },
+        });
+    }, [initialWidth]);
+
     return (
         <ScrollBar direction={direction}>
             <div className="flex flex-col justify-between h-full">
                 <div>
                     <div className="my-8 mx-6">
-                        <h3>Tools</h3>
+                        <h3>Toolss</h3>
                     </div>
                     <Menu variant="transparent" className="mx-2 mb-10">
                         {ToolsList.map((menu) => (
@@ -142,7 +208,10 @@ const ToolBarContent = () => {
                         ))}
                     </Menu>
                 </div>
-
+                <div
+                    ref={dividerRef}
+                    className="divider-class"
+                />
             </div>
         </ScrollBar>
     )
@@ -158,7 +227,6 @@ const ToolBar = () => {
     )
 
     const dispatch = useAppDispatch()
-
     const { smaller } = useResponsive()
 
     const onMobileSideBarClose = () => {

@@ -1,168 +1,128 @@
-import React, { useState, useMemo } from 'react';
-import { DataTable, OnSortParam, StrictModeDroppable } from "@/components/shared";
-import { MdWarningAmber } from "react-icons/md";
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Table from '@/components/ui/Table/Table';
 import THead from '@/components/ui/Table/THead';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import Tr from '@/components/ui/Table/Tr';
 import Th from '@/components/ui/Table/Th';
 import TBody from '@/components/ui/Table/TBody';
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import Td from '@/components/ui/Table/Td';
+import invariant from 'tiny-invariant';
+import { draggable, monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 const IndexTableView = ({ data, query, columns, loading }: any) => {
-
   const [sort, setSort] = useState<{ order: '' | 'asc' | 'desc'; key: string | number }>({ order: '', key: '' });
+  const [rowsData, setRowsData] = useState(data);
 
+  useEffect(() => {
+    setRowsData(data);
+  }, [data]);
 
   const sortedData = useMemo(() => {
     if (sort.order === 'asc') {
-      return [...data].sort((a, b) => {
+      return [...rowsData].sort((a, b) => {
         const aValue = String(a[sort.key]).toLowerCase();
         const bValue = String(b[sort.key]).toLowerCase();
-        if (aValue > bValue) return 1;
-        if (aValue < bValue) return -1;
-        return 0;
+        return aValue.localeCompare(bValue);
       });
     } else if (sort.order === 'desc') {
-      return [...data].sort((a, b) => {
+      return [...rowsData].sort((a, b) => {
         const aValue = String(a[sort.key]).toLowerCase();
         const bValue = String(b[sort.key]).toLowerCase();
-        if (aValue < bValue) return 1;
-        if (aValue > bValue) return -1;
-        return 0;
+        return bValue.localeCompare(aValue);
       });
     } else {
-      return data;
+      return rowsData;
     }
-  }, [sort, data]);
+  }, [sort, rowsData]);
+
   const reorderData = (startIndex: number, endIndex: number) => {
-    const newData = [...data]
-    const [movedRow] = newData.splice(startIndex, 1)
-    newData.splice(endIndex, 0, movedRow)
-    // setData(newData)
-  }
-
-
-  const handleDragEnd = (result: DropResult) => {
-    const { source, destination } = result
-    if (!destination) return
-    reorderData(source.index, destination.index)
-  }
-
-
+    const newData = [...rowsData];
+    const [movedRow] = newData.splice(startIndex, 1);
+    newData.splice(endIndex, 0, movedRow);
+    setRowsData(newData);
+  };
 
   const handleSort = ({ order, key }: OnSortParam) => {
     setSort({ order, key });
   };
+
   const table = useReactTable({
-    data,
+    data: sortedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
-  return (
-    <div>
-      {data && data?.length > 0 ? (
-        <div className="bg-white dark:bg-transparent mb-3">
-          {/* <DataTable
-            columns={columns}
-            data={sortedData}
-            // pagingData={{
-            //     total: data?.length,
-            //     pageIndex : query?.pageNumber,
-            //     pageSize:query?.pageSize
-            // }}
-            // showPagination={false}
-            onSort={handleSort}
-          /> */}
-          <Table className='w-full'>
-            <THead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <Th key={header.id} colSpan={header.colSpan}>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </Th>
-                    )
-                  })}
-                </Tr>
-              ))}
-            </THead>
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <StrictModeDroppable droppableId="table-body">
-                {(provided) => (
-                  <TBody
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    {table.getRowModel().rows.map((row) => {
-                      return (
-                        <Draggable
-                          key={row.id}
-                          draggableId={row.id}
-                          index={row.index}
-                        >
-                          {(provided, snapshot) => {
-                            const { style } =
-                              provided.draggableProps
-                            return (
-                              <Tr
-                                ref={provided.innerRef}
-                                className={
-                                  snapshot.isDragging
-                                    ? 'table'
-                                    : ''
-                                }
-                                style={style}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                {row
-                                  .getVisibleCells()
-                                  .map((cell) => {
-                                    return (
-                                      <Td
-                                        key={
-                                          cell.id
-                                        }
-                                      >
-                                        {flexRender(
-                                          cell
-                                            .column
-                                            .columnDef
-                                            .cell,
-                                          cell.getContext()
-                                        )}
-                                      </Td>
-                                    )
-                                  })}
-                              </Tr>
-                            )
-                          }}
-                        </Draggable>
-                      )
-                    })}
-                    {provided.placeholder}
-                  </TBody>
-                )}
-              </StrictModeDroppable>
-            </DragDropContext>
-          </Table>
-        </div>
+  });
 
-      ) : (
-        <div className="text-center ">
-          <h5 className="flex gap-3 items-center my-10">
-            <MdWarningAmber className='text-xl' />
-            No Data Available
-          </h5>
-        </div>
-      )}
-    </div>
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-drag]');
+
+    elements.forEach((el, index) => {
+      invariant(el);
+
+      const stopDraggable = draggable({
+        element: el,
+        getInitialData: () => ({ index }),
+        onDragStart: (e) => console.log('Dragging started for:', index),
+        onDrop: (e) => {
+          const startIndex = e.dataTransfer.getData('text/plain');
+          console.log('Dropped:', index);
+
+
+          reorderData(parseInt(startIndex, 10), index);
+        },
+      });
+
+      const stopMonitoring = monitorForElements({
+        onDrop: async ({ source, location }) => {
+          const destination = location.current.dropTargets[0]
+          if (!destination) {
+            console.log("No destination Available")
+            return;
+          }
+          const destinationIndex = destination.data.index
+          const sourceTaskId = source.data.id;
+
+        }
+      })
+
+      return () => stopDraggable();
+    });
+  }, [rowsData]);
+
+  return (
+    <Table>
+      <THead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <Tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <Th key={header.id} colSpan={header.colSpan}>
+                {flexRender(header.column.columnDef.header, header.getContext())}
+              </Th>
+            ))}
+          </Tr>
+        ))}
+      </THead>
+      <TBody>
+        {table.getRowModel().rows.map((row, rowIndex) => (
+          <Tr
+            key={row.id}
+            data-drag
+            draggable
+            onDragStart={(e) => e.dataTransfer.setData('text/plain', rowIndex.toString())}
+            onDrop={(e) => {
+              e.preventDefault();
+              handleDrop(e, rowIndex);
+            }}
+            onDragOver={(e) => e.preventDefault()}
+          >
+            {row.getVisibleCells().map((cell) => (
+              <Td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </Td>
+            ))}
+          </Tr>
+        ))}
+      </TBody>
+    </Table>
   );
 };
 

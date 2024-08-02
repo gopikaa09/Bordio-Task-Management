@@ -1,134 +1,263 @@
-// import { Loading } from "@/components/shared";
-// import { Avatar, ScrollBar } from "@/components/ui"
-// import { useAppSelector } from "@/store";
-// import { useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-// import { useState } from "react";
-// import { HiOutlineFlag, HiOutlineTrash, HiPaperClip, HiStar } from "react-icons/hi";
-// import { MdWarningAmber } from "react-icons/md";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { css, jsx } from '@emotion/react';
+import { bind } from 'bind-event-listener';
+import invariant from 'tiny-invariant';
 
-// const TaskNotes = () => {
-//   const TaskListUrl = 'http://localhost:4000/notes'; // Ensure this is the correct URL
+import CheckIcon from '@atlaskit/icon/glyph/check';
+import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
+import { Inline } from '@atlaskit/primitives';
+import { token } from '@atlaskit/tokens';
+import { Button } from '@/components/ui';
 
-//   const { data: NotesList, error, isPending } = useQuery({
-//     queryKey: ['tasknotes'],
-//     queryFn: async () => {
-//       const response = await axios.get(TaskListUrl);
-//       return response.data;
-//     }
-//   });
-//   console.log(NotesList);
-//   // const navigate = useNavigate()
+const containerStyles = css({
+  boxShadow: token(
+    'elevation.shadow.raised',
+    '0px 1px 1px rgba(9, 30, 66, 0.25),0px 0px 1px rgba(9, 30, 66, 0.31)',
+  ),
+  borderRadius: token('border.radius.100', '4px'),
+  overflow: 'hidden',
+  display: 'flex',
+  height: 400,
+  position: 'relative',
+  background: token('elevation.surface.raised', '#FFF'),
+});
 
-//   // const direction = useAppSelector((state) => state.theme.direction)
+const sidebarStyles = css({
+  background: token('elevation.surface.overlay', '#FFF'),
+  display: 'flex',
+  padding: 16,
+  gap: 16,
+  position: 'absolute',
+  bottom: 24,
+  boxShadow: token(
+    'elevation.shadow.overlay',
+    '0px 8px 12px rgba(9, 30, 66, 0.15),0px 0px 1px rgba(9, 30, 66, 0.31)',
+  ),
+  borderRadius: 4,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  boxSizing: 'border-box',
+  width: 'max-content',
+});
 
-//   // const [showContent, setShowContent] = useState({});
+const swatchBaseStyles = css({
+  boxSizing: 'border-box',
+  border: `2px solid ${token('color.border', 'rgba(9, 30, 66, 0.14)')}`,
+  width: 32,
+  height: 32,
+  borderRadius: '50%',
+  cursor: 'pointer',
+  color: token('color.text.inverse', '#FFF'),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
 
+const swatchColorMap = {
+  red: token('color.background.accent.red.subtle', '#F87462'),
+  orange: token('color.background.accent.orange.subtle', '#FAA53D'),
+  yellow: token('color.background.accent.yellow.subtle', '#E2B203'),
+  green: token('color.background.accent.green.subtle', '#4BCE97'),
+  teal: token('color.background.accent.teal.subtle', '#60C6D2'),
+  blue: token('color.background.accent.blue.subtle', '#579DFF'),
+  purple: token('color.background.accent.purple.subtle', '#9F8FEF'),
+  magenta: token('color.background.accent.magenta.subtle', '#E774BB'),
+};
 
-//   // const onMailClick = (e: MouseEvent<HTMLDivElement>, id: number) => {
-//   //   e.stopPropagation()
-//   //   dispatch(updateMailId(id))
-//   //   dispatch(updateReply(false))
-//   //   navigate(`${location.pathname}?mail=${id}`, { replace: true })
-//   // }
-//   return (
-//     <>
-//       <ScrollBar autoHide direction={direction}>
+type SwatchColor = keyof typeof swatchColorMap;
 
-//         <Loading
-//           type={NotesList?.length > 0 ? 'cover' : 'default'}
-//           spinnerClass={NotesList?.length > 0 ? 'hidden' : ''}
-//           loading={isPending}
-//         >
-//           {NotesList?.length > 0 ? (
-//             <>
-//               {NotesList?.map((message) => (
-//                 <div
-//                   key={message?.id}
-//                   className="relative flex border-b border-gray-200 dark:border-gray-600 last:border-0 hover:bg-hover"
-//                 >
-//                   <div
-//                     className={`${true ? 'bg-gray-50 dark:bg-gray-700' : ''} w-full py-6 pr-4 pl-4 cursor-pointer select-none hover:bg-gray-50 hover:dark:bg-gray-700 flex`}
-//                     onClick={(e) => onMailClick(e, message?.id)} // Moved onClick handler here
-//                     onMouseEnter={() => setShowContent(prevState => ({ ...prevState, [message?.id]: true }))}
-//                     onMouseLeave={() => setShowContent(prevState => ({ ...prevState, [message?.id]: false }))}
-//                   >
+function Swatch({
+  color,
+  isSelected = false,
+  onSelect: onSelectProp,
+}: {
+  color: SwatchColor;
+  isSelected?: boolean;
+  onSelect: (color: SwatchColor) => void;
+}) {
+  const onSelect = useCallback(() => {
+    onSelectProp(color);
+  }, [color, onSelectProp]);
 
-//                     <div className="w-full">
-//                       <div className="ltr:mr-2 rtl:ml-2">
-//                         {message?.id && (
-//                           <Avatar
-//                             shape="circle"
-//                             size={25}
-//                             src={message?.avatar}
-//                           />
-//                         )}
-//                       </div>
-//                       <div className="flex items-center justify-between mb-2 relative">
-//                         <div
-//                         >
-//                           <h2>Gopika</h2>
-//                         </div>
-
-//                         {showContent[message?.id] && (
-//                           <div className="absolute top-0 right-0 p-2">
-//                             <div className="flex items-center text-lg gap-2">
-//                               {message?.attachment?.length <= 0 && <HiPaperClip />}
-//                               {message?.starred && (
-//                                 <HiStar size={20} className="text-amber-500 ltr:ml-1 rtl:mr-1" />
-//                               )}
-//                               <HiOutlineTrash
-//                                 size={16}
-//                                 className="text-red-600 cursor-pointer"
-//                               // onClick={() => onDeleteEventData(message?.remoteId)}
-//                               />
-//                               {/* {deleteActivityLoad ? (
-//                                             <Spinner size={20} color="red-500" />
-//                                         ) : (
-//                                         )}  */}
-//                               {/* <Button
-//                                             variant="twoTone" shape="circle" color="red-700" size="xs"
-//                                             icon={<HiOutlineTrash size={14} />}
-//                                             loading={deleteActivityLoad} className="-mt-1"
-//                                             onClick={() => onDeleteEventData(message?.remoteId)}
-//                                         /> */}
-//                             </div>
-//                           </div>
-//                         )}
-//                       </div>
-//                       <div className="flex flex-auto w-full justify-between">
-//                         <p>{message?.title}</p>
-//                         <div className="ltr:ml-2 rtl:mr-2">
-//                           {/* <span className="whitespace-nowrap">{formatDate(message?.receivedDate)}</span> */}
-//                         </div>
-//                       </div>
-
-//                     </div>
-//                   </div>
-//                 </div>
-//               ))}
-//             </>
-//           ) : (
-//             <div className="emptyPageBlock w-[65%]">
-//               <h5 className="inline-flex gap-3 items-center ">
-//                 <MdWarningAmber className="text-xl" />
-//                 No Data Available
-//               </h5>
-//             </div>
-//           )}
-//         </Loading>
-//       </ScrollBar>
-//     </>
-//   )
-// }
-// export default TaskNotes
-
-
-const TaskNotes = () => {
   return (
-    <>
-      <h3>Notes</h3>
-    </>
-  )
+    <button
+      css={swatchBaseStyles}
+      onClick={onSelect}
+      style={{ backgroundColor: swatchColorMap[color] }}
+    >
+      {/* {isSelected && <CheckIcon label="" size="medium" />} */}
+    </button>
+  );
 }
-export default TaskNotes
+
+const canvasStyles = css({
+  width: '100%',
+  height: '100%',
+  background: 'lightgray', // Ensure visibility with a distinct color
+});
+
+const dividerStyles = css({
+  width: 1,
+  height: token('space.400', '32px'),
+  background: token('color.border', '#091E4224'),
+  display: 'flex',
+});
+
+export default function TaskNotes() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    invariant(canvas);
+
+    const ctx = canvas.getContext('2d');
+    invariant(ctx);
+
+    // Log canvas dimensions for debugging
+    console.log(`Canvas dimensions: ${canvas.width}x${canvas.height}`);
+
+    // Draw an initial rectangle to check visibility
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(10, 10, 100, 100);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const { borderBoxSize } of entries) {
+        if (!borderBoxSize) {
+          return;
+        }
+
+        const [{ inlineSize, blockSize }] = borderBoxSize;
+
+        canvas.width = inlineSize;
+        canvas.height = blockSize;
+
+        // Adjust drawing context settings
+        Object.assign(ctx, {
+          strokeStyle: ctx.strokeStyle,
+          shadowColor: ctx.shadowColor,
+          lineCap: 'round',
+          lineJoin: 'round',
+          lineWidth: 2,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          shadowBlur: 2,
+        });
+      }
+    });
+
+    resizeObserver.observe(canvas);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    invariant(canvas);
+
+    const ctx = canvas.getContext('2d');
+    invariant(ctx);
+
+    let prevPoint: { x: number; y: number } | null = null;
+
+    return combine(
+      bind(canvas, {
+        type: 'pointerdown',
+        listener(event) {
+          const { clientX, clientY } = event;
+          const rect = canvas.getBoundingClientRect();
+
+          ctx.beginPath();
+          ctx.lineTo(clientX - rect.x, clientY - rect.y);
+          ctx.stroke();
+          ctx.closePath();
+
+          prevPoint = { x: clientX, y: clientY };
+        },
+      }),
+      draggable({
+        element: canvas,
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          disableNativeDragPreview({ nativeSetDragImage });
+        },
+        onDragStart() {
+          preventUnhandled.start();
+        },
+        onDrag({ location }) {
+          const { clientX, clientY } = location.current.input;
+          const rect = canvas.getBoundingClientRect();
+
+          invariant(prevPoint);
+          const { x, y } = prevPoint;
+
+          ctx.beginPath();
+          ctx.moveTo(x - rect.x, y - rect.y);
+          ctx.lineTo(clientX - rect.x, clientY - rect.y);
+          ctx.stroke();
+
+          prevPoint = { x: clientX, y: clientY };
+        },
+        onDrop() {
+          preventUnhandled.stop();
+          ctx.closePath();
+        },
+      }),
+    );
+  }, []);
+
+  const [selectedColor, setSelectedColor] = useState<SwatchColor>('red');
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    invariant(canvas);
+
+    const ctx = canvas.getContext('2d');
+    invariant(ctx);
+
+    // Set stroke and shadow colors
+    ctx.strokeStyle = swatchColorMap[selectedColor];
+    ctx.shadowColor = swatchColorMap[selectedColor];
+  }, [selectedColor]);
+
+  const clearCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    invariant(canvas);
+
+    const ctx = canvas.getContext('2d');
+    invariant(ctx);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }, []);
+
+  return (
+    <div css={containerStyles} className="m-4 overflow-x-auto">
+      <canvas
+        className='bg-gray-100 border-1'
+        ref={canvasRef}
+        css={canvasStyles}
+        width='900'
+        height="400"
+      />
+      <div css={sidebarStyles}>
+        <Inline space="space.100">
+          {(Object.keys(swatchColorMap) as SwatchColor[]).map((color) => (
+            <Swatch
+              key={color}
+              color={color}
+              isSelected={color === selectedColor}
+              onSelect={setSelectedColor}
+            />
+          ))}
+        </Inline>
+        <div css={dividerStyles} />
+        <Button variant="solid" onClick={clearCanvas} className='my-4'>
+          Reset
+        </Button>
+      </div>
+    </div>
+  );
+}
