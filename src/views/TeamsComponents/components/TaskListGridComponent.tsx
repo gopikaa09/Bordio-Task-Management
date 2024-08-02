@@ -1,101 +1,87 @@
-import { useEffect, useRef } from "react";
-import { Card } from "@/components/ui";
-import { Badge, Tooltip } from "@/components/ui";
-import { getInitials } from "@/utils/getInitials";
-import dayjs from "dayjs";
-import { FaRegCircle } from "react-icons/fa";
-import { LuCalendarCheck2, LuCalendarClock, LuCircleDashed } from "react-icons/lu";
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { TbAlarm } from "react-icons/tb";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { MdOutlineBarChart, MdOutlineViewModule } from "react-icons/md";
-import BadgeIcon from "@/components/common/BadgeIcon";
-import { PriorityEnum, TaskStatus } from "@/@types/tasks";
-import StatusUpdate from "../InlineEdits/StatusUpdate";
-import PriorityUpdate from "../InlineEdits/PriorityUpdate";
-import StartDateUpdate from "../InlineEdits/StartDateUpdate";
-import DueDateUpdate from "../InlineEdits/DueDateUpdate";
-import ModuleUpdate from "../InlineEdits/ModuleUpdate";
-import TimeEstimatesUpdate from "../InlineEdits/TimeEstimatesUpdate";
-import AssigneeUpdate from "../InlineEdits/AssigneUpdate";
-import { draggable, monitorForElements, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import invariant from "tiny-invariant";
+import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import TaskListGridItem from "./TaskListGridItem.";
 
-const TaskListGridComponent = ({ item: tasks }) => {
-  const ref = useRef<HTMLDivElement>(null);
+const TaskListGridComponent = ({ data: initialTasks }) => {
+  const tasksWithIndex = initialTasks.map((task, index) => ({ ...task, index }));
+  console.log('Initial tasks:', tasksWithIndex);
+
+  const [tasks, setTasks] = useState(tasksWithIndex);
+
+  const queryClient = useQueryClient();
+  const { mutateAsync: changeStatusMutation } = useMutation({
+    mutationKey: ['taskStatusUpdate'],
+    mutationFn: async (task) => {
+      const url = `http://localhost:4000/taskList/${task.id}`;
+      const response = await axios.put(url, task);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['tasklistQuery']);
+    }
+  });
+
+  const swapTaskIndices = (draggedTaskId, targetTaskId) => {
+    const draggedTaskIndex = tasks.findIndex(task => task.id === draggedTaskId);
+    const targetTaskIndex = tasks.findIndex(task => task.id === targetTaskId);
+
+    if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
+      const updatedTasks = [...tasks];
+      [updatedTasks[draggedTaskIndex], updatedTasks[targetTaskIndex]] =
+        [updatedTasks[targetTaskIndex], updatedTasks[draggedTaskIndex]];
+
+      updatedTasks[draggedTaskIndex].index = draggedTaskIndex;
+      updatedTasks[targetTaskIndex].index = targetTaskIndex;
+
+      setTasks(updatedTasks);
+      console.log('Tasks after swap:', updatedTasks);
+    }
+  };
 
   useEffect(() => {
-    const el = ref.current;
-    invariant(el);
-
-    // Setup draggable
-    const stopDraggable = draggable({
-      element: el,
-      getInitialData: () => ({ id: tasks.id, status: tasks.status }),
-      onDragStart: () => console.log('Dragging started for:', tasks.id),
-      onDrop: () => console.log('Dropped task:', tasks.id),
-    });
-
-    // Setup monitor for elements
     const stopMonitoring = monitorForElements({
-      element: el,
-      onElementDragStart: ({ id }) => console.log('Element drag started:', id),
-      onElementDrop: ({ id }) => console.log('Element dropped:', id),
-    });
+      onDrop: async ({ source, location }) => {
+        const destination = location.current.dropTargets[0];
+        if (!destination) return;
 
-    // Setup drop target for elements
-    const stopDropTarget = dropTargetForElements({
-      element: el,
-      onDragEnter: ({ id }) => console.log('Drag entered:', id),
-      onDragLeave: ({ id }) => console.log('Drag left:', id),
-      onDrop: ({ id }) => {
-        console.log('Element dropped on target:', id);
-        // Handle the drop logic here
+        const destinationStatus = destination.data.status;
+        const sourceTaskIndex = source.data.index;
+
+        const updatedTasks = tasks.map(task =>
+          task.index === sourceTaskIndex ? { ...task, status: destinationStatus } : task
+        );
+        setTasks(updatedTasks);
+
+        const updatedTask = updatedTasks.find(task => task.index === sourceTaskIndex);
+        if (updatedTask) {
+          try {
+            await changeStatusMutation(updatedTask);
+          } catch (error) {
+            console.error('Failed to update task status:', error);
+          }
+        }
       },
     });
 
-    return () => {
-      stopDraggable();
-      stopMonitoring();
-      stopDropTarget();
-    };
-  }, [tasks]);
+    const dropTargets = document.querySelectorAll('.drop-target');
+    dropTargets.forEach(target => {
+      dropTargetForElements({
+        element: target,
+        getData: () => ({ status: Number(target.getAttribute('data-status')) })
+      });
+    });
+
+    return () => stopMonitoring();
+  }, [tasks, changeStatusMutation]);
 
   return (
-    <Card
-      bodyClass="p-4"
-      className={`hover:shadow-lg rounded-lg dark:bg-gray-700 mb-4 leading-8`}
-      ref={ref}
-    >
-      <div className="flex justify-between mb-2">
-        <p className="font-semibold">{tasks?.title}</p>
-        <div className="bg-gray-400 px-3 py-2 rounded-full text-white text-xs font-semibold">
-          <Tooltip title={tasks?.assignes}>
-            <span>{getInitials(tasks?.assignes)}</span>
-          </Tooltip>
-        </div>
-      </div>
-      <div className="flex gap-2 flex-wrap">
-        <Tooltip title={'Status'}>
-          <StatusUpdate task={tasks} id={tasks?.id} taskStatus={tasks?.status} />
-        </Tooltip>
-        <Tooltip title={'Priority'}>
-          <PriorityUpdate task={tasks} id={tasks?.id} priorityStatus={tasks?.priority} />
-        </Tooltip>
-        <Tooltip title={'Start Date'}>
-          <StartDateUpdate task={tasks} id={tasks?.id} startDate={tasks?.startDate} />
-        </Tooltip>
-        <Tooltip title={'Due Date'}>
-          <DueDateUpdate task={tasks} id={tasks?.id} DueDate={tasks?.dueDate} />
-        </Tooltip>
-        <Tooltip title={'Module'}>
-          <ModuleUpdate task={tasks} id={tasks?.id} moduleStatus={tasks?.modules} />
-        </Tooltip>
-        <Tooltip title={'Estimated Time'}>
-          <TimeEstimatesUpdate task={tasks} id={tasks?.id} timeEstimates={tasks?.estimates} />
-        </Tooltip>
-      </div>
-    </Card>
+    <>
+      {tasks.map(task => (
+        <TaskListGridItem key={task.id} task={task} onTaskDrop={swapTaskIndices} />
+      ))}
+    </>
   );
 };
 

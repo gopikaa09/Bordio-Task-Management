@@ -1,128 +1,114 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import Table from '@/components/ui/Table/Table';
 import THead from '@/components/ui/Table/THead';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import Tr from '@/components/ui/Table/Tr';
 import Th from '@/components/ui/Table/Th';
 import TBody from '@/components/ui/Table/TBody';
 import Td from '@/components/ui/Table/Td';
-import invariant from 'tiny-invariant';
-import { draggable, monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
+import { StrictModeDroppable } from '@/components/shared';
 
 const IndexTableView = ({ data, query, columns, loading }: any) => {
-  const [sort, setSort] = useState<{ order: '' | 'asc' | 'desc'; key: string | number }>({ order: '', key: '' });
   const [rowsData, setRowsData] = useState(data);
+  const [rowSelection, setRowSelection] = useState({})
 
-  useEffect(() => {
-    setRowsData(data);
-  }, [data]);
+  const queryClient = useQueryClient();
 
-  const sortedData = useMemo(() => {
-    if (sort.order === 'asc') {
-      return [...rowsData].sort((a, b) => {
-        const aValue = String(a[sort.key]).toLowerCase();
-        const bValue = String(b[sort.key]).toLowerCase();
-        return aValue.localeCompare(bValue);
-      });
-    } else if (sort.order === 'desc') {
-      return [...rowsData].sort((a, b) => {
-        const aValue = String(a[sort.key]).toLowerCase();
-        const bValue = String(b[sort.key]).toLowerCase();
-        return bValue.localeCompare(aValue);
-      });
-    } else {
-      return rowsData;
-    }
-  }, [sort, rowsData]);
+  const updateTaskOrderMutation = useMutation({
+    mutationFn: async (updatedTasks) => {
+      const response = await axios.put('http://localhost:4000/taskList', updatedTasks);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['tasklistQuery']);
+    },
+  });
 
   const reorderData = (startIndex: number, endIndex: number) => {
     const newData = [...rowsData];
     const [movedRow] = newData.splice(startIndex, 1);
     newData.splice(endIndex, 0, movedRow);
     setRowsData(newData);
-  };
-
-  const handleSort = ({ order, key }: OnSortParam) => {
-    setSort({ order, key });
+    return newData; // Return the new order
   };
 
   const table = useReactTable({
-    data: sortedData,
+    data: rowsData,
     columns,
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
-  useEffect(() => {
-    const elements = document.querySelectorAll('[data-drag]');
+  const handleDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+    if (!destination) return;
 
-    elements.forEach((el, index) => {
-      invariant(el);
+    const newData = reorderData(source.index, destination.index);
 
-      const stopDraggable = draggable({
-        element: el,
-        getInitialData: () => ({ index }),
-        onDragStart: (e) => console.log('Dragging started for:', index),
-        onDrop: (e) => {
-          const startIndex = e.dataTransfer.getData('text/plain');
-          console.log('Dropped:', index);
-
-
-          reorderData(parseInt(startIndex, 10), index);
-        },
-      });
-
-      const stopMonitoring = monitorForElements({
-        onDrop: async ({ source, location }) => {
-          const destination = location.current.dropTargets[0]
-          if (!destination) {
-            console.log("No destination Available")
-            return;
-          }
-          const destinationIndex = destination.data.index
-          const sourceTaskId = source.data.id;
-
-        }
-      })
-
-      return () => stopDraggable();
-    });
-  }, [rowsData]);
+    // Update server with new order
+    updateTaskOrderMutation.mutate(newData);
+  };
 
   return (
-    <Table>
-      <THead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <Tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <Th key={header.id} colSpan={header.colSpan}>
-                {flexRender(header.column.columnDef.header, header.getContext())}
-              </Th>
-            ))}
-          </Tr>
-        ))}
-      </THead>
-      <TBody>
-        {table.getRowModel().rows.map((row, rowIndex) => (
-          <Tr
-            key={row.id}
-            data-drag
-            draggable
-            onDragStart={(e) => e.dataTransfer.setData('text/plain', rowIndex.toString())}
-            onDrop={(e) => {
-              e.preventDefault();
-              handleDrop(e, rowIndex);
-            }}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            {row.getVisibleCells().map((cell) => (
-              <Td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Td>
-            ))}
-          </Tr>
-        ))}
-      </TBody>
-    </Table>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Table className="w-full">
+        <THead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <Th key={header.id} colSpan={header.colSpan}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </Th>
+                );
+              })}
+            </Tr>
+          ))}
+        </THead>
+        <StrictModeDroppable droppableId="table-body">
+          {(provided) => (
+            <TBody ref={provided.innerRef} {...provided.droppableProps}>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <Draggable key={row.id} draggableId={row.id} index={row.index}>
+                    {(provided, snapshot) => {
+                      const { style } = provided.draggableProps;
+                      return (
+                        <Tr
+                          ref={provided.innerRef}
+                          className={snapshot.isDragging ? 'table' : ''}
+                          style={style}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          {row.getVisibleCells().map((cell) => {
+                            return (
+                              <Td key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </Td>
+                            );
+                          })}
+                        </Tr>
+                      );
+                    }}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </TBody>
+          )}
+        </StrictModeDroppable>
+      </Table>
+    </DragDropContext>
   );
 };
 

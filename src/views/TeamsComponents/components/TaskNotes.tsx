@@ -41,6 +41,7 @@ const sidebarStyles = css({
   transform: 'translateX(-50%)',
   boxSizing: 'border-box',
   width: 'max-content',
+  zIndex: 10, // Ensure the sidebar is on top
 });
 
 const swatchBaseStyles = css({
@@ -56,42 +57,12 @@ const swatchBaseStyles = css({
   justifyContent: 'center',
 });
 
-const swatchColorMap = {
-  red: token('color.background.accent.red.subtle', '#F87462'),
-  orange: token('color.background.accent.orange.subtle', '#FAA53D'),
-  yellow: token('color.background.accent.yellow.subtle', '#E2B203'),
-  green: token('color.background.accent.green.subtle', '#4BCE97'),
-  teal: token('color.background.accent.teal.subtle', '#60C6D2'),
-  blue: token('color.background.accent.blue.subtle', '#579DFF'),
-  purple: token('color.background.accent.purple.subtle', '#9F8FEF'),
-  magenta: token('color.background.accent.magenta.subtle', '#E774BB'),
-};
-
-type SwatchColor = keyof typeof swatchColorMap;
-
-function Swatch({
-  color,
-  isSelected = false,
-  onSelect: onSelectProp,
-}: {
-  color: SwatchColor;
-  isSelected?: boolean;
-  onSelect: (color: SwatchColor) => void;
-}) {
-  const onSelect = useCallback(() => {
-    onSelectProp(color);
-  }, [color, onSelectProp]);
-
-  return (
-    <button
-      css={swatchBaseStyles}
-      onClick={onSelect}
-      style={{ backgroundColor: swatchColorMap[color] }}
-    >
-      {/* {isSelected && <CheckIcon label="" size="medium" />} */}
-    </button>
-  );
-}
+const Colors = [
+  { name: 'red', color: 'red' },
+  { name: 'green', color: 'green' },
+  { name: 'black', color: 'black' },
+  { name: 'blue', color: 'blue' },
+];
 
 const canvasStyles = css({
   width: '100%',
@@ -108,6 +79,7 @@ const dividerStyles = css({
 
 export default function TaskNotes() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedColor, setSelectedColor] = useState('red');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -171,11 +143,9 @@ export default function TaskNotes() {
           const { clientX, clientY } = event;
           const rect = canvas.getBoundingClientRect();
 
+          ctx.strokeStyle = selectedColor; // Use selected color
           ctx.beginPath();
-          ctx.lineTo(clientX - rect.x, clientY - rect.y);
-          ctx.stroke();
-          ctx.closePath();
-
+          ctx.moveTo(clientX - rect.x, clientY - rect.y);
           prevPoint = { x: clientX, y: clientY };
         },
       }),
@@ -207,21 +177,7 @@ export default function TaskNotes() {
         },
       }),
     );
-  }, []);
-
-  const [selectedColor, setSelectedColor] = useState<SwatchColor>('red');
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    invariant(canvas);
-
-    const ctx = canvas.getContext('2d');
-    invariant(ctx);
-
-    // Set stroke and shadow colors
-    ctx.strokeStyle = swatchColorMap[selectedColor];
-    ctx.shadowColor = swatchColorMap[selectedColor];
-  }, [selectedColor]);
+  }, [selectedColor]); // Ensure color is used in drawing
 
   const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -242,18 +198,18 @@ export default function TaskNotes() {
         width='900'
         height="400"
       />
-      <div css={sidebarStyles}>
-        <Inline space="space.100">
-          {(Object.keys(swatchColorMap) as SwatchColor[]).map((color) => (
-            <Swatch
-              key={color}
-              color={color}
-              isSelected={color === selectedColor}
-              onSelect={setSelectedColor}
+
+      <div className='flex gap-2 items-center justify-center'>
+        {
+          Colors.map((value) => (
+            <div
+              key={value.name}
+              className={`bg-${value.color}-700 rounded-3xl w-8 h-8`}
+              onClick={() => setSelectedColor(value.color)}
             />
-          ))}
-        </Inline>
-        <div css={dividerStyles} />
+          ))
+        }
+        <div />
         <Button variant="solid" onClick={clearCanvas} className='my-4'>
           Reset
         </Button>

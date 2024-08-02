@@ -12,7 +12,8 @@
       "dueDate": "2024-07-23T18:30:00.000Z",
       "estimates": 1,
       "attachements": "",
-      "startDate": "2024-06-30T18:30:00.000Z"
+      "startDate": "2024-06-30T18:30:00.000Z",
+      "index": 0
     },
     {
       "id": "fbc1",

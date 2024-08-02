@@ -43,7 +43,7 @@ const TaskBoardItem = ({ task }: { task: Task }) => {
             </Tooltip>
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap bg-gre">
           <Tooltip title={'Status'}>
             <StatusUpdate task={task} id={task.id} taskStatus={task.status} />
           </Tooltip>
@@ -66,3 +66,25 @@ const TaskBoardItem = ({ task }: { task: Task }) => {
 };
 
 export default TaskBoardItem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
