@@ -52,10 +52,8 @@ type IndexPageProps = {
     initialState?: IndexPageState
     addBtnUrl?: string
     name?: string
-
     noDataMainTitle?: string
     noDataSubTitle?: string
-
     isSelectable?: boolean
     handleSelected?: any
     queryFn: Array<any>
@@ -120,7 +118,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
         title,
         loading,
         initialState = indexInitialState,
-        gridItemComponent: GridItem,
+        gridItemComponent: GridView,
         listItemComponent: ListItem,
         boardViewComponent: BoardView,
         tableViewComponent: TableView,
@@ -263,7 +261,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
     }, [queryFn])
 
     const viewOptions: ViewOptions[] = []
-    if (GridItem)
+    if (GridView)
         viewOptions.push({
             value: 'grid',
             label: 'Grid',
@@ -488,14 +486,14 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                             />
                                         )}
                                         {view == 'grid' && (
-                                            <IndexGridView
+                                            <GridView
                                                 data={queryFn}
                                                 query={queryParams}
                                                 setQuery={setQuery}
-                                                item={GridItem}
-                                                grid={grid}
-                                                gap={gap}
-                                                isSelectable={isSelectable}
+                                            // item={GridItem}
+                                            // grid={grid}
+                                            // gap={gap}
+                                            // isSelectable={isSelectable}
                                             />
                                         )}
                                         {view == 'list' && ListItem && (
