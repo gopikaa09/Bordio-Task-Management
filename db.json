@@ -4,7 +4,6 @@
       "id": "dcad",
       "title": "Task23",
       "description": "asdas",
-      "status": 20,
       "assignes": "Sowmya",
       "priority": 2,
       "lables": 30,
@@ -13,7 +12,8 @@
       "estimates": 1,
       "attachements": "",
       "startDate": "2024-06-30T18:30:00.000Z",
-      "index": 0
+      "index": 0,
+      "status": 0
     },
     {
       "id": "fbc1",
@@ -358,6 +358,16 @@
     {
       "id": "f930",
       "name": "CRM"
+    }
+  ],
+  "headers": [
+    {
+      "id": "0e38",
+      "name": "title"
+    },
+    {
+      "id": "d2b7",
+      "name": "Status"
     }
   ]
 }

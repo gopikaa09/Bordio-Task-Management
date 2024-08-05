@@ -3,6 +3,7 @@ import auth, { AuthState } from './slices/auth'
 import base, { BaseState } from './slices/base'
 import locale, { LocaleState } from './slices/locale/localeSlice'
 import theme, { ThemeState } from './slices/theme/themeSlice'
+import boardStatus from './slices/boardStatusSlice'
 import RtkQueryService from '@/services/RtkQueryService'
 
 export type RootState = CombinedState<{
@@ -10,6 +11,7 @@ export type RootState = CombinedState<{
     base: CombinedState<BaseState>
     locale: LocaleState
     theme: ThemeState
+    boardStatus: any,
     /* eslint-disable @typescript-eslint/no-explicit-any */
     [RtkQueryService.reducerPath]: any
 }>
@@ -23,17 +25,18 @@ const staticReducers = {
     base,
     locale,
     theme,
+    boardStatus,
     [RtkQueryService.reducerPath]: RtkQueryService.reducer,
 }
 
 const rootReducer =
     (asyncReducers?: AsyncReducers) =>
-    (state: RootState, action: AnyAction) => {
-        const combinedReducer = combineReducers({
-            ...staticReducers,
-            ...asyncReducers,
-        })
-        return combinedReducer(state, action)
-    }
+        (state: RootState, action: AnyAction) => {
+            const combinedReducer = combineReducers({
+                ...staticReducers,
+                ...asyncReducers,
+            })
+            return combinedReducer(state, action)
+        }
 
 export default rootReducer

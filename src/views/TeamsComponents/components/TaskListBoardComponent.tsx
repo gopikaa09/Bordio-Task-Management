@@ -1,4 +1,4 @@
-import { Task } from "@/@types/tasks";
+import { Task, TaskStatus } from "@/@types/tasks";
 import { groupBy } from "lodash";
 import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
@@ -10,6 +10,7 @@ import invariant from "tiny-invariant";
 import { Button, Drawer } from "@/components/ui";
 import { HiOutlinePlus } from "react-icons/hi";
 import AddTask from "./AddTask";
+import { useAppSelector } from "@/store";
 
 const itemStyles = css({
   position: 'relative',
@@ -23,10 +24,10 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const statuses = [
-    { name: 'New Task', value: 10, position: 1 },
-    { name: 'Scheduled', value: 20, position: 2 },
-    { name: 'In Progress', value: 30, position: 3 },
-    { name: 'Completed', value: 40, position: 4 },
+    { name: 'New Task', value: 10 },
+    { name: 'Scheduled', value: 20 },
+    { name: 'In Progress', value: 30 },
+    { name: 'Completed', value: 40 },
   ];
 
   const queryClient = useQueryClient();
@@ -107,7 +108,12 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
     });
     columnRefs.current[statusValue] = el;
   };
+  const status1 = useAppSelector((store => store.boardStatus.data.status1))
+  const status2 = useAppSelector((store => store.boardStatus.data.status2))
+  const status3 = useAppSelector((store => store.boardStatus.data.status3))
+  const status4 = useAppSelector((store => store.boardStatus.data.status4))
 
+  const orderArray = [status1, status2, status3, status4]
   const ordered = groupBy(tasks, task => task.status);
   const handleAddTaskDrawerOpen = (status) => {
     setIsOpen(true)
@@ -115,6 +121,7 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
 
   const openAddTaskDrawer = () => {
     setIsOpen(true)
+
   }
   const onDrawerClose = () => {
     setIsOpen(false)
@@ -123,7 +130,7 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
   return (
     <>
       <div className="flex overflow-x-auto overflow-y-auto" data-position={statuses}>
-        {statuses.map((status) => (
+        {orderArray.map((status) => (
           <div
             key={status.value}
             className='p-2 drop-target'
@@ -131,11 +138,11 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
             ref={el => setColumnRef(el, status.value)}
           >
             <div className="flex justify-between mx-4">
-              <h6 className="pb-4 break-word">{status.name}</h6>
+              <h6 className="pb-4 break-word">{TaskStatus[status]}</h6>
               <Button icon={<HiOutlinePlus />} size="xs" onClick={() => handleAddTaskDrawerOpen(status?.value)}></Button>
             </div>
             <div className='p-2 dark:bg-slate-700 w-96' style={{ height: 'calc(100% - 50px)' }}>
-              {ordered[status.value]?.map((task: Task) => (
+              {ordered[status]?.map((task: Task) => (
                 <div
                   className="mb-3"
                   key={task.id}

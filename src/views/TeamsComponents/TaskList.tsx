@@ -12,6 +12,8 @@ import { HiOutlinePlusCircle } from 'react-icons/hi';
 import { LabelsEnum, PriorityEnum, TaskStatus } from '@/@types/tasks';
 import dayjs from 'dayjs';
 import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useAppDispatch } from '@/store';
+import { newUpdatedStatus, updateStatus1, updateStatus2, updateStatus3, updateStatus4 } from '@/store/slices/boardStatusSlice';
 
 type Tasks = {
   title: string;
@@ -96,6 +98,7 @@ const TaskList = () => {
     ],
     []
   );
+  const dispatch = useAppDispatch()
 
   const openAddTaskDrawer = () => setIsOpen(true);
   const onDrawerClose = () => setIsOpen(false);
@@ -115,25 +118,16 @@ const TaskList = () => {
       onDrop: ({ source, location }) => {
         const destination = location.current.dropTargets[0];
         if (!destination) return;
-
-        const destinationPosition = destination.data.position;
+        console.log(destination.data.status);
+        const destinationPosition = destination.data.status;
         const sourcePosition = source.data.position;
 
         if (destinationPosition === undefined || sourcePosition === undefined) return;
-
         // Update local state
-        setColumns(prevColumns => {
-          const sourceColumnIndex = prevColumns.findIndex(col => col.position === sourcePosition);
-          const destinationColumnIndex = prevColumns.findIndex(col => col.position === destinationPosition);
-          const updatedColumns = [...prevColumns];
-
-          // Swap columns
-          const [movedColumn] = updatedColumns.splice(sourceColumnIndex, 1);
-          updatedColumns.splice(destinationColumnIndex, 0, movedColumn);
-
-          // Update positions to reflect new order
-          return updatedColumns.map((column, index) => ({ ...column, position: index + 1 }));
-        });
+        dispatch(newUpdatedStatus([20, 10, 30, 40]));
+        // dispatch(updateStatus2(10));
+        // dispatch(updateStatus3(40));
+        // dispatch(updateStatus4(30));
       },
     });
 

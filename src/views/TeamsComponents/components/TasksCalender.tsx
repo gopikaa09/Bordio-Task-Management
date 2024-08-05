@@ -1,34 +1,37 @@
-import { useEffect } from 'react'
-import CalendarView from '@/components/shared/CalendarView'
-import Container from '@/components/shared/Container'
-// import EventDialog, { EventParam } from './components/EventDialog'
 
-import { injectReducer } from '@/store'
-import cloneDeep from 'lodash/cloneDeep'
-import dayjs from 'dayjs'
-import type {
-  EventDropArg,
-  EventClickArg,
-  DateSelectArg,
-} from '@fullcalendar/core'
+import Table from '@/components/custom/DraggableTable'
+import { CalendarView, Container } from '@/components/shared';
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
 // injectReducer('crmCalendar', reducer)
 
 const Calendar = () => {
 
+  const TaskListUrl = 'http://localhost:4000/taskList';
+
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ['tasklist'],
+    queryFn: async () => {
+      const response = await axios.get(TaskListUrl);
+      return response.data;
+    }
+  });
+
 
   return (
-    <Container className="h-full m-12">
-      <CalendarView
-        editable
-        selectable
-      // events={events}
-      // eventClick={onEventClick}
-      // select={onCellSelect}
-      // eventDrop={onEventChange}
-      />
-      {/* <EventDialog submit={onSubmit} /> */}
-    </Container>
+    <Table data={data} />
+    // <Container className="h-full m-12">
+    //   <CalendarView
+    //     editable
+    //     selectable
+    //   // events={events}
+    //   // eventClick={onEventClick}
+    //   // select={onCellSelect}
+    //   // eventDrop={onEventChange}
+    //   />
+    //   {/* <EventDialog submit={onSubmit} /> */}
+    // </Container>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Table from '@/components/ui/Table/Table';
 import THead from '@/components/ui/Table/THead';
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
@@ -10,11 +10,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import { StrictModeDroppable } from '@/components/shared';
+import { Button } from '@/components/ui';
+import invariant from 'tiny-invariant';
+import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 const IndexTableView = ({ data, query, columns, loading }: any) => {
   const [rowsData, setRowsData] = useState(data);
-  const [rowSelection, setRowSelection] = useState({})
-
+  const [rowSelection, setRowSelection] = useState({});
+  const [tableColumns, setTableColumns] = useState(columns);
+  const ref = useRef()
   const queryClient = useQueryClient();
 
   const updateTaskOrderMutation = useMutation({
@@ -37,7 +41,7 @@ const IndexTableView = ({ data, query, columns, loading }: any) => {
 
   const table = useReactTable({
     data: rowsData,
-    columns,
+    columns: tableColumns,
     state: {
       rowSelection,
     },
@@ -58,27 +62,53 @@ const IndexTableView = ({ data, query, columns, loading }: any) => {
     updateTaskOrderMutation.mutate(newData);
   };
 
+  const handleAddColumn = () => {
+    const header = prompt("Column Name")
+    const newColumn = {
+      header: header,
+      accessorKey: `newColumn${tableColumns.length}`,
+      cell: () => 'New Data',
+    };
+
+    setTableColumns((prevColumns) => [...prevColumns, newColumn]);
+  };
+
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el);
+
+    const stopDraggable = draggable({
+      element: el,
+      getInitialData: () => ({}),
+      onDragStart: () => console.log('Dragging started for:'),
+      onDrop: () => console.log('Dropped task:'),
+    });
+
+    return () => stopDraggable();
+  }, []);
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Table className="w-full">
-        <THead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Th key={header.id} colSpan={header.colSpan}>
+        <div >
+          <THead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id} >
+                {headerGroup.headers.map((header) => (
+                  <Th key={header.id} colSpan={header.colSpan} ref={ref}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Th>
-                );
-              })}
-            </Tr>
-          ))}
-        </THead>
-        <StrictModeDroppable droppableId="table-body">
-          {(provided) => (
-            <TBody ref={provided.innerRef} {...provided.droppableProps}>
-              {table.getRowModel().rows.map((row) => {
-                return (
+                ))}
+                <Th>
+                  <Button onClick={handleAddColumn}>Add Column</Button>
+                </Th>
+              </Tr>
+            ))}
+          </THead>
+          <StrictModeDroppable droppableId="table-body">
+            {(provided) => (
+              <TBody ref={provided.innerRef} {...provided.droppableProps}>
+                {table.getRowModel().rows.map((row) => (
                   <Draggable key={row.id} draggableId={row.id} index={row.index}>
                     {(provided, snapshot) => {
                       const { style } = provided.draggableProps;
@@ -90,25 +120,25 @@ const IndexTableView = ({ data, query, columns, loading }: any) => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          {row.getVisibleCells().map((cell) => {
-                            return (
-                              <Td key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </Td>
-                            );
-                          })}
+                          {row.getVisibleCells().map((cell) => (
+                            <Td key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </Td>
+                          ))}
                         </Tr>
                       );
                     }}
                   </Draggable>
-                );
-              })}
-              {provided.placeholder}
-            </TBody>
-          )}
-        </StrictModeDroppable>
+                ))}
+                {provided.placeholder}
+              </TBody>
+            )}
+          </StrictModeDroppable>
+        </div>
+
+
       </Table>
-    </DragDropContext>
+    </DragDropContext >
   );
 };
 
