@@ -20,18 +20,18 @@ const Calendar = () => {
 
 
   return (
-    <Table data={data} />
-    // <Container className="h-full m-12">
-    //   <CalendarView
-    //     editable
-    //     selectable
-    //   // events={events}
-    //   // eventClick={onEventClick}
-    //   // select={onCellSelect}
-    //   // eventDrop={onEventChange}
-    //   />
-    //   {/* <EventDialog submit={onSubmit} /> */}
-    // </Container>
+    // <Table />
+    <Container className="h-full m-12">
+      <CalendarView
+        editable
+        selectable
+      // events={events}
+      // eventClick={onEventClick}
+      // select={onCellSelect}
+      // eventDrop={onEventChange}
+      />
+      {/* <EventDialog submit={onSubmit} /> */}
+    </Container>
   )
 }
 

@@ -31,8 +31,8 @@ import TaskNotes from './TaskNotes'
 import TaskPeople from './TaskPeoples'
 import ListExample from './TasksCalender'
 import DrawingExample from './TaskNotes'
-import Table from './TasksCalender'
 import Calendar from './TasksCalender'
+import Table from '@/components/custom/DraggableTable'
 
 
 type ToggleButtonProps = {
@@ -153,7 +153,7 @@ const ToolbarList = () => {
                 selectedCategory?.value === 'tasks' && <TaskList />
               }
               {
-                selectedCategory?.value === 'calender' && <Calendar />
+                selectedCategory?.value === 'calender' && <Table />
 
               }
               {
