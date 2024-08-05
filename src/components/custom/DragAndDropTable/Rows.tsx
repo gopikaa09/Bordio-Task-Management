@@ -1,15 +1,12 @@
 import { useEffect, useRef } from "react";
-import Th from "../ui/Table/Th";
-import THead from "../ui/Table/THead";
-import Tr from "../ui/Table/Tr";
+import { draggable, monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import Td from "@/components/ui/Table/Td";
+import Th from "@/components/ui/Table/Th";
 
-
-
-const Table = () => {
-  // console.log(data);
+const Rows = () => {
   const ref = useRef()
+
 
   useEffect(() => {
     const el = ref.current;
@@ -20,24 +17,17 @@ const Table = () => {
       // getInitialData: () => ({ id: task.id, status: task.status }),
       onDragStart: () => console.log('Dragging started for:'),
       onDrop: () => console.log('Dropped task:'),
+
     });
 
+
     return () => stopDraggable();
+
   }, []);
   return (
-    <>
-      {/* <Table>
-        <THead>
-          <Tr>
-            <Th ref={ref}>Title</Th>
-            <Th>Title</Th>
-            <Th>Title</Th>
-          </Tr>
-        </THead>
-
-      </Table> */}
-    </>
+    <Th ref={ref}>
+      <p>text</p>
+    </Th>
   )
 }
-
-export default Table
+export default Rows

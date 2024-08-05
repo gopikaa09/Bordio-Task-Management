@@ -32,7 +32,8 @@ import TaskPeople from './TaskPeoples'
 import ListExample from './TasksCalender'
 import DrawingExample from './TaskNotes'
 import Calendar from './TasksCalender'
-import Table from '@/components/custom/DraggableTable'
+import DraggableTable from '@/components/custom/DragAndDropTable/DraggableTable'
+// import Table from '@/components/custom/DraggableTable'
 
 
 type ToggleButtonProps = {
@@ -86,7 +87,6 @@ const ToolbarList = () => {
   const dispatch = useAppDispatch()
   const { category } = useParams();
   console.log(category)
-  const [folder, setFolder] = useState('INBOX')
 
   const sideBarExpand = useAppSelector(
     (state) => state.toolBar.data.sideBarExpand
@@ -153,11 +153,11 @@ const ToolbarList = () => {
                 selectedCategory?.value === 'tasks' && <TaskList />
               }
               {
-                selectedCategory?.value === 'calender' && <Table />
+                selectedCategory?.value === 'calender' && <Calendar />
 
               }
               {
-                selectedCategory?.value === 'notes' && <Table />
+                selectedCategory?.value === 'notes' && <DraggableTable />
               }
               {
                 selectedCategory?.value === 'people' && <TaskPeople />

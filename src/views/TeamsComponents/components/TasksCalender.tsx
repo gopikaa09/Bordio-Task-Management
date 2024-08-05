@@ -1,5 +1,5 @@
 
-import Table from '@/components/custom/DraggableTable'
+import Table from '@/components/custom/DragAndDropTable/DraggableTable'
 import { CalendarView, Container } from '@/components/shared';
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
