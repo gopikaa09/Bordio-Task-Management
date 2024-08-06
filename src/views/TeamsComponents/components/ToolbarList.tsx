@@ -31,6 +31,7 @@ import TaskNotes from './TaskNotes'
 import TaskPeople from './TaskPeoples'
 import ListExample from './TasksCalender'
 import DrawingExample from './TaskNotes'
+import TaskSettings from './TaskSettings'
 
 
 type ToggleButtonProps = {
@@ -159,6 +160,9 @@ const ToolbarList = () => {
               }
               {
                 selectedCategory?.value === 'people' && <TaskPeople />
+              }
+              {
+                selectedCategory?.value === 'setting' && <TaskSettings />
               }
             </>
           ) : (
