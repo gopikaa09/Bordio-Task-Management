@@ -27,7 +27,19 @@ const TaskSettings = () => {
     const newColumns = [...columns];
     const [draggedColumn] = newColumns.splice(draggedColIndex, 1);
     newColumns.splice(index, 0, draggedColumn);
+
+    // Rearrange rows according to the new column order
+    const newRows = rows.map(row => {
+      const reorderedRow = [];
+      for (let i = 0; i < newColumns.length; i++) {
+        const colIndex = columns.indexOf(newColumns[i]);
+        reorderedRow.push(row[colIndex]);
+      }
+      return reorderedRow;
+    });
+
     setColumns(newColumns);
+    setRows(newRows);
     setDraggedColIndex(null);
   };
 
