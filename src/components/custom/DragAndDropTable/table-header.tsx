@@ -3,11 +3,20 @@ import { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import { css, jsx, SerializedStyles } from '@emotion/react'
 import ReactDOM from 'react-dom'
 import invariant from 'tiny-invariant'
-import { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types'
-import { draggable, dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/dist/types/adapter/element-adapter'
-import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/closest-edge'
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/dist/types/public-utils/element/disable-native-drag-preview'
 
+
+import { Box, Stack, xcss } from '@atlaskit/primitives'
+import { token } from '@atlaskit/tokens'
+
+// import { ColumnMenuButton } from './menu-button'
+import { Item } from './type'
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-indicator/box';
+import { TableContext } from './table-context'
+import { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types'
+import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
+// import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/dist/'
+import { getProperty } from './render-pieces'
 
 type HeaderState =
   | {
@@ -68,10 +77,10 @@ function clamp({
   return Math.max(min, Math.min(value, max))
 }
 
-// const headerDraggingStyles = css({
-//   background: token('color.background.disabled', '#091E4224'),
-//   color: token('color.text.disabled', '#091E424F')
-// })
+const headerDraggingStyles = css({
+  background: token('color.background.disabled', '#091E4224'),
+  color: token('color.text.disabled', '#091E424F')
+})
 
 type ColumnType =
   | 'first-of-many'
@@ -80,6 +89,7 @@ type ColumnType =
   | 'only-column'
 
 const resizerStyles = css({
+  '--local-hitbox-width': token('space.300', '24px'),
   width: 'var(--local-hitbox-width)',
   cursor: 'col-resize',
   flexGrow: '0',
@@ -91,8 +101,10 @@ const resizerStyles = css({
 
   '::before': {
     opacity: 0,
+    '--local-line-width': token('border.width', '2px'),
     content: '""',
     position: 'absolute',
+    background: token('color.border.brand', '#0052CC'),
     // Jesse would like us to use 'color.border' for hover, then brand while resizing
     // However,
     // - right now that is inconsistent with our sidebar
@@ -156,6 +168,7 @@ const dropTargetStyles: {
 }
 
 const thStyles = css({
+  borderBottom: `2px solid ${token('color.border', 'red')}`,
   // Need position:relative so our drop indicator (which uses position:absolute) can be
   // correctly positioned inside
   position: 'relative',
@@ -190,7 +203,7 @@ export function TableHeader({
   index,
   amountOfHeaders
 }: {
-  property: number
+  property: keyof Item
   index: number
   amountOfHeaders: number
 }) {
@@ -201,14 +214,14 @@ export function TableHeader({
   const [state, setState] = useState<HeaderState>(idleState)
   const columnType: ColumnType = getColumnType({ index, amountOfHeaders })
 
-  // const { instanceId } = useContext(TableContext)
-
+  const { instanceId } = useContext(TableContext)
+  const minColumnWidth = 1000
   // detect whether we should show a full height drop target
   useEffect(() => {
     return monitorForElements({
       canMonitor({ source }) {
         return (
-          // source.data.instanceId === instanceId &&
+          source.data.instanceId === instanceId &&
           source.data.type === 'table-header' &&
           source.data.property !== property
         )
@@ -226,7 +239,7 @@ export function TableHeader({
         setState(idleState)
       }
     })
-  }, [property])
+  }, [instanceId, property])
 
   // Creating a drop target to power reordering the column headers
   // We are dynamically creating the drop targets after the drag starts
@@ -251,7 +264,7 @@ export function TableHeader({
       },
       canDrop({ source }) {
         return (
-          // source.data.instanceId === instanceId &&
+          source.data.instanceId === instanceId &&
           source.data.type === 'table-header' &&
           source.data.property !== property
         )
@@ -288,7 +301,7 @@ export function TableHeader({
         setState(idleState)
       }
     })
-  }, [state.type, property, index])
+  }, [state.type, property, index, instanceId])
 
   // Setting up the draggable header
   useEffect(() => {
@@ -296,7 +309,7 @@ export function TableHeader({
     invariant(el)
 
     const dragHandle = dragHandleRef.current
-    invariant(dragHandle)
+    // invariant(dragHandle)
 
     return draggable({
       element: el,
@@ -304,23 +317,23 @@ export function TableHeader({
       getInitialData() {
         return { type: 'table-header', property, index, instanceId }
       },
-      // onGenerateDragPreview({ nativeSetDragImage }) {
-      //   setCustomNativeDragPreview({
-      //     getOffset: offsetFromPointer({
-      //       x: '18px',
-      //       y: '18px'
-      //     }),
-      //     render: ({ container }) => {
-      //       // Cause a `react` re-render to create your portal synchronously
-      //       setState({ type: 'preview', container })
-      //       // In our cleanup function: cause a `react` re-render to create remove your portal
-      //       // Note: you can also remove the portal in `onDragStart`,
-      //       // which is when the cleanup function is called
-      //       return () => setState(draggingState)
-      //     },
-      //     nativeSetDragImage
-      //   })
-      // },
+      onGenerateDragPreview({ nativeSetDragImage }) {
+        setCustomNativeDragPreview({
+          getOffset: offsetFromPointer({
+            x: '18px',
+            y: '18px'
+          }),
+          render: ({ container }) => {
+            // Cause a `react` re-render to create your portal synchronously
+            setState({ type: 'preview', container })
+            // In our cleanup function: cause a `react` re-render to create remove your portal
+            // Note: you can also remove the portal in `onDragStart`,
+            // which is when the cleanup function is called
+            return () => setState(draggingState)
+          },
+          nativeSetDragImage
+        })
+      },
       onDragStart() {
         setState(draggingState)
       },
@@ -328,7 +341,7 @@ export function TableHeader({
         setState(idleState)
       }
     })
-  }, [property, index])
+  }, [property, index, instanceId])
 
   const renderResizeHandle: boolean =
     (state.type === 'idle' || state.type === 'resizing') &&
@@ -354,8 +367,8 @@ export function TableHeader({
         return { type: 'column-resize', property, index, instanceId }
       },
       onGenerateDragPreview({ nativeSetDragImage }) {
-        disableNativeDragPreview({ nativeSetDragImage })
-        cancelUnhandled.start()
+        // disableNativeDragPreview({ nativeSetDragImage })
+        // cancelUnhandled.start()
 
         const initialWidth = header.getBoundingClientRect().width
 
@@ -408,7 +421,7 @@ export function TableHeader({
         )
       },
       onDrop() {
-        cancelUnhandled.stop()
+        // cancelUnhandled.stop()
         setState(idleState)
       }
     })
@@ -426,12 +439,12 @@ export function TableHeader({
         ]}
       >
         {label}
-
+        {/* 
         <ColumnMenuButton
           ref={dragHandleRef}
           columnIndex={index}
           amountOfHeaders={amountOfHeaders}
-        />
+        /> */}
 
         {/* Resizer */}
         {renderResizeHandle ? (
@@ -495,3 +508,11 @@ function ColumnPreview({ property }: { property: keyof Item }) {
     </Box>
   )
 }
+
+function setCustomNativeDragPreview(arg0: { getOffset: any; render: ({ container }: { container: any }) => () => void; nativeSetDragImage: ((image: Element, x: number, y: number) => void) | null }) {
+  throw new Error('Function not implemented.')
+}
+function offsetFromPointer(arg0: { x: string; y: string }): any {
+  throw new Error('Function not implemented.')
+}
+
