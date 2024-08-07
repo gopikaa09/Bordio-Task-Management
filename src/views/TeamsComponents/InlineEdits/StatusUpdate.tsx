@@ -11,6 +11,8 @@ import { LuCircleDashed } from 'react-icons/lu';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 
 const StatusUpdate = ({ id, taskStatus, task }: any) => {
+  const { view } = useAppSelector((state) => state.indexPage?.data['tasklist'])
+  console.log(view);
   const [status, setStatus] = useState(taskStatus);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({

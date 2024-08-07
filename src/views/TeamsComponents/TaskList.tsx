@@ -12,6 +12,7 @@ import { HiOutlinePlusCircle } from 'react-icons/hi';
 import { LabelsEnum, PriorityEnum, TaskStatus } from '@/@types/tasks';
 import dayjs from 'dayjs';
 import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useAppSelector } from '@/store';
 
 type Tasks = {
   title: string;
@@ -153,10 +154,11 @@ const TaskList = () => {
     return () => stopMonitoring();
   }, [columns]);
 
+
+
   return (
     <div className='m-5' data-status={'taskList'}>
       <IndexPage
-
         indexKey={'tasklist'}
         dropdownItem={AddButton}
         addBtnLabelDropdown={true}
@@ -164,6 +166,8 @@ const TaskList = () => {
         name="Tasks"
         tableColumns={columnDefs}
         queryFn={data}
+        DataURL={`http://localhost:4000/taskList`}
+        headersURL={`http://localhost:4000/headers`}
         gridItemComponent={TaskListGridComponent}
         boardViewComponent={TaskListBoardComponent}
         queryParamsShow={false}

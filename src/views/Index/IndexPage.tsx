@@ -85,6 +85,8 @@ type IndexPageProps = {
     displayGraph?: any
     paginationShow?: boolean
     productUsage?: boolean
+    headersURL?: string
+    DataURL?: string
 }
 type Option = {
     value: number
@@ -125,6 +127,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
         listViewComponent: ListView,
         usageViewComponent: UsageItem,
         tableColumns,
+
         filterComponent: Filter,
         unitsCount,
         queryParamsShow = true,
@@ -133,6 +136,10 @@ function IndexPage(indexPageProps: IndexPageProps) {
         multiButtonShow,
         multiButton,
         productUsage = false,
+        headersURL,
+        DataURL
+
+
     } = indexPageProps
 
     const dispatch = useDispatch()
@@ -314,7 +321,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
         }
 
         if (smaller.sm) {
-            setView('grid')
+            setView('table')
         }
     }, [])
 
@@ -515,11 +522,13 @@ function IndexPage(indexPageProps: IndexPageProps) {
 
                                         {view == 'table' && tableColumns && (
                                             <IndexTableView
-                                                data={queryFn}
-                                                query={queryParams}
-                                                setQuery={setQuery}
-                                                columns={tableColumns}
-                                                loading={loading}
+                                                DataURL={DataURL}
+                                                headersURL={headersURL}
+                                            // data={queryFn}
+                                            // query={queryParams}
+                                            // setQuery={setQuery}
+                                            // columns={tableColumns}
+                                            // loading={loading}
                                             />
                                         )}
                                         {view == 'table' && TableView && (

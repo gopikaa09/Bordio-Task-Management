@@ -1,17 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { TaskStatus, LabelsEnum } from '@/@types/tasks';
+import dayjs from 'dayjs';
+import StatusUpdate from '../InlineEdits/StatusUpdate';
 
 const TaskSettings = () => {
-  const [columns, setColumns] = useState(['Company', 'Contact', 'Country']);
-  const [rows, setRows] = useState([
-    ['Alfreds Futterkiste', 'Maria Anders', 'Germany'],
-    ['Centro comercial Moctezuma', 'Francisco Chang', 'Mexico'],
-    ['Ernst Handel', 'Roland Mendel', 'Austria'],
-    ['Island Trading', 'Helen Bennett', 'UK'],
-    ['Laughing Bacchus Winecellars', 'Yoshi Tannamuri', 'Canada'],
-    ['Magazzini Alimentari Riuniti', 'Giovanni Rovelli', 'Italy']
-  ]);
+  const [columns, setColumns] = useState([]);
+  const [rows, setRows] = useState([]);
   const [draggedColIndex, setDraggedColIndex] = useState(null);
   const [draggedRowIndex, setDraggedRowIndex] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from the server
+    const fetchData = async () => {
+      try {
+        const columnsResponse = await axios.get('http://localhost:4000/headers');
+        const rowsResponse = await axios.get('http://localhost:4000/taskList');
+
+        // Assuming columnsResponse.data is an array of column objects
+        // and rowsResponse.data is an array of row objects
+        const columnsData = columnsResponse.data.map(col => col.name); // Adjust based on actual structure
+        const rowsData = rowsResponse.data.map(row => {
+          console.log(row);
+          return columnsData.map(col => {
+            console.log(row[col.status]);
+            switch (col) {
+              case 'status':
+                // return TaskStatus[row[col]];
+                return <StatusUpdate task={row} id={row.id} taskStatus={row.status} />
+
+              case 'label':
+                return LabelsEnum[row[col]];
+              case 'startDate':
+                return dayjs(row[col]).format('MM/DD/YYYY')
+              case 'dueDate':
+                return dayjs(row[col]).format('MM/DD/YYYY')
+              default:
+                return row[col];
+            }
+          });
+        });
+
+        setColumns(columnsData);
+        setRows(rowsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleColumnDragStart = (e, index) => {
     setDraggedColIndex(index);
@@ -63,11 +101,12 @@ const TaskSettings = () => {
 
   return (
     <div>
-      <table className='w-full'>
+      <table className='w-11/12 m-5'>
         <thead>
           <tr>
             {columns.map((col, index) => (
               <th
+                className='bg-gray-200'
                 key={index}
                 draggable
                 onDragStart={(e) => handleColumnDragStart(e, index)}

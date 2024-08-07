@@ -43,7 +43,7 @@ const TaskBoardItem = ({ task }: { task: Task }) => {
             </Tooltip>
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap bg-gre">
+        <div className="flex gap-2 flex-wrap ">
           <Tooltip title={'Status'}>
             <StatusUpdate task={task} id={task.id} taskStatus={task.status} />
           </Tooltip>

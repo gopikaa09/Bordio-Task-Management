@@ -4,22 +4,25 @@
       "id": "dcad",
       "title": "Task23",
       "description": "asdas",
-      "status": 20,
       "assignes": "Sowmya",
       "priority": 2,
       "lables": 30,
       "modules": "Projects",
       "dueDate": "2024-07-23T18:30:00.000Z",
-      "estimates": 1,
+      "estimates": 2,
       "attachements": "",
       "startDate": "2024-06-30T18:30:00.000Z",
-      "index": 0
+      "index": 0,
+      "scope": "",
+      "column1": "",
+      "gopppik": "",
+      "status": 40
     },
     {
       "id": "fbc1",
       "title": "Task1",
       "description": "",
-      "status": 30,
+      "status": 10,
       "priority": 1,
       "lables": 10,
       "assignes": "Sowmya",
@@ -27,13 +30,16 @@
       "dueDate": "2024-07-01T18:30:00.000Z",
       "estimates": 1,
       "attachements": "",
-      "startDate": "2024-07-01T18:30:00.000Z"
+      "startDate": "2024-07-01T18:30:00.000Z",
+      "scope": "",
+      "column1": "",
+      "gopppik": ""
     },
     {
       "id": "a3ca",
       "title": "Task45",
       "description": "",
-      "status": 40,
+      "status": 30,
       "priority": 3,
       "assignes": "Gopika",
       "lables": 20,
@@ -41,13 +47,16 @@
       "dueDate": "2024-07-23T18:30:00.000Z",
       "estimates": 5,
       "attachements": "",
-      "startDate": "2024-07-02T18:30:00.000Z"
+      "startDate": "2024-07-02T18:30:00.000Z",
+      "scope": "",
+      "column1": "",
+      "gopppik": ""
     },
     {
       "id": "1e8c",
       "title": "Task678",
       "description": "",
-      "status": 40,
+      "status": 20,
       "priority": 3,
       "assignes": "Raghu",
       "lables": 20,
@@ -55,13 +64,16 @@
       "dueDate": "2024-07-09T18:30:00.000Z",
       "estimates": 2,
       "attachements": "",
-      "startDate": "2024-07-01T18:30:00.000Z"
+      "startDate": "2024-07-01T18:30:00.000Z",
+      "scope": "",
+      "column1": "",
+      "gopppik": ""
     },
     {
       "id": "8209",
       "title": "Task34",
       "description": "",
-      "status": 10,
+      "status": 20,
       "priority": 2,
       "assignes": "Gopika",
       "lables": 10,
@@ -69,7 +81,10 @@
       "startDate": "2024-07-09T18:30:00.000Z",
       "dueDate": "2024-07-05T18:30:00.000Z",
       "estimates": 12,
-      "attachements": ""
+      "attachements": "",
+      "scope": "",
+      "column1": "",
+      "gopppik": ""
     },
     {
       "id": "7831",
@@ -83,160 +98,23 @@
       "startDate": "2024-07-02T18:30:00.000Z",
       "dueDate": "2024-07-24T18:30:00.000Z",
       "estimates": 1,
-      "attachements": ""
+      "attachements": "",
+      "scope": "",
+      "column1": "",
+      "gopppik": ""
     },
     {
-      "id": "2627",
-      "title": "Task345",
+      "id": "a7d8",
+      "title": "Task34",
       "description": "",
-      "status": 30,
+      "status": 10,
       "priority": 1,
       "assignes": "Naveena",
       "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-06T18:30:00.000Z",
+      "modules": "Finance",
+      "startDate": "2024-08-08T18:30:00.000Z",
       "dueDate": "2024-08-14T18:30:00.000Z",
       "estimates": 2,
-      "attachements": ""
-    },
-    {
-      "id": "f8c0",
-      "title": "projects",
-      "description": "",
-      "status": 30,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 20,
-      "modules": "Dashboard",
-      "startDate": "2024-08-19T18:30:00.000Z",
-      "dueDate": "2024-08-20T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "445e",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 30,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "c8ea",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 20,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "8541",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 20,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "ac4f",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 30,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "14c7",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 20,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "2042",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 10,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "5d9a",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 40,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "9d2e",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 10,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
-      "attachements": ""
-    },
-    {
-      "id": "bd3e",
-      "title": "Dashboarrd changes",
-      "description": "",
-      "status": 20,
-      "priority": 2,
-      "assignes": "Gopika",
-      "lables": 10,
-      "modules": "Client Portal",
-      "startDate": "2024-08-13T18:30:00.000Z",
-      "dueDate": "2024-08-13T18:30:00.000Z",
-      "estimates": 3,
       "attachements": ""
     }
   ],
@@ -358,6 +236,44 @@
     {
       "id": "f930",
       "name": "CRM"
+    }
+  ],
+  "headers": [
+    {
+      "id": "914d",
+      "name": "status"
+    },
+    {
+      "id": "9a79",
+      "name": "title"
+    },
+    {
+      "id": "70a2",
+      "name": "priority"
+    },
+    {
+      "id": "fae0",
+      "name": "assignes"
+    },
+    {
+      "id": "0b32",
+      "name": "lables"
+    },
+    {
+      "id": "ff1c",
+      "name": "modules"
+    },
+    {
+      "id": "8e69",
+      "name": "dueDate"
+    },
+    {
+      "id": "4d76",
+      "name": "startDate"
+    },
+    {
+      "id": "709d",
+      "name": "estimates"
     }
   ]
 }

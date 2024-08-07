@@ -9,6 +9,7 @@ import { MdOutlineViewModule } from 'react-icons/md';
 import { getInitials } from '@/utils/getInitials';
 
 const AssigneeUpdate = ({ id, assigneName, task }: any) => {
+
   const [assignes, setAssigne] = useState(assigneName);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({
