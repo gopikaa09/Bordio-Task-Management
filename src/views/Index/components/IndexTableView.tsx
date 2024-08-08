@@ -22,20 +22,20 @@ const IndexTableView = ({ DataURL, headersURL }) => {
 
         // Assuming columnsResponse.data is an array of column objects
         // and rowsResponse.data is an array of row objects
-        const columnsData = columnsResponse.data.map(col => col.name); // Adjust based on actual structure
+        const columnsData = columnsResponse.data.map(col => col); // Adjust based on actual structure
         const rowsData = rowsResponse.data.map(row => {
           return columnsData.map(col => {
-            switch (col) {
+            switch (col.name) {
               case 'status':
                 return <StatusUpdate task={row} id={row.id} taskStatus={row.status} />;
               case 'label':
-                return LabelsEnum[row[col]];
+                return LabelsEnum[row[col.name]];
               case 'startDate':
-                return dayjs(row[col]).format('MM/DD/YYYY');
+                return dayjs(row[col.name]).format('MM/DD/YYYY');
               case 'dueDate':
-                return dayjs(row[col]).format('MM/DD/YYYY');
+                return dayjs(row[col.name]).format('MM/DD/YYYY');
               default:
-                return row[col];
+                return row[col.name];
             }
           });
         });
@@ -48,7 +48,7 @@ const IndexTableView = ({ DataURL, headersURL }) => {
     };
 
     fetchData();
-  }, []);
+  }, [DataURL, headersURL]);
 
   const handleColumnDragStart = (e, index) => {
     setDraggedColIndex(index);
@@ -99,7 +99,7 @@ const IndexTableView = ({ DataURL, headersURL }) => {
   };
 
   const HeaderURL = headersURL;
-  const TaskURL = 'DataURL';
+  const TaskURL = DataURL;
 
   const addColumnMutation = useMutation({
     mutationFn: async (column) => {
@@ -117,15 +117,22 @@ const IndexTableView = ({ DataURL, headersURL }) => {
     }
   });
 
+  const deleteColumnMutation = useMutation({
+    mutationFn: async (columnId) => {
+      const response = await axios.delete(`${HeaderURL}/${columnId}`);
+      return response.data;
+    }
+  });
+
   const handleAddColumn = async () => {
     const newColumnName = prompt('Enter the name for the new column:');
 
     if (newColumnName) {
       try {
         // Add the new column to the headers
-        await addColumnMutation.mutateAsync(newColumnName);
+        const newColumn = await addColumnMutation.mutateAsync(newColumnName);
 
-        setColumns(prevColumns => [...prevColumns, newColumnName]);
+        setColumns(prevColumns => [...prevColumns, newColumn]);
         setRows(prevRows =>
           prevRows.map(row => [...row, '']) // Add empty values for the new column in each row
         );
@@ -149,9 +156,44 @@ const IndexTableView = ({ DataURL, headersURL }) => {
     }
   };
 
+  const handleDeleteColumn = async (columnId) => {
+    try {
+      // Delete the column from the headers
+      await deleteColumnMutation.mutateAsync(columnId);
+
+      const columnName = columns.find(col => col.id === columnId).name;
+
+      setColumns(prevColumns => prevColumns.filter(col => col.id !== columnId));
+      setRows(prevRows =>
+        prevRows.map(row => {
+          const newRow = [...row];
+          const colIndex = columns.findIndex(col => col.id === columnId);
+          newRow.splice(colIndex, 1); // Remove the cell corresponding to the deleted column
+          return newRow;
+        })
+      );
+
+      // Fetch the current task list
+      const rowsResponse = await axios.get(TaskURL);
+      const tasks = rowsResponse.data;
+
+      // Update each task to remove the deleted column name
+      const updatedTasks = tasks.map(task => {
+        const { [columnName]: _, ...rest } = task;
+        return rest;
+      });
+
+      // Update tasks on the server
+      await updateTasksMutation.mutateAsync(updatedTasks);
+      console.log('All tasks updated successfully');
+    } catch (error) {
+      console.error('Error deleting column or updating tasks:', error);
+    }
+  };
+
   return (
-    <div>
-      <table className='w-11/12 m-5 '>
+    <div className='overflow-auto'>
+      <table className='w-11/12 m-5'>
         <thead>
           <tr>
             <th className='bg-gray-200'></th>
@@ -164,9 +206,11 @@ const IndexTableView = ({ DataURL, headersURL }) => {
                 onDragOver={handleColumnDragOver}
                 onDrop={(e) => handleColumnDrop(e, index)}
               >
-                {col}
+                {col.name}
                 <MdDragIndicator className='inline-table mx-2 cursor-grab' />
-
+                <Button variant='danger' size='xs' onClick={() => handleDeleteColumn(col.id)}>
+                  Delete
+                </Button>
               </th>
             ))}
             <th className='bg-gray-200'>
@@ -177,25 +221,21 @@ const IndexTableView = ({ DataURL, headersURL }) => {
           </tr>
         </thead>
         <tbody>
-
           {rows.map((row, rowIndex) => (
-            <>
-              <tr
-                key={rowIndex}
-                draggable
-                onDragStart={(e) => handleRowDragStart(e, rowIndex)}
-                onDragOver={handleRowDragOver}
-                onDrop={(e) => handleRowDrop(e, rowIndex)}
-              >
-                <td>
-                  <MdDragIndicator className='inline-table m-2 cursor-grab' />
-                </td>
-                {row.map((cell, colIndex) => (
-                  <td key={colIndex} className='py-4'>{cell}</td>
-                ))}
-              </tr>
-            </>
-
+            <tr
+              key={rowIndex}
+              draggable
+              onDragStart={(e) => handleRowDragStart(e, rowIndex)}
+              onDragOver={handleRowDragOver}
+              onDrop={(e) => handleRowDrop(e, rowIndex)}
+            >
+              <td>
+                <MdDragIndicator className='inline-table m-2 cursor-grab' />
+              </td>
+              {row.map((cell, colIndex) => (
+                <td key={colIndex} className='py-4'>{cell}</td>
+              ))}
+            </tr>
           ))}
         </tbody>
       </table>

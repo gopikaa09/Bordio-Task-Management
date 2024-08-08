@@ -7,13 +7,15 @@ import { TaskStatus } from '@/@types/tasks';
 import BadgeIcon from '@/components/common/BadgeIcon';
 import { MdOutlineViewModule } from 'react-icons/md';
 
-const ModuleUpdate = ({ id, moduleStatus, task }: any) => {
+const ModuleUpdate = ({ id, moduleStatus, task, DataURL }: any) => {
   const [module, setModule] = useState(moduleStatus);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['moduleStatus', id],
     mutationFn: async (data: any) => {
-      const url = `http://localhost:4000/taskList/${id}`;
+      // const url = `http://localhost:4000/taskList/${id}`;
+      const url = `${DataURL}/${id}`;
+
       const response = await axios.put(url, { ...task, modules: data.modules });
       return response.data;
     },

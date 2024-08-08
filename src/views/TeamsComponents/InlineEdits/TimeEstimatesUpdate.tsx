@@ -6,14 +6,14 @@ import { useState } from "react";
 import { FaRegCircle } from "react-icons/fa"; // Assuming you are using react-icons for FaRegCircle
 import { MdOutlineAccessTime, MdOutlineViewModule } from "react-icons/md";
 
-const TimeEstimatesUpdate = ({ task, id, timeEstimates }: any) => {
+const TimeEstimatesUpdate = ({ task, id, timeEstimates, DataURL }: any) => {
   const [estimates, setTimeEstimates] = useState(timeEstimates);
   const queryClient = useQueryClient();
 
   const { mutateAsync: TimeChange } = useMutation({
     mutationKey: ['startDateUpdate', id],
     mutationFn: async (data) => {
-      const url = `http://localhost:4000/taskList/${id}`;
+      const url = `${DataURL}/${id}`;
       const response = await axios.put(url, { ...task, estimates: data });
       return response.data;
     },

@@ -10,7 +10,7 @@ import StartDateUpdate from "../InlineEdits/StartDateUpdate";
 import DueDateUpdate from "../InlineEdits/DueDateUpdate";
 import ModuleUpdate from "../InlineEdits/ModuleUpdate";
 
-const TaskBoardItem = ({ task }: { task: Task }) => {
+const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,19 +45,19 @@ const TaskBoardItem = ({ task }: { task: Task }) => {
         </div>
         <div className="flex gap-2 flex-wrap ">
           <Tooltip title={'Status'}>
-            <StatusUpdate task={task} id={task.id} taskStatus={task.status} />
+            <StatusUpdate task={task} id={task.id} taskStatus={task.status} DataURL={DataURL} />
           </Tooltip>
           <Tooltip title={'Priority'}>
-            <PriorityUpdate task={task} id={task.id} priorityStatus={task.priority} />
+            <PriorityUpdate task={task} id={task.id} priorityStatus={task.priority} DataURL={DataURL} />
           </Tooltip>
           <Tooltip title={'Start Date'}>
-            <StartDateUpdate task={task} id={task.id} startDate={task.startDate} />
+            <StartDateUpdate task={task} id={task.id} startDate={task.startDate} DataURL={DataURL} />
           </Tooltip>
           <Tooltip title={'Due Date'}>
-            <DueDateUpdate task={task} id={task.id} DueDate={task.dueDate} />
+            <DueDateUpdate task={task} id={task.id} DueDate={task.dueDate} DataURL={DataURL} />
           </Tooltip>
           <Tooltip title={'Module'}>
-            <ModuleUpdate task={task} id={task.id} moduleStatus={task.modules} />
+            <ModuleUpdate task={task} id={task.id} moduleStatus={task.modules} DataURL={DataURL} />
           </Tooltip>
         </div>
       </Card>

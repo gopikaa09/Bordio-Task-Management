@@ -6,29 +6,23 @@
       "description": "asdas",
       "assignes": "Sowmya",
       "priority": 2,
-      "lables": 30,
       "modules": "Projects",
       "dueDate": "2024-07-23T18:30:00.000Z",
-      "estimates": 2,
       "attachements": "",
       "startDate": "2024-06-30T18:30:00.000Z",
       "index": 0,
       "scope": "",
       "column1": "",
-      "gopppik": "",
-      "status": 40
+      "gopppik": ""
     },
     {
       "id": "fbc1",
       "title": "Task1",
       "description": "",
-      "status": 10,
       "priority": 1,
-      "lables": 10,
       "assignes": "Sowmya",
       "modules": "Projects",
       "dueDate": "2024-07-01T18:30:00.000Z",
-      "estimates": 1,
       "attachements": "",
       "startDate": "2024-07-01T18:30:00.000Z",
       "scope": "",
@@ -39,13 +33,10 @@
       "id": "a3ca",
       "title": "Task45",
       "description": "",
-      "status": 30,
       "priority": 3,
       "assignes": "Gopika",
-      "lables": 20,
       "modules": "Client Portal",
       "dueDate": "2024-07-23T18:30:00.000Z",
-      "estimates": 5,
       "attachements": "",
       "startDate": "2024-07-02T18:30:00.000Z",
       "scope": "",
@@ -56,13 +47,10 @@
       "id": "1e8c",
       "title": "Task678",
       "description": "",
-      "status": 20,
       "priority": 3,
       "assignes": "Raghu",
-      "lables": 20,
       "modules": "Projects",
       "dueDate": "2024-07-09T18:30:00.000Z",
-      "estimates": 2,
       "attachements": "",
       "startDate": "2024-07-01T18:30:00.000Z",
       "scope": "",
@@ -73,14 +61,11 @@
       "id": "8209",
       "title": "Task34",
       "description": "",
-      "status": 20,
       "priority": 2,
       "assignes": "Gopika",
-      "lables": 10,
       "modules": "Projects",
       "startDate": "2024-07-09T18:30:00.000Z",
       "dueDate": "2024-07-05T18:30:00.000Z",
-      "estimates": 12,
       "attachements": "",
       "scope": "",
       "column1": "",
@@ -90,14 +75,11 @@
       "id": "7831",
       "title": "Task67",
       "description": "",
-      "status": 10,
       "priority": 1,
       "assignes": "Sowmya",
-      "lables": 10,
       "modules": "Projects",
       "startDate": "2024-07-02T18:30:00.000Z",
       "dueDate": "2024-07-24T18:30:00.000Z",
-      "estimates": 1,
       "attachements": "",
       "scope": "",
       "column1": "",
@@ -107,14 +89,11 @@
       "id": "a7d8",
       "title": "Task34",
       "description": "",
-      "status": 10,
       "priority": 1,
       "assignes": "Naveena",
-      "lables": 10,
       "modules": "Finance",
       "startDate": "2024-08-08T18:30:00.000Z",
       "dueDate": "2024-08-14T18:30:00.000Z",
-      "estimates": 2,
       "attachements": ""
     }
   ],
@@ -240,10 +219,6 @@
   ],
   "headers": [
     {
-      "id": "914d",
-      "name": "status"
-    },
-    {
       "id": "9a79",
       "name": "title"
     },
@@ -256,10 +231,6 @@
       "name": "assignes"
     },
     {
-      "id": "0b32",
-      "name": "lables"
-    },
-    {
       "id": "ff1c",
       "name": "modules"
     },
@@ -270,10 +241,6 @@
     {
       "id": "4d76",
       "name": "startDate"
-    },
-    {
-      "id": "709d",
-      "name": "estimates"
     }
   ]
 }

@@ -18,7 +18,7 @@ const itemStyles = css({
   border: `1px solid lightgrey`,
 });
 
-const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
+const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL }: { data: Task[] }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [isOpen, setIsOpen] = useState(false)
 
@@ -33,7 +33,7 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['taskStatusUpdate'],
     mutationFn: async (task: Task) => {
-      const url = `http://localhost:4000/taskList/${task.id}`;
+      const url = `DataURL/${task.id}`;
       const response = await axios.put(url, task);
       return response.data;
     },
@@ -141,7 +141,7 @@ const TaskListBoardComponent = ({ data: initialTasks }: { data: Task[] }) => {
                   key={task.id}
                   css={itemStyles}
                 >
-                  <TaskBoardItem task={task} />
+                  <TaskBoardItem task={task} DataURL={DataURL} />
                 </div>
               ))}
             </div>

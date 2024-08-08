@@ -11,7 +11,7 @@ import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-d
 import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 
-const TaskListGridItem = ({ task, onTaskDrop }) => {
+const TaskListGridItem = ({ task, onTaskDrop, DataURL }) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -57,22 +57,26 @@ const TaskListGridItem = ({ task, onTaskDrop }) => {
       </div>
       <div className="flex gap-2 flex-wrap">
         <Tooltip title="Status">
-          <StatusUpdate task={task} id={task.id} taskStatus={task.status} />
+          <StatusUpdate task={task} id={task.id} taskStatus={task.status} DataURL={DataURL} />
         </Tooltip>
         <Tooltip title="Priority">
-          <PriorityUpdate task={task} id={task.id} priorityStatus={task.priority} />
+          <PriorityUpdate task={task} id={task.id} priorityStatus={task.priority} DataURL={DataURL} />
+
         </Tooltip>
         <Tooltip title="Start Date">
-          <StartDateUpdate task={task} id={task.id} startDate={task.startDate} />
+          <StartDateUpdate task={task} id={task.id} startDate={task.startDate} DataURL={DataURL} />
+
         </Tooltip>
         <Tooltip title="Due Date">
-          <DueDateUpdate task={task} id={task.id} DueDate={task.dueDate} />
+          <DueDateUpdate task={task} id={task.id} DueDate={task.dueDate} DataURL={DataURL} />
+
         </Tooltip>
         <Tooltip title="Module">
-          <ModuleUpdate task={task} id={task.id} moduleStatus={task.modules} />
+          <ModuleUpdate task={task} id={task.id} moduleStatus={task.modules} DataURL={DataURL} />
+
         </Tooltip>
         <Tooltip title="Estimated Time">
-          <TimeEstimatesUpdate task={task} id={task.id} timeEstimates={task.estimates} />
+          <TimeEstimatesUpdate task={task} id={task.id} timeEstimates={task.estimates} DataURL={DataURL} />
         </Tooltip>
       </div>
     </Card>

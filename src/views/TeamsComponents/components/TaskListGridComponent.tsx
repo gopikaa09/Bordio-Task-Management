@@ -4,7 +4,7 @@ import axios from "axios";
 import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import TaskListGridItem from "./TaskListGridItem.";
 
-const TaskListGridComponent = ({ data: initialTasks }) => {
+const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
   const tasksWithIndex = initialTasks.map((task, index) => ({ ...task, index }));
   console.log('Initial tasks:', tasksWithIndex);
 
@@ -14,7 +14,7 @@ const TaskListGridComponent = ({ data: initialTasks }) => {
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['taskStatusUpdate'],
     mutationFn: async (task) => {
-      const url = `http://localhost:4000/taskList/${task.id}`;
+      const url = `DataURL/${task.id}`;
       const response = await axios.put(url, task);
       return response.data;
     },
@@ -79,7 +79,7 @@ const TaskListGridComponent = ({ data: initialTasks }) => {
   return (
     <>
       {tasks.map(task => (
-        <TaskListGridItem key={task.id} task={task} onTaskDrop={swapTaskIndices} />
+        <TaskListGridItem key={task.id} task={task} onTaskDrop={swapTaskIndices} DataURL={DataURL} />
       ))}
     </>
   );

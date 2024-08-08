@@ -487,6 +487,8 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                     <>
                                         {view == 'board' && (
                                             <BoardView
+                                                DataURL={DataURL}
+                                                headersURL={headersURL}
                                                 data={queryFn}
                                                 query={queryParams}
                                                 setQuery={setQuery}
@@ -494,6 +496,8 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                         )}
                                         {view == 'grid' && (
                                             <GridView
+                                                DataURL={DataURL}
+                                                headersURL={headersURL}
                                                 data={queryFn}
                                                 query={queryParams}
                                                 setQuery={setQuery}

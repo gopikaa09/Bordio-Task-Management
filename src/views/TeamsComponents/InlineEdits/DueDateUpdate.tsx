@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { LuCalendarClock } from "react-icons/lu";
 
-const DueDateUpdate = ({ id, DueDate, task }: any) => {
+const DueDateUpdate = ({ id, DueDate, task, DataURL }: any) => {
   const [dueDate, setDueDate] = useState(DueDate);
   const [showCalender, setShowCalender] = useState(false);
   const dropdownProRef = useRef(null);
@@ -22,7 +22,9 @@ const DueDateUpdate = ({ id, DueDate, task }: any) => {
     mutationKey: ['changeStatus', id],
     mutationFn: async (data: any) => {
       console.log("Data sent to server:", data);
-      const url = `http://localhost:4000/taskList/${id}`;
+      // const url = `http://localhost:4000/taskList/${id}`;
+      const url = `${DataURL}/${id}`;
+
       const response = await axios.put(url, { ...task, dueDate: data.dueDate });
       return response.data;
     },

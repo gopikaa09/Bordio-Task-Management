@@ -10,7 +10,7 @@ import { TbAlarm } from 'react-icons/tb';
 import { LuCircleDashed } from 'react-icons/lu';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 
-const StatusUpdate = ({ id, taskStatus, task }: any) => {
+const StatusUpdate = ({ id, taskStatus, task, DataURL }: any) => {
   const { view } = useAppSelector((state) => state.indexPage?.data['tasklist'])
   console.log(view);
   const [status, setStatus] = useState(taskStatus);
@@ -18,7 +18,7 @@ const StatusUpdate = ({ id, taskStatus, task }: any) => {
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['startDateUpdate', id],
     mutationFn: async (data: any) => {
-      const url = `http://localhost:4000/taskList/${id}`;
+      const url = `${DataURL}/${id}`;
       const response = await axios.put(url, { ...task, status: data.status });
       return response.data;
     },

@@ -153,7 +153,7 @@ const TaskList = () => {
 
     return () => stopMonitoring();
   }, [columns]);
-
+  const DataURL = 'http://localhost:4000/taskList'
 
 
   return (
@@ -166,7 +166,7 @@ const TaskList = () => {
         name="Tasks"
         tableColumns={columnDefs}
         queryFn={data}
-        DataURL={`http://localhost:4000/taskList`}
+        DataURL={DataURL}
         headersURL={`http://localhost:4000/headers`}
         gridItemComponent={TaskListGridComponent}
         boardViewComponent={TaskListBoardComponent}
@@ -182,7 +182,7 @@ const TaskList = () => {
           onRequestClose={onDrawerClose}
         >
           <div className="p-5">
-            <AddTask drawerClose={onDrawerClose} />
+            <AddTask drawerClose={onDrawerClose} DataURL={DataURL} />
           </div>
         </Drawer>
       </div>

@@ -19,7 +19,7 @@ type FormModel = {
   attachements: string
 }
 
-const AddTask = ({ drawerClose, status }) => {
+const AddTask = ({ drawerClose, status, DataURL }) => {
   console.log(status);
   const initialValues = {
     title: '',
@@ -41,7 +41,7 @@ const AddTask = ({ drawerClose, status }) => {
   })
 
 
-  const TaskListUrl = 'http://localhost:4000/taskList'; // Ensure this is the correct URL
+  const TaskListUrl = DataURL; // Ensure this is the correct URL
   const queryClient = useQueryClient();
 
   const { mutateAsync: addTask } = useMutation({
