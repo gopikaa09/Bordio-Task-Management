@@ -13,6 +13,8 @@
     "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^1.4.0",
+    "@atlaskit/pragmatic-drag-and-drop-flourish": "^1.1.1",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@floating-ui/react": "^0.26.4",
     "@fullcalendar/daygrid": "^6.1.8",
@@ -37,6 +39,7 @@
     "history": "^5.3.0",
     "html-react-parser": "^3.0.15",
     "i18next": "^23.7.11",
+    "invariant": "^2.2.4",
     "lodash": "^4.17.21",
     "miragejs": "^0.1.48",
     "react": "^18.2.0",

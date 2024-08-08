@@ -6,14 +6,13 @@
       "description": "asdas",
       "assignes": "Sowmya",
       "priority": 2,
-      "modules": "Projects",
-      "dueDate": "2024-07-23T18:30:00.000Z",
       "attachements": "",
-      "startDate": "2024-06-30T18:30:00.000Z",
       "index": 0,
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 30,
+      "Module": ""
     },
     {
       "id": "fbc1",
@@ -21,13 +20,12 @@
       "description": "",
       "priority": 1,
       "assignes": "Sowmya",
-      "modules": "Projects",
-      "dueDate": "2024-07-01T18:30:00.000Z",
       "attachements": "",
-      "startDate": "2024-07-01T18:30:00.000Z",
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 10,
+      "Module": ""
     },
     {
       "id": "a3ca",
@@ -35,13 +33,12 @@
       "description": "",
       "priority": 3,
       "assignes": "Gopika",
-      "modules": "Client Portal",
-      "dueDate": "2024-07-23T18:30:00.000Z",
       "attachements": "",
-      "startDate": "2024-07-02T18:30:00.000Z",
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 20,
+      "Module": ""
     },
     {
       "id": "1e8c",
@@ -49,13 +46,12 @@
       "description": "",
       "priority": 3,
       "assignes": "Raghu",
-      "modules": "Projects",
-      "dueDate": "2024-07-09T18:30:00.000Z",
       "attachements": "",
-      "startDate": "2024-07-01T18:30:00.000Z",
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 40,
+      "Module": ""
     },
     {
       "id": "8209",
@@ -63,13 +59,12 @@
       "description": "",
       "priority": 2,
       "assignes": "Gopika",
-      "modules": "Projects",
-      "startDate": "2024-07-09T18:30:00.000Z",
-      "dueDate": "2024-07-05T18:30:00.000Z",
       "attachements": "",
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 20,
+      "Module": ""
     },
     {
       "id": "7831",
@@ -77,13 +72,12 @@
       "description": "",
       "priority": 1,
       "assignes": "Sowmya",
-      "modules": "Projects",
-      "startDate": "2024-07-02T18:30:00.000Z",
-      "dueDate": "2024-07-24T18:30:00.000Z",
       "attachements": "",
       "scope": "",
       "column1": "",
-      "gopppik": ""
+      "gopppik": "",
+      "status": 30,
+      "Module": ""
     },
     {
       "id": "a7d8",
@@ -91,10 +85,9 @@
       "description": "",
       "priority": 1,
       "assignes": "Naveena",
-      "modules": "Finance",
-      "startDate": "2024-08-08T18:30:00.000Z",
-      "dueDate": "2024-08-14T18:30:00.000Z",
-      "attachements": ""
+      "attachements": "",
+      "status": 30,
+      "Module": ""
     }
   ],
   "notes": [
@@ -149,49 +142,49 @@
       "id": "6981",
       "name": "Gopika",
       "email": "gopika@gmail.com",
-      "isActive": true,
+      "isActive": "Active",
       "Role": "Team Leader"
     },
     {
       "id": "19d3",
       "name": "Sowmya",
       "email": "gopika123@gmail.com",
-      "isActive": false,
+      "isActive": "Not Active",
       "Role": "Team Member"
     },
     {
       "id": "f248",
       "name": "Naveena",
       "email": "gopika123@gmail.com",
-      "isActive": true,
+      "isActive": "Active",
       "Role": "Team Member"
     },
     {
       "id": "7d99",
       "name": "Sagar",
       "email": "gopika123@gmail.com",
-      "isActive": true,
+      "isActive": "Active",
       "Role": "Team Member"
     },
     {
       "id": "1196",
       "name": "Raghu",
       "email": "gopika123@gmail.com",
-      "isActive": false,
+      "isActive": "Not Active",
       "Role": "Team Member"
     },
     {
       "id": "4cd7",
       "name": "Prudhvi",
       "email": "gopika123@gmail.com",
-      "isActive": false,
+      "isActive": "Not Active",
       "Role": "Team Member"
     },
     {
       "id": "95c9",
       "name": "Uday",
       "email": "gopika123@gmail.com",
-      "isActive": false,
+      "isActive": "Not Active",
       "Role": "Team Member"
     }
   ],
@@ -231,16 +224,26 @@
       "name": "assignes"
     },
     {
-      "id": "ff1c",
-      "name": "modules"
+      "id": "c3c3",
+      "name": "Module"
+    }
+  ],
+  "PeoplesHeader": [
+    {
+      "id": "a2b0",
+      "name": "name"
     },
     {
-      "id": "8e69",
-      "name": "dueDate"
+      "id": "cdfa",
+      "name": "Role"
     },
     {
-      "id": "4d76",
-      "name": "startDate"
+      "id": "6531",
+      "name": "email"
+    },
+    {
+      "id": "9100",
+      "name": "isActive"
     }
   ]
 }

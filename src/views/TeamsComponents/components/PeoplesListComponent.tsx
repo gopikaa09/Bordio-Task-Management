@@ -1,26 +1,10 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { Card } from '@/components/ui';
+import React, { useEffect, useState } from 'react';
+import PeopleLIstItem from './PeopleLIstItem';
 import { monitorForElements, dropTargetForElements, draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import TaskListGridItem from "./TaskListGridItem";
 
-const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
-
-
-  const [tasks, setTasks] = useState(initialTasks);
-
-  const queryClient = useQueryClient();
-  const { mutateAsync: changeStatusMutation } = useMutation({
-    mutationKey: ['taskStatusUpdate'],
-    mutationFn: async (task) => {
-      const url = `DataURL/${task.id}`;
-      const response = await axios.put(url, task);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['tasklistQuery']);
-    }
-  });
+const PeoplesListComponent = ({ data: initialPeoples }) => {
+  const [peoples, setPeoples] = useState(initialPeoples);
 
   useEffect(() => {
     // Start monitoring for draggable elements
@@ -46,7 +30,7 @@ const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
         const dropTargetIndex = dropTargetData.index;
 
         // Reorder the array
-        const newPeoples = [...tasks];
+        const newPeoples = [...peoples];
         const draggedItemIndex = newPeoples.findIndex(item => item.id === source.data.id);
         if (draggedItemIndex === -1) return;
 
@@ -54,7 +38,7 @@ const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
         const [movedItem] = newPeoples.splice(draggedItemIndex, 1);
         newPeoples.splice(dropTargetIndex, 0, movedItem);
 
-        setTasks(newPeoples);
+        setPeoples(newPeoples);
         console.log(`Item ID: ${source.data.id} moved to position: ${dropTargetIndex}`);
 
         // Optionally, make an API call to update the server with the new order
@@ -72,20 +56,19 @@ const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
     });
 
     return () => stopMonitoring();
-  }, [tasks]);
+  }, [peoples]);
 
   return (
-    <div className="grid xs:grid-cols-1 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 ">
+    <div className='flex flex-col gap-2'>
       {
-        tasks.map((task, index) => (
-          <div key={task.id} data-index={index}
-            className="drop-target"
-          >
-            <TaskListGridItem key={task.id} task={task} DataURL={DataURL} />
+        peoples?.map((item, index) => (
+          <div key={item.id} className='drop-target' data-index={index}>
+            <PeopleLIstItem item={item} />
           </div>
-        ))}
+        ))
+      }
     </div>
   );
 };
 
-export default TaskListGridComponent;
+export default PeoplesListComponent;

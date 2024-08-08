@@ -8,6 +8,7 @@ import Badge from '@/components/ui/Badge'
 import { useMemo, useState } from "react";
 import { HiOutlineUser } from "react-icons/hi";
 import IndexPage from "@/views/Index/IndexPage";
+import PeoplesListComponent from "./PeoplesListComponent";
 type Member = {
   id: string;
   name: string;
@@ -89,6 +90,8 @@ const TaskPeople = () => {
       }
     ]
   }, [])
+  const HeadersURL = "http://localhost:4000/PeoplesHeader"
+  const DataURL = 'http://localhost:4000/peoples'
 
   console.log(PeopleData);
   return (
@@ -102,6 +105,10 @@ const TaskPeople = () => {
               name="Peoples"
               tableColumns={columns}
               queryFn={PeopleData}
+              listViewComponent={PeoplesListComponent}
+              headersURL={HeadersURL}
+              DataURL={DataURL}
+
             />
           )
           :

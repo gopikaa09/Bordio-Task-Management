@@ -4,8 +4,9 @@ import { TaskStatus, LabelsEnum } from '@/@types/tasks';
 import dayjs from 'dayjs';
 import StatusUpdate from '@/views/TeamsComponents/InlineEdits/StatusUpdate';
 import { useMutation } from '@tanstack/react-query';
-import { Button } from '@/components/ui';
+import { Button, Dropdown } from '@/components/ui';
 import { MdDragIndicator } from 'react-icons/md';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const IndexTableView = ({ DataURL, headersURL }) => {
   const [columns, setColumns] = useState([]);
@@ -190,6 +191,9 @@ const IndexTableView = ({ DataURL, headersURL }) => {
       console.error('Error deleting column or updating tasks:', error);
     }
   };
+  const DropDownTitle = <Button variant='plain' size='xs' icon={<BsThreeDotsVertical />
+  } className=''></Button>
+
 
   return (
     <div className='overflow-auto'>
@@ -199,7 +203,7 @@ const IndexTableView = ({ DataURL, headersURL }) => {
             <th className='bg-gray-200'></th>
             {columns.map((col, index) => (
               <th
-                className='bg-gray-200 uppercase font-normal py-2 w-1/12'
+                className='bg-gray-200 uppercase font-normal py-2'
                 key={index}
                 draggable
                 onDragStart={(e) => handleColumnDragStart(e, index)}
@@ -207,10 +211,10 @@ const IndexTableView = ({ DataURL, headersURL }) => {
                 onDrop={(e) => handleColumnDrop(e, index)}
               >
                 {col.name}
-                <MdDragIndicator className='inline-table mx-2 cursor-grab' />
-                <Button variant='danger' size='xs' onClick={() => handleDeleteColumn(col.id)}>
-                  Delete
-                </Button>
+                <Dropdown renderTitle={DropDownTitle}>
+                  <Dropdown.Item eventKey="a" >Edit</Dropdown.Item>
+                  <Dropdown.Item eventKey="b" onClick={() => handleDeleteColumn(col.id)}>Delete</Dropdown.Item>
+                </Dropdown>
               </th>
             ))}
             <th className='bg-gray-200'>

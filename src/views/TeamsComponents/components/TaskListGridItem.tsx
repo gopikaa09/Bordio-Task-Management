@@ -11,7 +11,7 @@ import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-d
 import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 
-const TaskListGridItem = ({ task, onTaskDrop, DataURL }) => {
+const TaskListGridItem = ({ task, DataURL }) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -25,21 +25,8 @@ const TaskListGridItem = ({ task, onTaskDrop, DataURL }) => {
       onDrop: () => console.log('Dropped task:', task.id),
     });
 
-    const stopDropTarget = dropTargetForElements({
-      element: el,
-      onDragEnter: ({ id }) => console.log('Drag entered:', id),
-      onDragLeave: ({ id }) => console.log('Drag left:', id),
-      onDrop: ({ id, source }) => {
-        console.log('Element dropped on target:', id);
-        onTaskDrop(source.id, task.id);
-      },
-    });
-
-    return () => {
-      stopDraggable();
-      stopDropTarget();
-    };
-  }, [task, onTaskDrop]);
+    return () => stopDraggable();
+  }, [task]);
 
   return (
     <Card
