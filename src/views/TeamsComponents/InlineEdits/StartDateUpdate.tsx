@@ -14,8 +14,8 @@ const StartDateUpdate = ({ id, StartDate, DataURL, task }: any) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    console.log("Initial StartDate:", StartDate);
-    console.log("Formatted Initial StartDate:", dayjs(StartDate).format('MM/DD/YYYY'));
+    // console.log("Initial StartDate:", StartDate);
+    // console.log("Formatted Initial StartDate:", dayjs(StartDate).format('MM/DD/YYYY'));
   }, [StartDate]);
 
   const { mutateAsync: changeStartDate } = useMutation({
@@ -35,7 +35,7 @@ const StartDateUpdate = ({ id, StartDate, DataURL, task }: any) => {
 
   const OnUpdateDate = async (date: any) => {
     if (dayjs(date).format('YYYY-MM-DD') !== dayjs(startDate).format('YYYY-MM-DD')) {
-      console.log("Updating date to:", dayjs(date).format('YYYY-MM-DD'));
+      // console.log("Updating date to:", dayjs(date).format('YYYY-MM-DD'));
       setStartDate(date);
       await changeStartDate({ id: id, startDate: date });
     }

@@ -21,7 +21,7 @@ const TaskListGridItem = ({ task, DataURL }) => {
     const stopDraggable = draggable({
       element: el,
       getInitialData: () => ({ id: task.id, status: task.status, index: task.index }),
-      onDragStart: () => console.log('Dragging started for:', task.id),
+      onDragStart: () => console.log('Dragging started for:', task.index),
       onDrop: () => console.log('Dropped task:', task.id),
     });
 

@@ -12,7 +12,7 @@ import { FaRegCircleCheck } from 'react-icons/fa6';
 
 const StatusUpdate = ({ id, taskStatus, task, DataURL }: any) => {
   const { view } = useAppSelector((state) => state.indexPage?.data['tasklist'])
-  console.log(view);
+  // console.log(view);
   const [status, setStatus] = useState(taskStatus);
   const queryClient = useQueryClient()
   const { mutateAsync: changeStatusMutation } = useMutation({

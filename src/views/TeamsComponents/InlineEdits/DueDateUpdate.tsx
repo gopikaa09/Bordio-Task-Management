@@ -14,8 +14,8 @@ const DueDateUpdate = ({ id, DueDate, task, DataURL }: any) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    console.log("Initial DueDate:", DueDate);
-    console.log("Formatted Initial DueDate:", dayjs(DueDate).format('MM/DD/YYYY'));
+    // console.log("Initial DueDate:", DueDate);
+    // console.log("Formatted Initial DueDate:", dayjs(DueDate).format('MM/DD/YYYY'));
   }, [DueDate]);
 
   const { mutateAsync: changeDueDate } = useMutation({
@@ -35,7 +35,7 @@ const DueDateUpdate = ({ id, DueDate, task, DataURL }: any) => {
 
   const OnUpdateDate = async (date: any) => {
     if (dayjs(date).format('YYYY-MM-DD') !== dayjs(dueDate).format('YYYY-MM-DD')) {
-      console.log("Updating date to:", dayjs(date).format('YYYY-MM-DD'));
+      // console.log("Updating date to:", dayjs(date).format('YYYY-MM-DD'));
       setDueDate(date);
       await changeDueDate({ id: id, dueDate: date });
     }

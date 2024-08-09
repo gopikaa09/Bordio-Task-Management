@@ -17,7 +17,7 @@ export type IndexPageState = {
 export const SLICE_NAME = 'indexPage'
 //{[key : string]: ProjectListState}
 export const indexInitialState: IndexPageState = {
-    view: 'table',
+    view: 'board',
     query: {
         pageNumber: 1,
         pageSize: 10,

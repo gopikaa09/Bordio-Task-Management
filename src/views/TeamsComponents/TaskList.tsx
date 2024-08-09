@@ -111,49 +111,64 @@ const TaskList = () => {
     </Button>
   );
 
+  const DataURL = 'http://localhost:4000/taskList'
+  const [statusPosition, setStatusPosition] = useState(statuses);
+
   useEffect(() => {
+    // Start monitoring for draggable elements
     const stopMonitoring = monitorForElements({
-      onDrop: ({ source, location }) => {
-        const destination = location.current.dropTargets[0];
-        if (!destination) return;
+      onDrop: async ({ source, location }) => {
+        const dropTargets = location.current.dropTargets;
 
-        const destinationPosition = destination.data.position;
-        const sourcePosition = source.data.position;
+        // Debug: Inspect the drop targets
+        console.log('Drop targets:', dropTargets);
 
-        if (destinationPosition === undefined || sourcePosition === undefined) return;
+        // Ensure dropTargets contains valid data
+        if (dropTargets.length === 0) {
+          console.error('No drop targets found.');
+          return;
+        }
 
-        // Update local state
-        setColumns(prevColumns => {
-          const sourceColumnIndex = prevColumns.findIndex(col => col.position === sourcePosition);
-          const destinationColumnIndex = prevColumns.findIndex(col => col.position === destinationPosition);
-          const updatedColumns = [...prevColumns];
+        const dropTargetData = dropTargets[0]?.data;
+        if (!dropTargetData || typeof dropTargetData.index !== 'number') {
+          console.error('Invalid drop target data.');
+          return;
+        }
 
-          // Swap columns
-          const [movedColumn] = updatedColumns.splice(sourceColumnIndex, 1);
-          updatedColumns.splice(destinationColumnIndex, 0, movedColumn);
+        const dropTargetIndex = dropTargetData.index;
+        console.log(dropTargetIndex);
 
-          // Update positions to reflect new order
-          return updatedColumns.map((column, index) => ({ ...column, position: index + 1 }));
-        });
+
+        // Reorder the array
+        const newStatus = [...statusPosition];
+        console.log(newStatus);
+        const draggedItemIndex = newStatus.findIndex(item => item.index === source.data.index);
+        if (draggedItemIndex === -1) return;
+
+        // Remove the dragged item and insert it at the new position
+        const [movedItem] = newStatus.splice(draggedItemIndex, 1);
+        newStatus.splice(dropTargetIndex, 0, movedItem);
+
+        setStatusPosition(newStatus);
+        console.log(statusPosition);
+        console.log(`Item ID: ${source.data.id} moved to position: ${dropTargetIndex}`);
+
+        // Optionally, make an API call to update the server with the new order
+        // await updatePeoplesOrder(newPeoples);
       },
     });
 
-    const dropTargets = document.querySelectorAll('.draggable-column');
-    dropTargets.forEach(target => {
+    // Initialize drop targets
+    const dropTargets = document.querySelectorAll('.drop-target');
+    dropTargets.forEach((target, index) => {
       dropTargetForElements({
         element: target,
-        getData: () => ({ position: Number(target.getAttribute('data-position')) })
-      });
-
-      draggable({
-        element: target,
-        getData: () => ({ position: Number(target.getAttribute('data-position')) })
+        getData: () => ({ index })
       });
     });
 
     return () => stopMonitoring();
-  }, [columns]);
-  const DataURL = 'http://localhost:4000/taskList'
+  }, [data]);
 
 
   return (
@@ -166,6 +181,7 @@ const TaskList = () => {
         name="Tasks"
         tableColumns={columnDefs}
         queryFn={data}
+        boardStatus={statuses}
         DataURL={DataURL}
         headersURL={`http://localhost:4000/headers`}
         gridItemComponent={TaskListGridComponent}

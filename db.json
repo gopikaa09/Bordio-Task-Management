@@ -24,7 +24,7 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 10,
+      "status": 20,
       "Module": ""
     },
     {
@@ -37,14 +37,14 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 20,
-      "Module": ""
+      "Module": "",
+      "status": 10
     },
     {
       "id": "1e8c",
       "title": "Task678",
       "description": "",
-      "priority": 3,
+      "priority": 1,
       "assignes": "Raghu",
       "attachements": "",
       "scope": "",
@@ -76,18 +76,17 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 30,
       "Module": ""
     },
     {
       "id": "a7d8",
-      "title": "Task34",
+      "title": "Task38",
       "description": "",
       "priority": 1,
       "assignes": "Naveena",
       "attachements": "",
-      "status": 30,
-      "Module": ""
+      "Module": "",
+      "status": 10
     }
   ],
   "notes": [

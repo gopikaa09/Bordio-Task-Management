@@ -84,7 +84,7 @@ const ToggleButton = ({
 const ToolbarList = () => {
   const dispatch = useAppDispatch()
   const { category } = useParams();
-  console.log(category)
+  // console.log(category)
   const [folder, setFolder] = useState('INBOX')
 
   const sideBarExpand = useAppSelector(

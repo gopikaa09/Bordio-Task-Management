@@ -87,6 +87,7 @@ type IndexPageProps = {
     productUsage?: boolean
     headersURL?: string
     DataURL?: string
+    boardStatus?: []
 }
 type Option = {
     value: number
@@ -137,7 +138,8 @@ function IndexPage(indexPageProps: IndexPageProps) {
         multiButton,
         productUsage = false,
         headersURL,
-        DataURL
+        DataURL,
+        boardStatus = []
 
 
     } = indexPageProps
@@ -487,6 +489,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                     <>
                                         {view == 'board' && (
                                             <BoardView
+                                                boardStatus={boardStatus}
                                                 DataURL={DataURL}
                                                 headersURL={headersURL}
                                                 data={queryFn}
