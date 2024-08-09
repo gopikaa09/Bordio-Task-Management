@@ -11,8 +11,8 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 30,
-      "Module": ""
+      "Module": "",
+      "status": 20
     },
     {
       "id": "fbc1",
@@ -24,7 +24,7 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 20,
+      "status": 30,
       "Module": ""
     },
     {
@@ -64,7 +64,11 @@
       "column1": "",
       "gopppik": "",
       "Module": "",
+<<<<<<< Updated upstream
       "status": 10
+=======
+      "status": 20
+>>>>>>> Stashed changes
     },
     {
       "id": "7831",
@@ -77,7 +81,11 @@
       "column1": "",
       "gopppik": "",
       "Module": "",
+<<<<<<< Updated upstream
       "status": 20
+=======
+      "status": 10
+>>>>>>> Stashed changes
     },
     {
       "id": "a7d8",
@@ -87,7 +95,7 @@
       "assignes": "Naveena",
       "attachements": "",
       "Module": "",
-      "status": 10
+      "status": 20
     }
   ],
   "notes": [

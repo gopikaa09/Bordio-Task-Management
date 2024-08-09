@@ -87,7 +87,9 @@ type IndexPageProps = {
     productUsage?: boolean
     headersURL?: string
     DataURL?: string
-    boardStatus?: []
+    initialBoardStatus?: []
+    updatedBoardStatus?: []
+    onColumnDataSend?: []
 }
 type Option = {
     value: number
@@ -139,9 +141,9 @@ function IndexPage(indexPageProps: IndexPageProps) {
         productUsage = false,
         headersURL,
         DataURL,
-        boardStatus = []
-
-
+        initialBoardStatus = [],
+        updatedBoardStatus = [],
+        onColumnDataSend = []
     } = indexPageProps
 
     const dispatch = useDispatch()
@@ -489,12 +491,14 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                     <>
                                         {view == 'board' && (
                                             <BoardView
-                                                boardStatus={boardStatus}
+                                                initialBoardStatus={initialBoardStatus}
+                                                updatedBoardStatus={updatedBoardStatus}
                                                 DataURL={DataURL}
                                                 headersURL={headersURL}
                                                 data={queryFn}
                                                 query={queryParams}
                                                 setQuery={setQuery}
+                                                onColumnDataSend={onColumnDataSend}
                                             />
                                         )}
                                         {view == 'grid' && (

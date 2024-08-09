@@ -13,7 +13,7 @@ const IndexTableView = ({ DataURL, headersURL }) => {
   const [rows, setRows] = useState([]);
   const [draggedColIndex, setDraggedColIndex] = useState(null);
   const [draggedRowIndex, setDraggedRowIndex] = useState(null);
-
+  const [hoveredColIndex, setHoveredColIndex] = useState(null);
   useEffect(() => {
     // Fetch data from the server
     const fetchData = async () => {
@@ -56,8 +56,9 @@ const IndexTableView = ({ DataURL, headersURL }) => {
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleColumnDragOver = (e) => {
+  const handleColumnDragOver = (e, index) => {
     e.preventDefault();
+    setHoveredColIndex(index)
   };
 
   const handleColumnDrop = (e, index) => {
@@ -78,6 +79,7 @@ const IndexTableView = ({ DataURL, headersURL }) => {
 
     setColumns(newColumns);
     setRows(newRows);
+    setHoveredColIndex(index)
     setDraggedColIndex(null);
   };
 
@@ -203,7 +205,8 @@ const IndexTableView = ({ DataURL, headersURL }) => {
             <th className='bg-gray-200'></th>
             {columns.map((col, index) => (
               <th
-                className='bg-gray-200 uppercase font-normal py-2'
+                // className='bg-gray-200 uppercase font-normal py-2'
+                className={`bg-gray-200 uppercase font-normal py-2 ${hoveredColIndex === index ? 'column-hover' : ''}`}
                 key={index}
                 draggable
                 onDragStart={(e) => handleColumnDragStart(e, index)}

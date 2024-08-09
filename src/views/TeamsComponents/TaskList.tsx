@@ -111,25 +111,27 @@ const TaskList = () => {
     </Button>
   );
 
+  const handleColumnRef = () => {
+    setColumns(statusPosition)
+  }
+
   const DataURL = 'http://localhost:4000/taskList'
   const [statusPosition, setStatusPosition] = useState(statuses);
-
   useEffect(() => {
-    // Start monitoring for draggable elements
     const stopMonitoring = monitorForElements({
       onDrop: async ({ source, location }) => {
         const dropTargets = location.current.dropTargets;
 
-        // Debug: Inspect the drop targets
         console.log('Drop targets:', dropTargets);
 
-        // Ensure dropTargets contains valid data
         if (dropTargets.length === 0) {
           console.error('No drop targets found.');
           return;
         }
 
         const dropTargetData = dropTargets[0]?.data;
+        console.log(dropTargetData);
+
         if (!dropTargetData || typeof dropTargetData.index !== 'number') {
           console.error('Invalid drop target data.');
           return;
@@ -139,27 +141,21 @@ const TaskList = () => {
         console.log(dropTargetIndex);
 
 
-        // Reorder the array
         const newStatus = [...statusPosition];
         console.log(newStatus);
         const draggedItemIndex = newStatus.findIndex(item => item.index === source.data.index);
         if (draggedItemIndex === -1) return;
 
-        // Remove the dragged item and insert it at the new position
         const [movedItem] = newStatus.splice(draggedItemIndex, 1);
         newStatus.splice(dropTargetIndex, 0, movedItem);
 
         setStatusPosition(newStatus);
         console.log(statusPosition);
         console.log(`Item ID: ${source.data.id} moved to position: ${dropTargetIndex}`);
-
-        // Optionally, make an API call to update the server with the new order
-        // await updatePeoplesOrder(newPeoples);
       },
     });
 
-    // Initialize drop targets
-    const dropTargets = document.querySelectorAll('.drop-target');
+    const dropTargets = document.querySelectorAll('.status-target');
     dropTargets.forEach((target, index) => {
       dropTargetForElements({
         element: target,
@@ -168,11 +164,12 @@ const TaskList = () => {
     });
 
     return () => stopMonitoring();
-  }, [data]);
+  }, [data, statusPosition]);
+
 
 
   return (
-    <div className='m-5' data-status={'taskList'}>
+    <div className='m-5 status-target' data-status={'taskList'}>
       <IndexPage
         indexKey={'tasklist'}
         dropdownItem={AddButton}
@@ -181,11 +178,13 @@ const TaskList = () => {
         name="Tasks"
         tableColumns={columnDefs}
         queryFn={data}
-        boardStatus={statuses}
+        initialBoardStatus={statuses}
+        updatedBoardStatus={statusPosition}
         DataURL={DataURL}
         headersURL={`http://localhost:4000/headers`}
         gridItemComponent={TaskListGridComponent}
         boardViewComponent={TaskListBoardComponent}
+        onColumnDataSend={handleColumnRef}
         queryParamsShow={false}
       />
       <div>

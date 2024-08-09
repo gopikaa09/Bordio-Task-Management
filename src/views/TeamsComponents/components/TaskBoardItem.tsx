@@ -26,32 +26,14 @@ const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
     const stopDraggable = draggable({
       element: el,
       getInitialData: () => ({ id: task.id, status: task.status }),
-      onDragStart: () => console.log('Dragging started for:', task.id),
-      onDrop: () => console.log('Dropped task:', task.id),
-      // onGenerateDragPreview: ({ nativeSetDragImage }) => {
-      //   const isSafari = navigator.userAgent.includes('AppleWebKit') && !navigator.userAgent.includes('Chrome');
-
-      //   if (isSafari) {
-      //     // Safari specific handling
-      //     setCustomNativeDragPreview({
-      //       getOffset: (event) => ({
-      //         x: event.clientX,
-      //         y: event.clientY,
-      //       }),
-      //       render: ({ container }) => {
-      //         container.style.backgroundColor = 'red';
-      //         container.style.color = 'white';
-      //         container.style.padding = '10px';
-      //         container.innerHTML = 'Custom Preview';
-      //         return () => setDraggableState(idle);
-      //       },
-      //       nativeSetDragImage,
-      //     });
-      //   } else {
-      //     // Non-Safari browsers
-      //     setDraggableState({ type: 'generate-column-preview' });
-      //   }
-      // },
+      onDragStart: () => {
+        el.classList.add('dragging'); // Add dragging class on drag start
+        console.log('Dragging started:', task.id);
+      },
+      onDrop: () => {
+        el.classList.remove('dragging'); // Remove dragging class on drop
+        console.log('Dropped task:', task.id);
+      },
     });
 
     return () => stopDraggable();

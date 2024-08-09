@@ -79,7 +79,7 @@ const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
       {
         tasks.map((task, index) => (
           <div key={task.id} data-index={index}
-            className="drop-target"
+            className="drop-target cardStyles"
           >
             <TaskListGridItem key={task.id} task={task} DataURL={DataURL} />
           </div>

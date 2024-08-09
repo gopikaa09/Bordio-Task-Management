@@ -12,3 +12,13 @@ td, th {
   text-align: left;
   padding: 8px;
 }
+
+.dragging{
+  border: 2px solid red;
+}
+
+/* styles.css */
+.column-hover {
+  border-bottom: 3px solid #3498db; /* Add underline with a specific color */
+  transition: border-bottom 0.2s ease-in-out;
+}
