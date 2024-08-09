@@ -50,8 +50,8 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 40,
-      "Module": ""
+      "Module": "",
+      "status": 10
     },
     {
       "id": "8209",
@@ -63,8 +63,8 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "status": 20,
-      "Module": ""
+      "Module": "",
+      "status": 10
     },
     {
       "id": "7831",
@@ -76,7 +76,8 @@
       "scope": "",
       "column1": "",
       "gopppik": "",
-      "Module": ""
+      "Module": "",
+      "status": 20
     },
     {
       "id": "a7d8",

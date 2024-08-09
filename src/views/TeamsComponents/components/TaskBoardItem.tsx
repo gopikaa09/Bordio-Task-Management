@@ -1,17 +1,23 @@
 import { Task } from "@/@types/tasks";
 import { Card, Tooltip } from "@/components/ui";
 import { getInitials } from "@/utils/getInitials";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import StatusUpdate from "../InlineEdits/StatusUpdate";
 import PriorityUpdate from "../InlineEdits/PriorityUpdate";
 import StartDateUpdate from "../InlineEdits/StartDateUpdate";
 import DueDateUpdate from "../InlineEdits/DueDateUpdate";
 import ModuleUpdate from "../InlineEdits/ModuleUpdate";
 
+type IdleState = { type: 'idle' }
+
+const idle: IdleState = { type: 'idle' }
+
 const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [draggableState, setDraggableState] = useState(idle);
 
   useEffect(() => {
     const el = ref.current;
@@ -22,6 +28,30 @@ const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
       getInitialData: () => ({ id: task.id, status: task.status }),
       onDragStart: () => console.log('Dragging started for:', task.id),
       onDrop: () => console.log('Dropped task:', task.id),
+      // onGenerateDragPreview: ({ nativeSetDragImage }) => {
+      //   const isSafari = navigator.userAgent.includes('AppleWebKit') && !navigator.userAgent.includes('Chrome');
+
+      //   if (isSafari) {
+      //     // Safari specific handling
+      //     setCustomNativeDragPreview({
+      //       getOffset: (event) => ({
+      //         x: event.clientX,
+      //         y: event.clientY,
+      //       }),
+      //       render: ({ container }) => {
+      //         container.style.backgroundColor = 'red';
+      //         container.style.color = 'white';
+      //         container.style.padding = '10px';
+      //         container.innerHTML = 'Custom Preview';
+      //         return () => setDraggableState(idle);
+      //       },
+      //       nativeSetDragImage,
+      //     });
+      //   } else {
+      //     // Non-Safari browsers
+      //     setDraggableState({ type: 'generate-column-preview' });
+      //   }
+      // },
     });
 
     return () => stopDraggable();
@@ -66,25 +96,3 @@ const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
 };
 
 export default TaskBoardItem;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
