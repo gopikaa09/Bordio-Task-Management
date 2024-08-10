@@ -3,7 +3,6 @@ import { Dropdown, Input } from "@/components/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { FaRegCircle } from "react-icons/fa"; // Assuming you are using react-icons for FaRegCircle
 import { MdOutlineAccessTime, MdOutlineViewModule } from "react-icons/md";
 
 const TimeEstimatesUpdate = ({ task, id, timeEstimates, DataURL }: any) => {

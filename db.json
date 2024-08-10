@@ -64,11 +64,7 @@
       "column1": "",
       "gopppik": "",
       "Module": "",
-<<<<<<< Updated upstream
-      "status": 10
-=======
       "status": 20
->>>>>>> Stashed changes
     },
     {
       "id": "7831",
@@ -81,11 +77,7 @@
       "column1": "",
       "gopppik": "",
       "Module": "",
-<<<<<<< Updated upstream
       "status": 20
-=======
-      "status": 10
->>>>>>> Stashed changes
     },
     {
       "id": "a7d8",
@@ -95,7 +87,7 @@
       "assignes": "Naveena",
       "attachements": "",
       "Module": "",
-      "status": 20
+      "status": 40
     }
   ],
   "notes": [

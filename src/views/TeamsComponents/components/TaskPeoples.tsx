@@ -16,7 +16,7 @@ type Member = {
   isActive: boolean
 }
 const TaskPeople = () => {
-  const PeoplesUrl = 'http://localhost:4000/peoples'; // Ensure this is the correct URL
+  const PeoplesUrl = 'http://localhost:4000/peoples';
 
   const { data: PeopleData, error, isPending } = useQuery({
     queryKey: ['taskpeople'],

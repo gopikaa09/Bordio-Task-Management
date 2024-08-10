@@ -30,7 +30,7 @@ const ModuleUpdate = ({ id, moduleStatus, task, DataURL }: any) => {
   };
 
 
-  const ModulesURL = 'http://localhost:4000/modules'; // Ensure this is the correct URL
+  const ModulesURL = 'http://localhost:4000/modules';
 
   const { data: Modules } = useQuery({
     queryKey: ['Modules'],

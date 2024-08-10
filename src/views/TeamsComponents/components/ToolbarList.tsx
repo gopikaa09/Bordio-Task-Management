@@ -5,12 +5,8 @@ import Avatar from '@/components/ui/Avatar'
 import Button from '@/components/ui/Button'
 import Loading from '@/components/shared/Loading'
 import {
-  HiOutlineFlag,
-  HiStar,
-  HiPaperClip,
   HiMenu,
   HiMenuAlt2,
-  HiOutlineTrash,
 } from 'react-icons/hi'
 
 import useResponsive from '@/utils/hooks/useResponsive'
@@ -20,8 +16,7 @@ import type { MouseEvent } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MdWarningAmber } from 'react-icons/md'
-// import { getConfirmation } from '@/components/common/CommonDialogProvider';
-// import globalOptions from '@/configs/globalOptions';
+
 import { Spinner } from '@/components/ui'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { toggleMobileSidebar, toggleSidebar } from '@/views/store'
@@ -82,7 +77,6 @@ const ToggleButton = ({
 
 
 const ToolbarList = () => {
-  const dispatch = useAppDispatch()
   const { category } = useParams();
   // console.log(category)
   const [folder, setFolder] = useState('INBOX')
@@ -99,21 +93,7 @@ const ToolbarList = () => {
 
   const direction = useAppSelector((state) => state.theme.direction)
 
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const params = {
-    folders: selectedCategory?.value
-  }
-
-
-  const queryClient = useQueryClient()
-
-
-
-
-  const [showContent, setShowContent] = useState({});
-  const TaskListUrl = 'http://localhost:4000/taskList'; // Ensure this is the correct URL
+  const TaskListUrl = 'http://localhost:4000/taskList';
 
   const { data: ToolbarListData, error, isPending } = useQuery({
     queryKey: ['tasklistQuery'],
@@ -127,7 +107,6 @@ const ToolbarList = () => {
       className={classNames(
         'min-w-[360px] ease-in-out duration-300 relative flex flex-auto flex-col ltr:border-r rtl:border-l border-gray-200 dark:border-gray-600',
         sideBarExpand && 'ltr:xl:ml-[280px] rtl:xl:mr-[280px]',
-        // mailId ? 'hidden xl:flex' : 'xs:flex'
       )}
     >
       <div className="relative flex flex-0 items-center justify-between min-h-[55px] border-gray-200 dark:border-gray-600">

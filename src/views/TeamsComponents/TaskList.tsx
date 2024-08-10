@@ -116,55 +116,8 @@ const TaskList = () => {
   }
 
   const DataURL = 'http://localhost:4000/taskList'
+
   const [statusPosition, setStatusPosition] = useState(statuses);
-  useEffect(() => {
-    const stopMonitoring = monitorForElements({
-      onDrop: async ({ source, location }) => {
-        const dropTargets = location.current.dropTargets;
-
-        console.log('Drop targets:', dropTargets);
-
-        if (dropTargets.length === 0) {
-          console.error('No drop targets found.');
-          return;
-        }
-
-        const dropTargetData = dropTargets[0]?.data;
-        console.log(dropTargetData);
-
-        if (!dropTargetData || typeof dropTargetData.index !== 'number') {
-          console.error('Invalid drop target data.');
-          return;
-        }
-
-        const dropTargetIndex = dropTargetData.index;
-        console.log(dropTargetIndex);
-
-
-        const newStatus = [...statusPosition];
-        console.log(newStatus);
-        const draggedItemIndex = newStatus.findIndex(item => item.index === source.data.index);
-        if (draggedItemIndex === -1) return;
-
-        const [movedItem] = newStatus.splice(draggedItemIndex, 1);
-        newStatus.splice(dropTargetIndex, 0, movedItem);
-
-        setStatusPosition(newStatus);
-        console.log(statusPosition);
-        console.log(`Item ID: ${source.data.id} moved to position: ${dropTargetIndex}`);
-      },
-    });
-
-    const dropTargets = document.querySelectorAll('.status-target');
-    dropTargets.forEach((target, index) => {
-      dropTargetForElements({
-        element: target,
-        getData: () => ({ index })
-      });
-    });
-
-    return () => stopMonitoring();
-  }, [data, statusPosition]);
 
 
 

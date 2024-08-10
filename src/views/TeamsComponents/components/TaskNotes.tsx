@@ -25,37 +25,8 @@ const containerStyles = css({
   background: token('elevation.surface.raised', '#FFF'),
 });
 
-const sidebarStyles = css({
-  background: token('elevation.surface.overlay', '#FFF'),
-  display: 'flex',
-  padding: 16,
-  gap: 16,
-  position: 'absolute',
-  bottom: 24,
-  boxShadow: token(
-    'elevation.shadow.overlay',
-    '0px 8px 12px rgba(9, 30, 66, 0.15),0px 0px 1px rgba(9, 30, 66, 0.31)',
-  ),
-  borderRadius: 4,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  boxSizing: 'border-box',
-  width: 'max-content',
-  zIndex: 10, // Ensure the sidebar is on top
-});
 
-const swatchBaseStyles = css({
-  boxSizing: 'border-box',
-  border: `2px solid ${token('color.border', 'rgba(9, 30, 66, 0.14)')}`,
-  width: 32,
-  height: 32,
-  borderRadius: '50%',
-  cursor: 'pointer',
-  color: token('color.text.inverse', '#FFF'),
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
+
 
 const Colors = [
   { name: 'red', color: 'red' },
@@ -67,7 +38,7 @@ const Colors = [
 const canvasStyles = css({
   width: '100%',
   height: '100%',
-  background: 'lightgray', // Ensure visibility with a distinct color
+  background: 'lightgray',
 });
 
 const dividerStyles = css({
@@ -88,10 +59,8 @@ export default function TaskNotes() {
     const ctx = canvas.getContext('2d');
     invariant(ctx);
 
-    // Log canvas dimensions for debugging
     console.log(`Canvas dimensions: ${canvas.width}x${canvas.height}`);
 
-    // Draw an initial rectangle to check visibility
     ctx.fillStyle = 'blue';
     ctx.fillRect(10, 10, 100, 100);
 
@@ -106,7 +75,6 @@ export default function TaskNotes() {
         canvas.width = inlineSize;
         canvas.height = blockSize;
 
-        // Adjust drawing context settings
         Object.assign(ctx, {
           strokeStyle: ctx.strokeStyle,
           shadowColor: ctx.shadowColor,
@@ -143,7 +111,7 @@ export default function TaskNotes() {
           const { clientX, clientY } = event;
           const rect = canvas.getBoundingClientRect();
 
-          ctx.strokeStyle = selectedColor; // Use selected color
+          ctx.strokeStyle = selectedColor;
           ctx.beginPath();
           ctx.moveTo(clientX - rect.x, clientY - rect.y);
           prevPoint = { x: clientX, y: clientY };
@@ -177,7 +145,7 @@ export default function TaskNotes() {
         },
       }),
     );
-  }, [selectedColor]); // Ensure color is used in drawing
+  }, [selectedColor]);
 
   const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current;

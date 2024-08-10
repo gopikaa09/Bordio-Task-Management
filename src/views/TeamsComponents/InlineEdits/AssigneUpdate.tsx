@@ -29,7 +29,7 @@ const AssigneeUpdate = ({ id, assigneName, task }: any) => {
     await changeStatusMutation({ id: id, assignes: selectedStatus.value });
   };
 
-  const MembersURl = 'http://localhost:4000/peoples'; // Ensure this is the correct URL
+  const MembersURl = 'http://localhost:4000/peoples';
 
   const { data: peoples } = useQuery({
     queryKey: ['Peoples'],

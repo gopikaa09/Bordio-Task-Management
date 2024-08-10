@@ -1,23 +1,17 @@
 import { Task } from "@/@types/tasks";
 import { Card, Tooltip } from "@/components/ui";
 import { getInitials } from "@/utils/getInitials";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import StatusUpdate from "../InlineEdits/StatusUpdate";
 import PriorityUpdate from "../InlineEdits/PriorityUpdate";
 import StartDateUpdate from "../InlineEdits/StartDateUpdate";
 import DueDateUpdate from "../InlineEdits/DueDateUpdate";
 import ModuleUpdate from "../InlineEdits/ModuleUpdate";
 
-type IdleState = { type: 'idle' }
-
-const idle: IdleState = { type: 'idle' }
-
-const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
+const TaskBoardItem = ({ task, DataURL }: { task: Task; DataURL: string }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [draggableState, setDraggableState] = useState(idle);
 
   useEffect(() => {
     const el = ref.current;
@@ -25,13 +19,13 @@ const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
 
     const stopDraggable = draggable({
       element: el,
-      getInitialData: () => ({ id: task.id, status: task.status }),
+      getInitialData: () => ({ type: 'taskCard', id: task.id, status: task.status }),
       onDragStart: () => {
-        el.classList.add('dragging'); // Add dragging class on drag start
+        el.classList.add('dragging');
         console.log('Dragging started:', task.id);
       },
       onDrop: () => {
-        el.classList.remove('dragging'); // Remove dragging class on drop
+        el.classList.remove('dragging');
         console.log('Dropped task:', task.id);
       },
     });
@@ -43,7 +37,7 @@ const TaskBoardItem = ({ task, DataURL }: { task: Task }) => {
     <div ref={ref} id={task.id}>
       <Card
         bodyClass="p-4"
-        className={` dark:bg-gray-700
+        className={`dark:bg-gray-700
           ${task.status === 10 ? 'bg-blue-200' : task.status === 20 ? 'bg-green-200' : task.status === 30 ? 'bg-red-200' : 'bg-gray-200'}
           mb-4 leading-8`}
       >

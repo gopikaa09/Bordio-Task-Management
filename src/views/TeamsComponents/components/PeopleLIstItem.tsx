@@ -18,11 +18,11 @@ const PeopleListItem = ({ item }) => {
       getInitialData: () => ({ id: item.id }),
       onDragStart: () => {
         console.log(`Dragging started for item ID: ${item.id}`);
-        setIsDragging(true); // Set dragging state to true
+        setIsDragging(true);
       },
       onDrop: () => {
         console.log(`Dropped item ID: ${item.id}`);
-        setIsDragging(false); // Reset dragging state
+        setIsDragging(false);
       },
 
       onGenerateDragPreview({ nativeSetDragImage }) {
@@ -45,14 +45,13 @@ const PeopleListItem = ({ item }) => {
     return () => stopDraggable();
   }, [item]);
 
-  // Conditional styling for the card based on the dragging state
-  const cardStyle = isDragging
-    ? 'border-dashed border-2 border-blue-500 shadow-lg bg-red-200'
-    : 'border border-gray-300';
+  // const cardStyle = isDragging
+  //   ? 'border-dashed border-2 border-blue-500 shadow-lg bg-red-200'
+  //   : 'border border-gray-300';
 
   return (
     <div ref={ref}>
-      <Card className={`p-1 ${cardStyle}`}>
+      <Card className={`p-1 `}>
         <div className='flex justify-between'>
           <div className='flex gap-2 items-center'>
             <div className="bg-gray-400 px-3 py-2 rounded-full text-white text-xs font-semibold">

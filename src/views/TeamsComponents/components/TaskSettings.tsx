@@ -11,15 +11,12 @@ const TaskSettings = () => {
   const [draggedRowIndex, setDraggedRowIndex] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the server
     const fetchData = async () => {
       try {
         const columnsResponse = await axios.get('http://localhost:4000/headers');
         const rowsResponse = await axios.get('http://localhost:4000/taskList');
 
-        // Assuming columnsResponse.data is an array of column objects
-        // and rowsResponse.data is an array of row objects
-        const columnsData = columnsResponse.data.map(col => col.name); // Adjust based on actual structure
+        const columnsData = columnsResponse.data.map(col => col.name);
         const rowsData = rowsResponse.data.map(row => {
           console.log(row);
           return columnsData.map(col => {
@@ -66,7 +63,6 @@ const TaskSettings = () => {
     const [draggedColumn] = newColumns.splice(draggedColIndex, 1);
     newColumns.splice(index, 0, draggedColumn);
 
-    // Rearrange rows according to the new column order
     const newRows = rows.map(row => {
       const reorderedRow = [];
       for (let i = 0; i < newColumns.length; i++) {

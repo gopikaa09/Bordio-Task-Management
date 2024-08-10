@@ -41,7 +41,7 @@ const AddTask = ({ drawerClose, status, DataURL }) => {
   })
 
 
-  const TaskListUrl = DataURL; // Ensure this is the correct URL
+  const TaskListUrl = DataURL;
   const queryClient = useQueryClient();
 
   const { mutateAsync: addTask } = useMutation({
@@ -69,7 +69,7 @@ const AddTask = ({ drawerClose, status, DataURL }) => {
       queryClient.invalidateQueries(["tasklistQuery"])
     }
   })
-  const MembersURl = 'http://localhost:4000/peoples'; // Ensure this is the correct URL
+  const MembersURl = 'http://localhost:4000/peoples';
 
   const { data: peoples } = useQuery({
     queryKey: ['Peoples'],
@@ -79,7 +79,7 @@ const AddTask = ({ drawerClose, status, DataURL }) => {
     }
   })
 
-  const ModulesURL = 'http://localhost:4000/modules'; // Ensure this is the correct URL
+  const ModulesURL = 'http://localhost:4000/modules';
 
   const { data: Modules } = useQuery({
     queryKey: ['Modules'],
