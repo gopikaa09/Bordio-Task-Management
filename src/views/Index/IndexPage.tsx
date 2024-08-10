@@ -11,21 +11,8 @@ import {
 } from 'react-icons/hi'
 import { Button, Drawer, Pagination, Select } from '@/components/ui'
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
-import { IndexGridSkeleton } from '@/views/Index/components/IndexGridSkeleton'
-import { IndexListSkeleton } from '@/views/Index/components/IndexListSkeleton'
-import IndexBoardSkeleton from '@/views/Index/components/IndexBoardSkeleton'
 import { injectReducer } from '@/store'
 import { ComponentType, FunctionComponent } from 'react'
-// import reducer, {
-//     indexInitialState,
-//     IndexPageState,
-//     setIndexInitialState,
-//     setIndexQueryParam,
-//     setIndexView,
-//     useAppSelector,
-// } from '@/store/slices/IndexPage'
-import { IndexTableSkeleton } from '@/views/Index/components/IndexTableSkeleton'
-import IndexGridView from '@/views/Index/components/IndexGridView'
 import IndexListView from '@/views/Index/components/IndexListView'
 import IndexTableView from '@/views/Index/components/IndexTableView'
 import IndexUsageView from '@/views/Index/components/IndexUsageView'

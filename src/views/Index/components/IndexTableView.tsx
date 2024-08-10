@@ -15,15 +15,12 @@ const IndexTableView = ({ DataURL, headersURL }) => {
   const [draggedRowIndex, setDraggedRowIndex] = useState(null);
   const [hoveredColIndex, setHoveredColIndex] = useState(null);
   useEffect(() => {
-    // Fetch data from the server
     const fetchData = async () => {
       try {
         const columnsResponse = await axios.get(headersURL);
         const rowsResponse = await axios.get(DataURL);
 
-        // Assuming columnsResponse.data is an array of column objects
-        // and rowsResponse.data is an array of row objects
-        const columnsData = columnsResponse.data.map(col => col); // Adjust based on actual structure
+        const columnsData = columnsResponse.data.map(col => col);
         const rowsData = rowsResponse.data.map(row => {
           return columnsData.map(col => {
             switch (col.name) {
@@ -67,7 +64,6 @@ const IndexTableView = ({ DataURL, headersURL }) => {
     const [draggedColumn] = newColumns.splice(draggedColIndex, 1);
     newColumns.splice(index, 0, draggedColumn);
 
-    // Rearrange rows according to the new column order
     const newRows = rows.map(row => {
       const reorderedRow = [];
       for (let i = 0; i < newColumns.length; i++) {
@@ -132,25 +128,21 @@ const IndexTableView = ({ DataURL, headersURL }) => {
 
     if (newColumnName) {
       try {
-        // Add the new column to the headers
         const newColumn = await addColumnMutation.mutateAsync(newColumnName);
 
         setColumns(prevColumns => [...prevColumns, newColumn]);
         setRows(prevRows =>
-          prevRows.map(row => [...row, '']) // Add empty values for the new column in each row
+          prevRows.map(row => [...row, ''])
         );
 
-        // Fetch the current task list
         const rowsResponse = await axios.get(TaskURL);
         const tasks = rowsResponse.data;
 
-        // Update each task with the new column name
         const updatedTasks = tasks.map(task => ({
           ...task,
-          [newColumnName]: '' // Initialize the new column with an empty value
+          [newColumnName]: ''
         }));
 
-        // Update tasks on the server
         await updateTasksMutation.mutateAsync(updatedTasks);
         console.log('All tasks updated successfully');
       } catch (error) {
@@ -161,7 +153,6 @@ const IndexTableView = ({ DataURL, headersURL }) => {
 
   const handleDeleteColumn = async (columnId) => {
     try {
-      // Delete the column from the headers
       await deleteColumnMutation.mutateAsync(columnId);
 
       const columnName = columns.find(col => col.id === columnId).name;
@@ -171,22 +162,19 @@ const IndexTableView = ({ DataURL, headersURL }) => {
         prevRows.map(row => {
           const newRow = [...row];
           const colIndex = columns.findIndex(col => col.id === columnId);
-          newRow.splice(colIndex, 1); // Remove the cell corresponding to the deleted column
+          newRow.splice(colIndex, 1);
           return newRow;
         })
       );
 
-      // Fetch the current task list
       const rowsResponse = await axios.get(TaskURL);
       const tasks = rowsResponse.data;
 
-      // Update each task to remove the deleted column name
       const updatedTasks = tasks.map(task => {
         const { [columnName]: _, ...rest } = task;
         return rest;
       });
 
-      // Update tasks on the server
       await updateTasksMutation.mutateAsync(updatedTasks);
       console.log('All tasks updated successfully');
     } catch (error) {

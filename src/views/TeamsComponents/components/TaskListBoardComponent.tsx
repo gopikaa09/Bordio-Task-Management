@@ -65,7 +65,6 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
 
           const [movedItem] = newOrder.splice(draggedItemIndex, 1);
 
-          // Adjust drop target index
           if (dropTargetIndex >= newOrder.length) {
             dropTargetIndex = newOrder.length - 1;
           }
@@ -96,7 +95,6 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
       },
     });
 
-    // Initialize drop targets with correct index
     const dropTargets = document.querySelectorAll('.status-target');
     dropTargets.forEach((target, index) => {
       dropTargetForElements({

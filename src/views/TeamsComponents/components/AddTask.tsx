@@ -28,7 +28,7 @@ const AddTask = ({ drawerClose, status, DataURL }) => {
     assignes: '',
     lables: '',
     modules: '',
-    status: 1, // Default value corresponding to 'New Task'
+    status: 1, //new task default
     startDate: '',
     dueDate: '',
     estimates: '',
