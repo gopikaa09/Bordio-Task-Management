@@ -21,19 +21,17 @@ const TaskListGridItem = ({ task, DataURL }) => {
     const stopDraggable = draggable({
       element: el,
       getInitialData: () => ({ id: task.id, status: task.status, index: task.index }),
-      onDragStart: () => console.log('Dragging started for:', task.index),
+      onDragStart: () => console.log('Dragging started for:', task.id),
       onDrop: () => console.log('Dropped task:', task.id),
     });
 
     return () => stopDraggable();
   }, [task]);
-
   return (
     <Card
       bodyClass="p-4"
-      className="hover:shadow-lg rounded-lg dark:bg-gray-700 mb-4 leading-8n"
+      className="hover:shadow-lg rounded-lg dark:bg-gray-700 mb-4 leading-8"
       ref={ref}
-
     >
       <div className="flex justify-between mb-2">
         <p className="font-semibold">{task.title}</p>
@@ -61,6 +59,7 @@ const TaskListGridItem = ({ task, DataURL }) => {
         </Tooltip>
         <Tooltip title="Module">
           <ModuleUpdate task={task} id={task.id} moduleStatus={task.modules} DataURL={DataURL} />
+
         </Tooltip>
         <Tooltip title="Estimated Time">
           <TimeEstimatesUpdate task={task} id={task.id} timeEstimates={task.estimates} DataURL={DataURL} />

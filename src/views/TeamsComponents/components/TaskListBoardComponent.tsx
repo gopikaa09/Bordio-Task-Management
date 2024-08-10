@@ -48,7 +48,7 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
           return;
         }
 
-        const dropTargetIndex = dropTargetData.index;
+        let dropTargetIndex = dropTargetData.index;
 
         console.log('Drop target index:', dropTargetIndex);
 
@@ -65,9 +65,9 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
 
           const [movedItem] = newOrder.splice(draggedItemIndex, 1);
 
-          // Correctly adjust the index
+          // Adjust drop target index
           if (dropTargetIndex >= newOrder.length) {
-            dropTargetIndex = newOrder.length - 1; // Ensure it doesn't exceed the array length
+            dropTargetIndex = newOrder.length - 1;
           }
 
           newOrder.splice(dropTargetIndex, 0, movedItem);
@@ -96,21 +96,18 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
       },
     });
 
-    // Initialize drop targets with index
+    // Initialize drop targets with correct index
     const dropTargets = document.querySelectorAll('.status-target');
     dropTargets.forEach((target, index) => {
       dropTargetForElements({
         element: target,
-        getData: () => {
-          const targetIndex = Array.from(dropTargets).indexOf(target);
-          console.log('Setting drop target index:', targetIndex);
-          return { index: targetIndex, status: Number(target.getAttribute('data-status')) };
-        },
+        getData: () => ({ index, status: Number(target.getAttribute('data-status')) }),
       });
     });
 
     return () => stopMonitoring();
   }, [tasks, statusOrder, changeStatusMutation]);
+
 
 
 
@@ -125,6 +122,8 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
     }
     columnRefs.current[index] = el;
   };
+
+
 
   const handleAddTaskDrawerOpen = (status: number) => {
     setIsOpen(true);
