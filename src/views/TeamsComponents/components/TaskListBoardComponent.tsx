@@ -8,18 +8,17 @@ import { Button, Drawer } from "@/components/ui";
 import { HiOutlinePlus } from "react-icons/hi";
 import AddTask from "./AddTask";
 
-const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL, onColumnDataSend }: { data: Task[]; DataURL: string }) => {
+const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[]; DataURL: string }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [isOpen, setIsOpen] = useState(false);
+  const [statusOrder, setStatusOrder] = useState([
+    { name: 'New Task', value: 10 },
+    { name: 'Scheduled', value: 20 },
+    { name: 'In Progress', value: 30 },
+    { name: 'Completed', value: 40 },
+  ]);
+
   const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const statuses = [
-    { name: 'New Task', value: 10, position: 1 },
-    { name: 'Scheduled', value: 20, position: 2 },
-    { name: 'In Progress', value: 30, position: 3 },
-    { name: 'Completed', value: 40, position: 4 },
-  ];
-
   const queryClient = useQueryClient();
   const { mutateAsync: changeStatusMutation } = useMutation({
     mutationKey: ['taskStatusUpdate'],
@@ -32,8 +31,6 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL, onCol
       queryClient.invalidateQueries(['tasklistQuery']);
     },
   });
-
-  const [statusPosition, setStatusPosition] = useState(statuses);
 
   useEffect(() => {
     const stopMonitoring = monitorForElements({
@@ -53,26 +50,30 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL, onCol
 
         const dropTargetIndex = dropTargetData.index;
 
+        console.log('Drop target index:', dropTargetIndex);
+
         if (source.data.type === 'statusDiv') {
-          const newStatus = [...statusPosition];
-          const draggedItemIndex = newStatus.findIndex(item => item.position === source.data.position);
+          const newOrder = [...statusOrder];
+          const draggedItemIndex = newOrder.findIndex(item => item.value === source.data.value);
+
+          console.log('Dragged item index:', draggedItemIndex);
 
           if (draggedItemIndex === -1) {
-            console.error('Dragged item not found in statusPosition.');
+            console.error('Dragged item not found in statusOrder.');
             return;
           }
 
-          const [movedItem] = newStatus.splice(draggedItemIndex, 1);
-          newStatus.splice(dropTargetIndex, 0, movedItem);
+          const [movedItem] = newOrder.splice(draggedItemIndex, 1);
 
-          // Update the positions in the newStatus array
-          newStatus.forEach((item, index) => {
-            item.position = index + 1;  // Update position to match new order
-          });
+          // Correctly adjust the index
+          if (dropTargetIndex >= newOrder.length) {
+            dropTargetIndex = newOrder.length - 1; // Ensure it doesn't exceed the array length
+          }
 
-          setStatusPosition(newStatus);
-          console.log('Updated status positions:', newStatus);
-          console.log(`Status column moved to position: ${dropTargetIndex}`);
+          newOrder.splice(dropTargetIndex, 0, movedItem);
+
+          setStatusOrder(newOrder);
+          console.log('Updated status order:', newOrder);
         } else if (source.data.type === 'taskCard') {
           const destinationStatus = dropTargetData.status;
           const sourceTaskId = source.data.id;
@@ -95,29 +96,34 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL, onCol
       },
     });
 
+    // Initialize drop targets with index
     const dropTargets = document.querySelectorAll('.status-target');
     dropTargets.forEach((target, index) => {
       dropTargetForElements({
         element: target,
-        getData: () => ({ index, status: Number(target.getAttribute('data-status')) }),
+        getData: () => {
+          const targetIndex = Array.from(dropTargets).indexOf(target);
+          console.log('Setting drop target index:', targetIndex);
+          return { index: targetIndex, status: Number(target.getAttribute('data-status')) };
+        },
       });
     });
 
     return () => stopMonitoring();
-  }, [tasks, statusPosition, changeStatusMutation]);
+  }, [tasks, statusOrder, changeStatusMutation]);
 
-  const setColumnRef = (el: HTMLDivElement | null, position: number) => {
+
+
+  const setColumnRef = (el: HTMLDivElement | null, index: number) => {
     if (el) {
       draggable({
         element: el,
-        getInitialData: () => ({ type: 'statusDiv', position: position }),
-
-        onDragStart: () => console.log(`Dragging started for column ${position}`),
-        onDrop: () => console.log(`Dropped column ${position}`),
+        getInitialData: () => ({ type: 'statusDiv', value: statusOrder[index].value }),
+        onDragStart: () => console.log(`Dragging started for column at index ${index}`),
+        onDrop: () => console.log(`Dropped column at index ${index}`),
       });
     }
-    columnRefs.current[position - 1] = el; // Adjust index to avoid gaps in the array
-    onColumnDataSend(columnRefs.current);
+    columnRefs.current[index] = el;
   };
 
   const handleAddTaskDrawerOpen = (status: number) => {
@@ -131,49 +137,45 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL, headersURL, onCol
   return (
     <>
       <div className="flex overflow-x-auto overflow-y-auto">
-        {statusPosition
-          .sort((a, b) => a.position - b.position)
-          .map((status, index) => (
-            <div
-              key={index}
-              className="p-2 drop-target status-target"
-              data-status={status.value}
-            >
-              <div className="flex justify-between mx-4">
-                <h6 className="pb-4 break-word"
-                  ref={(el) => setColumnRef(el, status.position)}
-                >
-                  {status.name}
-                </h6>
-                <Button
-                  icon={<HiOutlinePlus />}
-                  size="xs"
-                  onClick={() => handleAddTaskDrawerOpen(status.value)}
-                />
-              </div>
-              <div className="p-2 dark:bg-slate-700 w-96" style={{ height: 'calc(100% - 50px)' }}>
-                {tasks
-                  .filter((task) => task.status === status.value)
-                  .map((task) => (
-                    <div className="mb-3" key={task.id}>
-                      <TaskBoardItem task={task} DataURL={DataURL} />
-                    </div>
-                  ))}
-              </div>
+        {statusOrder.map((status, index) => (
+          <div
+            key={status.value}
+            className="p-2 drop-target status-target"
+            data-status={status.value}
+            ref={(el) => setColumnRef(el, index)}
+          >
+            <div className="flex justify-between mx-4">
+              <h6 className="pb-4 break-word">
+                {status.name}
+              </h6>
+              <Button
+                icon={<HiOutlinePlus />}
+                size="xs"
+                onClick={() => handleAddTaskDrawerOpen(status.value)}
+              />
             </div>
-          ))}
+            <div className="p-2 dark:bg-slate-700 w-96" style={{ height: 'calc(100% - 50px)' }}>
+              {tasks
+                .filter((task) => task.status === status.value)
+                .map((task) => (
+                  <div className="mb-3" key={task.id}>
+                    <TaskBoardItem task={task} DataURL={DataURL} />
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))}
       </div>
       <Drawer
         title="Add Task"
         isOpen={isOpen}
         drawerClass={'w-full md:w-[650px]'}
         bodyClass="overflow-x-hidden p-0 editDrawer"
-        className=""
         onClose={onDrawerClose}
         onRequestClose={onDrawerClose}
       >
         <div className="p-5">
-          <AddTask drawerClose={onDrawerClose} status={statusPosition[0].value} />
+          <AddTask drawerClose={onDrawerClose} status={statusOrder[0].value} />
         </div>
       </Drawer>
     </>

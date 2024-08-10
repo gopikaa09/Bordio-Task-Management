@@ -31,13 +31,6 @@ type Tasks = {
 const TaskList = () => {
   const TaskListUrl = 'http://localhost:4000/taskList';
   const [isOpen, setIsOpen] = useState(false);
-  const statuses = [
-    { name: 'New Task', value: 10, position: 1 },
-    { name: 'Scheduled', value: 20, position: 2 },
-    { name: 'In Progress', value: 30, position: 3 },
-    { name: 'Completed', value: 40, position: 4 },
-  ];
-  const [columns, setColumns] = useState(statuses);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['tasklist'],
@@ -111,13 +104,10 @@ const TaskList = () => {
     </Button>
   );
 
-  const handleColumnRef = () => {
-    setColumns(statusPosition)
-  }
+
 
   const DataURL = 'http://localhost:4000/taskList'
 
-  const [statusPosition, setStatusPosition] = useState(statuses);
 
 
 
@@ -131,13 +121,10 @@ const TaskList = () => {
         name="Tasks"
         tableColumns={columnDefs}
         queryFn={data}
-        initialBoardStatus={statuses}
-        updatedBoardStatus={statusPosition}
         DataURL={DataURL}
         headersURL={`http://localhost:4000/headers`}
         gridItemComponent={TaskListGridComponent}
         boardViewComponent={TaskListBoardComponent}
-        onColumnDataSend={handleColumnRef}
         queryParamsShow={false}
       />
       <div>
