@@ -266,41 +266,60 @@
   ],
   "timeSheetList": [
     {
-      "id": "ce53",
-      "date": "12/18/2024",
-      "in": "10 AM",
-      "out": "4 PM",
-      "hours": "5 hrs"
+      "id": "26f5",
+      "projectName": "Archd",
+      "task": "CRM",
+      "dates": [
+        {
+          "date": "12 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "13 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "14 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "15 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "16 Aug 2024",
+          "hours": "8:00"
+        }
+      ],
+      "total": "40.00"
     },
     {
-      "id": "d6d3",
-      "date": "12/18/2024",
-      "in": "10 AM",
-      "out": "4 PM",
-      "hours": "5 hrs"
-    },
-    {
-      "id": "f55d",
-      "date": "12/18/2024",
-      "in": "10 AM",
-      "out": "4 PM",
-      "hours": "5 hrs"
-    },
-    {
-      "id": "8406",
-      "date": "12/18/2024",
-      "in": "10 AM",
-      "out": "4 PM",
-      "hours": "5 hrs"
-    },
-    {
-      "id": "036d",
-      "date": "2024-08-06T18:30:00.000Z",
-      "in": "2024-08-11T19:30:00.000Z",
-      "out": "",
-      "hours": "",
-      "20-lbLWb3V3Kt": "012",
-      "22-bNrHRgtfla": "1"
+      "id": "dd03",
+      "projectName": "Archd",
+      "task": "CRM",
+      "dates": [
+        {
+          "date": "12 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "13 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "14 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "15 Aug 2024",
+          "hours": "8:00"
+        },
+        {
+          "date": "16 Aug 2024",
+          "hours": "8:00"
+        }
+      ],
+      "total": "40.00"
     }
   ]
 }

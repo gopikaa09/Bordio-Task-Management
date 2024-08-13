@@ -6,6 +6,7 @@ import axios from 'axios'
 import React, { useMemo, useState } from 'react'
 import { HiOutlinePlusCircle } from 'react-icons/hi'
 import AddTimeSheet from './AddTimeSheet'
+import TimeSheetTableView from './TimeSheetTableView'
 type TimeSheets = {
   date: string
 }
@@ -47,21 +48,7 @@ const TimeSheetsList = () => {
   console.log(data);
   return (
     <div>
-      <IndexPage
-        indexKey={'tasklist'}
-        dropdownItem={AddButton}
-        addBtnLabelDropdown={true}
-        title='Time Sheets'
-        name="Tasks"
-        addColume={false}
-        tableColumns={columnDefs}
-        // TableView={TimeSheetTableView}
-        queryFn={data}
-        DataURL={sheetUrl}
-        headersURL={headersURL}
-        queryParamsShow={false}
-
-      />
+      <TimeSheetTableView />
       <div>
         <Drawer
           title='Add Time Entry'

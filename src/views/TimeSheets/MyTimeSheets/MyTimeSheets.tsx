@@ -7,6 +7,7 @@ import TabList from '@/components/ui/Tabs/TabList'
 import TabNav from '@/components/ui/Tabs/TabNav'
 import TabContent from '@/components/ui/Tabs/TabContent'
 import TimeEntry from './Components/TimeEntry'
+import TasksProgress from './Components/TasksProgress'
 
 const MyTimeSheets = () => {
 
@@ -36,7 +37,9 @@ const MyTimeSheets = () => {
       <div className=''>
         <MainDetails />
       </div>
-      <Card className='col-span-2'></Card>
+      <Card className='col-span-2'>
+        <TasksProgress />
+      </Card>
       <div className='col-span-3'>
         <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
           <div className="md:block hidden">

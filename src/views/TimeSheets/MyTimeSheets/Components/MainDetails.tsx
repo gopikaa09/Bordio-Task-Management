@@ -1,40 +1,41 @@
+import { IconText } from '@/components/shared'
 import { Avatar, Card } from '@/components/ui'
 import React from 'react'
-import { HiOutlineUser } from 'react-icons/hi'
+import { FaPhoneFlip } from 'react-icons/fa6'
+import { HiMail, HiOutlineUser } from 'react-icons/hi'
+import { MdEmail, MdMarkEmailRead, MdPerson } from 'react-icons/md'
 
 const MainDetails = () => {
   return (
     <div>
-      <Card className='py-5 px-10'>
-        <div className='flex justify-center my-4'>
-          <div className='flex flex-col items-center gap-2'>
-            <div>
-              <Avatar shape="circle" size="lg" icon={<HiOutlineUser className='size-12' />} className='size-32' />
-
-            </div>
-            <p>Gopika</p>
+      <Card>
+        <div className='grid grid-cols-3'>
+          <div className=''>
+            <Avatar shape="circle" size="lg" icon={<HiOutlineUser className='' />} className='size-16' />
+          </div>
+          <div className='flex flex-col gap-2 col-span-2'>
+            <IconText
+              icon={<MdPerson />}
+            >
+              Gopika Guduru
+            </IconText>
+            <IconText
+              icon={<HiMail />}
+            >
+              gopika@gmail.com
+            </IconText>
+            <IconText
+              icon={<FaPhoneFlip />}
+            >
+              Gopika Guduru
+            </IconText>
           </div>
         </div>
-        <div className='flex flex-col gap-6'>
-          <div>
-            <p className='font-semibold'>Email</p>
-            <p>gopika.guduru@gmail.com</p>
-          </div>
-          <div>
-            <p className='font-semibold'>Email</p>
-            <p>gopika.guduru@gmail.com</p>
-          </div>
-          {/* <div>
-            <p className='font-semibold'>Email</p>
-            <p>gopika.guduru@gmail.com</p>
-          </div>
-          <div>
-            <p className='font-semibold'>Email</p>
-            <p>gopika.guduru@gmail.com</p>
-          </div> */}
+        <div>
+          <p>Admin</p>
         </div>
-      </Card>
-    </div>
+      </Card >
+    </div >
   )
 }
 

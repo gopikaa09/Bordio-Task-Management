@@ -7,6 +7,9 @@ import axios from "axios";
 import { Button, Drawer } from "@/components/ui";
 import { HiOutlinePlus } from "react-icons/hi";
 import AddTask from "./AddTask";
+import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
+
 
 const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[]; DataURL: string }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
@@ -103,6 +106,19 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
       });
     });
 
+    // return combine(
+    //   dropTargetForElements({
+    //     element,
+    //   }),
+    //   // A scrollable element does not need to be a drop target,
+    //   // but in this case it is.
+    //   // We can add auto scrolling to an element along side our other
+    //   // Pragmatic drag and drop bindings
+    //   autoScrollForElements({
+    //     element,
+    //   }),
+    // );
+
     return () => stopMonitoring();
   }, [tasks, statusOrder, changeStatusMutation]);
 
@@ -172,7 +188,7 @@ const TaskListBoardComponent = ({ data: initialTasks, DataURL }: { data: Task[];
         onRequestClose={onDrawerClose}
       >
         <div className="p-5">
-          <AddTask drawerClose={onDrawerClose} status={statusOrder[0].value} />
+          <AddTask drawerClose={onDrawerClose} status={statusOrder[0].value} DataURL={DataURL} />
         </div>
       </Drawer>
     </>
