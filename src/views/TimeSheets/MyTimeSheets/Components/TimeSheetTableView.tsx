@@ -9,22 +9,50 @@ import {
 import { HiOutlineChevronRight, HiOutlineChevronDown } from 'react-icons/hi';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 import type { ReactElement, SyntheticEvent } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import DropdownItem from '@/components/ui/Dropdown/DropdownItem';
-import { Button, Dropdown } from '@/components/ui';
+import { Button, Dropdown, Input, Select } from '@/components/ui';
 import { TbClockPlus } from 'react-icons/tb';
 import { MdOutlineContentCopy } from 'react-icons/md';
 
 type TimeSheet = {
   id: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  visits: number;
+  status: string;
   progress: number;
   projectName: string;
+};
+
+type WeekData = {
+  week: string;
+  entries: TimeSheet[];
+};
+
+const timeSheetData: Record<string, WeekData> = {
+  '2024-W32': {
+    week: '2024-W32',
+    entries: [
+      {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        age: 30,
+        visits: 5,
+        status: 'Active',
+        progress: 80,
+        projectName: 'Archd',
+      },
+      // More entries...
+    ],
+  },
+  // Add more weeks as needed
 };
 
 type ReactTableProps<T> = {
   renderRowSubComponent: (props: { row: Row<T> }) => ReactElement;
   getRowCanExpand: (row: Row<T>) => boolean;
+  initialData: T[];
 };
 
 const { Tr, Th, Td, THead, TBody } = Table;
@@ -32,17 +60,9 @@ const { Tr, Th, Td, THead, TBody } = Table;
 function ReactTable<T extends object>({
   renderRowSubComponent,
   getRowCanExpand,
+  initialData,
 }: ReactTableProps<T>) {
-  const TimeSheetUrl = 'http://localhost:4000/timeSheetList';
-  const { data: TimeSheetsData = [], isLoading } = useQuery({
-    queryKey: ['timesheets'],
-    queryFn: async () => {
-      const response = await axios.get(TimeSheetUrl);
-      return response.data;
-    },
-  });
-
-  const [rows, setRows] = useState<TimeSheet[]>(TimeSheetsData);
+  const [rows, setRows] = useState<T[]>(initialData);
 
   const headers = [
     { date: '16 aug 2024', hours: '9:00' },
@@ -54,18 +74,14 @@ function ReactTable<T extends object>({
     { date: '16 aug 2024', hours: '9:00' },
   ];
 
-  const dropdownItemsProjects = [
-    { key: 'a', name: 'Archd' },
-    { key: 'b', name: 'UttamBlashtech' },
-    { key: 'c', name: 'StageXPS' },
+  const dropdownItemsOptions = [
+    { value: 'a', name: 'Archd' },
+    { value: 'b', name: 'UttamBlashtech' },
+    { value: 'c', name: 'StageXPS' },
   ];
 
   const onDropdownItemClick = (eventKey: string, e: SyntheticEvent) => {
     console.log('Dropdown Item Clicked', eventKey, e);
-  };
-
-  const onDropdownClick = (e: SyntheticEvent) => {
-    console.log('Dropdown Clicked', e);
   };
 
   const dropDownButton = <Button variant='plain'>Archd</Button>;
@@ -73,70 +89,58 @@ function ReactTable<T extends object>({
   const columns = useMemo<ColumnDef<T>[]>(
     () => [
       {
-        header: () => null,
-        id: 'expander',
+        header: () => null, // No header
+        id: 'expander', // It needs an ID
         cell: ({ row }) => (
           <>
             {row.getCanExpand() ? (
-              <button className="text-lg" {...{ onClick: row.getToggleExpandedHandler() }}>
-                {row.getIsExpanded() ? <HiOutlineChevronDown /> : <HiOutlineChevronRight />}
+              <button
+                className="text-lg"
+                {...{ onClick: row.getToggleExpandedHandler() }}
+              >
+                {row.getIsExpanded() ? (
+                  <HiOutlineChevronDown />
+                ) : (
+                  <HiOutlineChevronRight />
+                )}
               </button>
             ) : null}
           </>
         ),
-        subCell: () => null,
+        subCell: () => null, // No expander on an expanded row
       },
       {
         header: 'Project Name',
         accessorKey: 'projectName',
-        cell: ({ cell }) => (
-          <input
-            type="text"
-            value={cell.getValue() as string}
-            onChange={(e) => {
-              const newValue = e.target.value;
-              setRows((prevRows) =>
-                prevRows.map((row, idx) =>
-                  idx === cell.row.index ? { ...row, projectName: newValue } : row
-                )
-              );
-            }}
-            className="input"
-          />
+        cell: () => (
+          <Select
+            options={dropdownItemsOptions}
+          >
+          </Select>
         ),
       },
       {
         header: 'Task',
         accessorKey: 'task',
-        cell: ({ cell }) => (
-          <input
-            type="text"
-            value={cell.getValue() as string}
-            onChange={(e) => {
-              const newValue = e.target.value;
-              setRows((prevRows) =>
-                prevRows.map((row, idx) =>
-                  idx === cell.row.index ? { ...row, task: newValue } : row
-                )
-              );
-            }}
-            className="input"
-          />
+        cell: () => (
+          <Select
+            options={dropdownItemsOptions}
+          >
+          </Select>
         ),
       },
       ...headers.map((header, index) => ({
         header: header.date,
-        accessorKey: `header_${index}`,
-        cell: () => <p>{header.hours}</p>,
+        accessorKey: `header_${index}`, // Unique accessorKey for each column
+        cell: () => <p><Input type='time' placeholder='0:00'></Input></p>,
       })),
       {
         header: 'Total',
         accessorKey: 'total',
       },
     ],
-    [headers, rows]
+    [headers]
   );
-
 
   const table = useReactTable({
     data: rows,
@@ -149,6 +153,11 @@ function ReactTable<T extends object>({
   const handleAddRow = () => {
     const newRow: TimeSheet = {
       id: (rows.length + 1).toString(),
+      firstName: '',
+      lastName: '',
+      age: 0,
+      visits: 0,
+      status: '',
       progress: 0,
       projectName: '',
     };
@@ -216,7 +225,6 @@ function ReactTable<T extends object>({
       </div>
     </>
   );
-
 }
 
 const renderSubComponent = ({ row }: { row: Row<TimeSheet> }) => {
@@ -227,13 +235,17 @@ const renderSubComponent = ({ row }: { row: Row<TimeSheet> }) => {
   );
 };
 
-const SubComponent = () => {
+function SubComponent() {
+  const [selectedWeek, setSelectedWeek] = useState('2024-W32');
+  const currentWeekData = timeSheetData[selectedWeek]?.entries || [];
+
   return (
     <ReactTable<TimeSheet>
       renderRowSubComponent={renderSubComponent}
       getRowCanExpand={() => true}
+      initialData={currentWeekData} // Pass the week's data here
     />
   );
-};
+}
 
 export default SubComponent;
