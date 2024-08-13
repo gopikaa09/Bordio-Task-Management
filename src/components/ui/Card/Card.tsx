@@ -6,7 +6,7 @@ import type { ReactNode, ComponentPropsWithRef, MouseEvent } from 'react'
 
 export interface CardProps
     extends CommonProps,
-        Omit<ComponentPropsWithRef<'div'>, 'onClick'> {
+    Omit<ComponentPropsWithRef<'div'>, 'onClick'> {
     clickable?: boolean
     bodyClass?: string
     bordered?: boolean

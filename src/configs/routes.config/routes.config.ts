@@ -11,19 +11,6 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/Home')),
         authority: [],
     },
-    /** Example purpose only, please remove */
-    // {
-    //     key: 'appsAccount.toolbar',
-    //     path: `/frontEndTeam`,
-    //     component: lazy(() => import('@/views/TeamsComponents')),
-    //     authority: [],
-    //     meta: {
-    //         // header: 'Toolbar',
-    //         headerContainer: true,
-    //     },
-
-
-    // },
     {
         key: 'appsAccount.toolbar',
         path: `/frontEndTeam/:category`,
@@ -35,14 +22,25 @@ export const protectedRoutes = [
         // },
         children: [
             {
-
                 key: 'add-tasks',
                 path: `add`,
                 component: lazy(() => import('@/views/TeamsComponents/TaskCrudRoutes')),
                 authority: [],
-
             },
         ]
     },
-
+    {
+        key: 'timeSheets',
+        path: '/timeSheets',
+        component: lazy(() => import('@/views/TimeSheets/MyTimeSheets')),
+        authority: [],
+        children: [
+            {
+                key: 'timeSheets',
+                path: '/timeSheets/add',
+                component: lazy(() => import('@/views/TimeSheets/MyTimeSheets/')),
+                authority: [],
+            }
+        ]
+    },
 ]

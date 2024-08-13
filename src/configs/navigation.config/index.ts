@@ -88,7 +88,47 @@ const navigationConfig: NavigationTree[] = [
             },
         ],
     },
-
+    {
+        key: 'timeSheets',
+        path: '',
+        title: 'Time Sheets',
+        translateKey: 'nav.collapseMenu3.collapseMenu',
+        icon: 'collapseMenu',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [],
+        subMenu: [
+            {
+                key: 'collapseMenu3.item1',
+                path: '/collapse-menu-item-view-1',
+                title: 'DashBoard',
+                translateKey: 'nav.collapseMenu3.item1',
+                icon: '',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
+            {
+                key: 'collapseMenu3.item2',
+                path: '/collapse-menu-item-view-2',
+                title: 'Users',
+                translateKey: 'nav.collapseMenu3.item2',
+                icon: '',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
+            {
+                key: 'collapseMenu3.item3',
+                path: '/timeSheets',
+                title: 'My Time Sheets',
+                translateKey: 'nav.collapseMenu3.item3',
+                icon: '',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
+        ],
+    },
 
 ]
 

@@ -5,6 +5,7 @@ import SidePanelContent, { SidePanelContentProps } from './SidePanelContent'
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
+import ThemeConfigurator from "@/components/template/ThemeConfigurator";
 
 type SidePanelProps = SidePanelContentProps & CommonProps
 
@@ -42,11 +43,12 @@ const _SidePanel = (props: SidePanelProps) => {
                 title="Side Panel"
                 isOpen={panelExpand}
                 placement={direction === 'rtl' ? 'left' : 'right'}
-                width={375}
+                drawerClass={'w-full md:w-[375px]'}
                 onClose={closePanel}
                 onRequestClose={closePanel}
+
             >
-                <SidePanelContent callBackClose={closePanel} />
+                <ThemeConfigurator />
             </Drawer>
         </>
     )

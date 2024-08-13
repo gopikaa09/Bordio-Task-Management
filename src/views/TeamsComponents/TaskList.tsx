@@ -119,7 +119,7 @@ const TaskList = () => {
         addBtnLabelDropdown={true}
         title='Tasks'
         name="Tasks"
-        tableColumns={columnDefs}
+        // tableColumns={columnDefs}
         queryFn={data}
         DataURL={DataURL}
         headersURL={`http://localhost:4000/headers`}

@@ -8,7 +8,7 @@ import { Button, Dropdown } from '@/components/ui';
 import { MdDragIndicator } from 'react-icons/md';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
-const IndexTableView = ({ DataURL, headersURL }) => {
+const IndexTableView = ({ DataURL, headersURL, addColume, tableStyles, columnDropDowm }) => {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [draggedColIndex, setDraggedColIndex] = useState(null);
@@ -187,14 +187,17 @@ const IndexTableView = ({ DataURL, headersURL }) => {
 
   return (
     <div className='overflow-auto'>
-      <table className='w-11/12 m-5'>
+      <table className={`${tableStyles} w-full`}>
         <thead>
           <tr>
-            <th className='bg-gray-200'></th>
+            {
+              columnDropDowm &&
+              <th className='bg-gray-100'></th>
+            }
             {columns.map((col, index) => (
               <th
                 // className='bg-gray-200 uppercase font-normal py-2'
-                className={`bg-gray-200 uppercase font-normal py-2 ${hoveredColIndex === index ? 'column-hover' : ''}`}
+                className={`bg-gray-100 uppercase font-normal py-4 ${hoveredColIndex === index ? 'column-hover' : ''}`}
                 key={index}
                 draggable
                 onDragStart={(e) => handleColumnDragStart(e, index)}
@@ -202,17 +205,23 @@ const IndexTableView = ({ DataURL, headersURL }) => {
                 onDrop={(e) => handleColumnDrop(e, index)}
               >
                 {col.name}
-                <Dropdown renderTitle={DropDownTitle}>
-                  <Dropdown.Item eventKey="a" >Edit</Dropdown.Item>
-                  <Dropdown.Item eventKey="b" onClick={() => handleDeleteColumn(col.id)}>Delete</Dropdown.Item>
-                </Dropdown>
+                {
+                  columnDropDowm &&
+                  <Dropdown renderTitle={DropDownTitle}>
+                    <Dropdown.Item eventKey="a" >Edit</Dropdown.Item>
+                    <Dropdown.Item eventKey="b" onClick={() => handleDeleteColumn(col.id)}>Delete</Dropdown.Item>
+                  </Dropdown>
+                }
               </th>
             ))}
-            <th className='bg-gray-200'>
-              <Button variant='twoTone' size='xs' onClick={handleAddColumn}>
-                Add Column
-              </Button>
-            </th>
+            {
+              addColume &&
+              <th className='bg-gray-100'>
+                <Button variant='twoTone' size='xs' onClick={handleAddColumn}>
+                  Add Column
+                </Button>
+              </th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -224,9 +233,12 @@ const IndexTableView = ({ DataURL, headersURL }) => {
               onDragOver={handleRowDragOver}
               onDrop={(e) => handleRowDrop(e, rowIndex)}
             >
-              <td>
-                <MdDragIndicator className='inline-table m-2 cursor-grab' />
-              </td>
+              {
+                columnDropDowm &&
+                <td>
+                  <MdDragIndicator className='inline-table m-2 cursor-grab' />
+                </td>
+              }
               {row.map((cell, colIndex) => (
                 <td key={colIndex} className='py-4'>{cell}</td>
               ))}

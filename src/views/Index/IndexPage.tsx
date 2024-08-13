@@ -77,6 +77,9 @@ type IndexPageProps = {
     initialBoardStatus?: []
     updatedBoardStatus?: []
     onColumnDataSend?: []
+    addColume: boolean
+    tableStyles?: string
+    columnDropDowm?: string
 }
 type Option = {
     value: number
@@ -130,7 +133,10 @@ function IndexPage(indexPageProps: IndexPageProps) {
         DataURL,
         initialBoardStatus = [],
         updatedBoardStatus = [],
-        onColumnDataSend = []
+        onColumnDataSend = [],
+        addColume = false,
+        tableStyles,
+        columnDropDowm = false
     } = indexPageProps
 
     const dispatch = useDispatch()
@@ -293,7 +299,7 @@ function IndexPage(indexPageProps: IndexPageProps) {
 
     useEffect(() => {
         if (!viewOptions.some((x) => x.value == initialState.view))
-            setView(viewOptions[0].value)
+            setView(viewOptions[0]?.value)
     }, [])
 
     const [isOpen, setIsOpen] = useState(false)
@@ -522,6 +528,9 @@ function IndexPage(indexPageProps: IndexPageProps) {
                                             <IndexTableView
                                                 DataURL={DataURL}
                                                 headersURL={headersURL}
+                                                addColume={addColume}
+                                                tableStyles={tableStyles}
+                                                columnDropDowm={columnDropDowm}
                                             // data={queryFn}
                                             // query={queryParams}
                                             // setQuery={setQuery}

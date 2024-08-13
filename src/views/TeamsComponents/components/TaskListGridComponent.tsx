@@ -67,7 +67,7 @@ const TaskListGridComponent = ({ data: initialTasks, DataURL }) => {
   }, [tasks]);
 
   return (
-    <div className="grid xs:grid-cols-1 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 ">
+    <div className="grid xs:grid-cols-1 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 ">
       {
         tasks.map((task, index) => (
           <>
