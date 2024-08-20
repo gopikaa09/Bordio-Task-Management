@@ -22,3 +22,42 @@ td, th {
   border-bottom: 3px solid #3498db; /* Add underline with a specific color */
   transition: border-bottom 0.2s ease-in-out;
 }
+.custom-table table {
+  border-collapse: collapse;
+  width: 100%;
+  border: none !important;
+  text-align: center;
+}
+
+.custom-table th, td {
+  border: none !important; /* Removes default borders */
+  padding: 8px; /* Adds padding for better spacing */
+  text-align: center;
+}
+.custom-table tr{
+  border-bottom: 1px solid #f2f2f2 !important;
+}
+
+.custom-table th {
+  text-align: left; /* Align header text to the left */
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f7f7f7; /* Hover effect for rows */
+}
+.custom-table tbody tr.last-row {
+  background-color: transparent; 
+  border-bottom: none !important;/* or use any other styling */
+}
+
+.custom-table tbody tr.last-row:hover {
+  background-color: transparent;
+ /* or adjust as needed */
+}
+table td{
+  padding: 4px;
+  text-align: left !important ;
+}
+tr>td:last-child{
+  text-align: right;
+}

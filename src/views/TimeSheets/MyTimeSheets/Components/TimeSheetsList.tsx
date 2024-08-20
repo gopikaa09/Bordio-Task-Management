@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react'
 import { HiOutlinePlusCircle } from 'react-icons/hi'
 import AddTimeSheet from './AddTimeSheet'
 import TimeSheetTableView from './TimeSheetTableView'
+import { DataTable } from '@/components/shared'
 type TimeSheets = {
   date: string
 }
@@ -49,6 +50,10 @@ const TimeSheetsList = () => {
   return (
     <div>
       <TimeSheetTableView />
+      {/* <DataTable
+        columns={columnDefs}
+        data={data}
+      /> */}
       <div>
         <Drawer
           title='Add Time Entry'

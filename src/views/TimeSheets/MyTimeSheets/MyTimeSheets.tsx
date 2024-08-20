@@ -8,6 +8,7 @@ import TabNav from '@/components/ui/Tabs/TabNav'
 import TabContent from '@/components/ui/Tabs/TabContent'
 import TimeEntry from './Components/TimeEntry'
 import TasksProgress from './Components/TasksProgress'
+import TaskPieChart from './Components/TaskPieChart'
 
 const MyTimeSheets = () => {
 
@@ -34,11 +35,14 @@ const MyTimeSheets = () => {
 
   return (
     <div className='grid grid-cols-3 gap-5'>
-      <div className=''>
+      <>
         <MainDetails />
-      </div>
-      <Card className='col-span-2'>
+      </>
+      <Card className=''>
         <TasksProgress />
+      </Card>
+      <Card className=''>
+        <TaskPieChart />
       </Card>
       <div className='col-span-3'>
         <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>

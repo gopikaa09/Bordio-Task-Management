@@ -1,251 +1,84 @@
-import { useMemo, Fragment, useState } from 'react';
-import Table from '@/components/ui/Table';
-import {
-  useReactTable,
-  getCoreRowModel,
-  getExpandedRowModel,
-  flexRender,
-} from '@tanstack/react-table';
-import { HiOutlineChevronRight, HiOutlineChevronDown } from 'react-icons/hi';
-import type { ColumnDef, Row } from '@tanstack/react-table';
-import type { ReactElement, SyntheticEvent } from 'react';
-import { Button, Dropdown, Input, Select } from '@/components/ui';
-import { TbClockPlus } from 'react-icons/tb';
-import { MdOutlineContentCopy } from 'react-icons/md';
+import { useState, useMemo } from 'react';
+import { Button, Card, Segment } from '@/components/ui';
+import { IoChevronBackOutline, IoChevronForward } from 'react-icons/io5';
+import CustomTable from './CustomTable';
 
 type TimeSheet = {
   id: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
   projectName: string;
+  task: string;
+  [key: string]: any;
 };
 
-type WeekData = {
-  week: string;
-  entries: TimeSheet[];
-};
-
-const timeSheetData: Record<string, WeekData> = {
+const timeSheetData: Record<string, { week: string; entries: TimeSheet[] }> = {
   '2024-W32': {
     week: '2024-W32',
     entries: [
-      {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        age: 30,
-        visits: 5,
-        status: 'Active',
-        progress: 80,
-        projectName: 'Archd',
-      },
-      // More entries...
+      { id: '1', date: '5 Aug 2024', hours: '9:00' },
+      { id: '2', date: '6 Aug 2024', hours: '9:00' },
+      { id: '3', date: '7 Aug 2024', hours: '9:00' },
+      { id: '4', date: '8 Aug 2024', hours: '9:00' },
+      { id: '5', date: '9 Aug 2024', hours: '9:00' },
     ],
   },
-  // Add more weeks as needed
-};
-
-type ReactTableProps<T> = {
-  renderRowSubComponent: (props: { row: Row<T> }) => ReactElement;
-  getRowCanExpand: (row: Row<T>) => boolean;
-  initialData: T[];
-};
-
-const { Tr, Th, Td, THead, TBody } = Table;
-
-function ReactTable<T extends object>({
-  renderRowSubComponent,
-  getRowCanExpand,
-  initialData,
-}: ReactTableProps<T>) {
-  const [rows, setRows] = useState<T[]>(initialData);
-
-  const headers = [
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-    { date: '16 aug 2024', hours: '9:00' },
-  ];
-
-  const dropdownItemsOptions = [
-    { value: 'a', name: 'Archd' },
-    { value: 'b', name: 'UttamBlashtech' },
-    { value: 'c', name: 'StageXPS' },
-  ];
-
-  const onDropdownItemClick = (eventKey: string, e: SyntheticEvent) => {
-    console.log('Dropdown Item Clicked', eventKey, e);
-  };
-
-  const dropDownButton = <Button variant='plain'>Archd</Button>;
-
-  const columns = useMemo<ColumnDef<T>[]>(
-    () => [
-      {
-        header: () => null, // No header
-        id: 'expander', // It needs an ID
-        cell: ({ row }) => (
-          <>
-            {row.getCanExpand() ? (
-              <button
-                className="text-lg"
-                {...{ onClick: row.getToggleExpandedHandler() }}
-              >
-                {row.getIsExpanded() ? (
-                  <HiOutlineChevronDown />
-                ) : (
-                  <HiOutlineChevronRight />
-                )}
-              </button>
-            ) : null}
-          </>
-        ),
-        subCell: () => null, // No expander on an expanded row
-      },
-      {
-        header: 'Project Name',
-        accessorKey: 'projectName',
-        cell: () => (
-          <Select
-            options={dropdownItemsOptions}
-          >
-          </Select>
-        ),
-      },
-      {
-        header: 'Task',
-        accessorKey: 'task',
-        cell: () => (
-          <Select
-            options={dropdownItemsOptions}
-          >
-          </Select>
-        ),
-      },
-      ...headers.map((header, index) => ({
-        header: header.date,
-        accessorKey: `header_${index}`, // Unique accessorKey for each column
-        cell: () => <p><Input type='time' placeholder='0:00'></Input></p>,
-      })),
-      {
-        header: 'Total',
-        accessorKey: 'total',
-      },
+  '2024-W33': {
+    week: '2024-W33',
+    entries: [
+      { id: '1', date: '12 Aug 2024', hours: '9:00' },
+      { id: '2', date: '13 Aug 2024', hours: '9:00' },
+      { id: '3', date: '14 Aug 2024', hours: '9:00' },
+      { id: '4', date: '15 Aug 2024', hours: '9:00' },
+      { id: '5', date: '16 Aug 2024', hours: '9:00' },
     ],
-    [headers]
-  );
+  },
+};
 
-  const table = useReactTable({
-    data: rows,
-    columns,
-    getRowCanExpand,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-  });
+function TimeSheetTableView() {
+  const [currentWeek, setCurrentWeek] = useState<string>('2024-W32');
 
-  const handleAddRow = () => {
-    const newRow: TimeSheet = {
-      id: (rows.length + 1).toString(),
-      firstName: '',
-      lastName: '',
-      age: 0,
-      visits: 0,
-      status: '',
-      progress: 0,
-      projectName: '',
-    };
-    setRows([...rows, newRow]);
+  // Generate headers dynamically based on the current week's entries
+  const headers = useMemo(() => {
+    const entries = timeSheetData[currentWeek]?.entries || [];
+    const dates = Array.from(new Set(entries.map(entry => entry.date)));
+    return dates.map(date => ({ date, hours: '0:00' }));
+  }, [currentWeek]);
+
+  const handleWeekChange = (direction: 'prev' | 'next') => {
+    const weeks = Object.keys(timeSheetData);
+    const currentIndex = weeks.indexOf(currentWeek);
+    if (direction === 'prev' && currentIndex > 0) {
+      setCurrentWeek(weeks[currentIndex - 1]);
+    } else if (direction === 'next' && currentIndex < weeks.length - 1) {
+      setCurrentWeek(weeks[currentIndex + 1]);
+    }
   };
 
   return (
     <>
-      <h6 className='mb-5'>My Time Sheets</h6>
-      <Table>
-        <THead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Th key={header.id} colSpan={header.colSpan}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </THead>
-        <TBody>
-          {table.getRowModel().rows.map((row) => (
-            <Fragment key={row.id}>
-              <Tr>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                ))}
-              </Tr>
-              {row.getIsExpanded() && (
-                <Tr>
-                  <Td colSpan={row.getVisibleCells().length}>
-                    {renderRowSubComponent({ row })}
-                  </Td>
-                </Tr>
-              )}
-            </Fragment>
-          ))}
-          {/* Add a summary or total row at the end */}
-          <Tr>
-            <Td colSpan={3}>Total</Td>
-            {headers.map((header, index) => (
-              <Td key={index}>
-                18:00
-                {/* Customize the content as needed */}
-                {/* Display total hours calculation */}
-              </Td>
-            ))}
-            <Td>80:00 </Td>
-          </Tr>
-        </TBody>
-      </Table>
-      <div className='flex gap-4 my-4'>
-        <Button icon={<TbClockPlus />} onClick={handleAddRow}>
-          Add TimeSheet Row
-        </Button>
-        <Button icon={<MdOutlineContentCopy />}>
-          Copy Previous Week
-        </Button>
+      <div className='flex justify-between my-4'>
+        <div></div>
+        <div className='flex justify-between items-center gap-2'>
+          <Segment size='xs'>
+            <Segment.Item onClick={() => handleWeekChange('prev')} className='cursor-pointer' ><IoChevronBackOutline /></Segment.Item>
+            <Segment.Item>{timeSheetData[currentWeek].week}</Segment.Item>
+            <Segment.Item onClick={() => handleWeekChange('next')} className='cursor-pointer' ><IoChevronForward /></Segment.Item>
+          </Segment>
+          <Button size='xs'>Report</Button>
+        </div >
+
       </div>
+      <CustomTable
+        renderRowSubComponent={({ row }) => (
+          <Card>
+            <p>Details for {row.original.id}</p>
+          </Card>
+        )}
+        getRowCanExpand={(row) => row.original.projectName !== 'Excluded'}
+        initialData={timeSheetData[currentWeek].entries}
+        headers={headers}
+      />
     </>
   );
 }
 
-const renderSubComponent = ({ row }: { row: Row<TimeSheet> }) => {
-  return (
-    <pre style={{ fontSize: '10px' }}>
-      <code>{JSON.stringify(row.original, null, 2)}</code>
-    </pre>
-  );
-};
-
-function SubComponent() {
-  const [selectedWeek, setSelectedWeek] = useState('2024-W32');
-  const currentWeekData = timeSheetData[selectedWeek]?.entries || [];
-
-  return (
-    <ReactTable<TimeSheet>
-      renderRowSubComponent={renderSubComponent}
-      getRowCanExpand={() => true}
-      initialData={currentWeekData} // Pass the week's data here
-    />
-  );
-}
-
-export default SubComponent;
+export default TimeSheetTableView;

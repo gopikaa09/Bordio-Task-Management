@@ -3,22 +3,20 @@ import { Avatar, Card } from '@/components/ui'
 import React from 'react'
 import { FaPhoneFlip } from 'react-icons/fa6'
 import { HiMail, HiOutlineUser } from 'react-icons/hi'
-import { MdEmail, MdMarkEmailRead, MdPerson } from 'react-icons/md'
+import { MdAccessTime, MdEmail, MdMarkEmailRead, MdPerson } from 'react-icons/md'
 
 const MainDetails = () => {
   return (
-    <div>
+    <>
       <Card>
-        <div className='grid grid-cols-3'>
+        <div className='flex flex-col items-center gap-2'>
           <div className=''>
-            <Avatar shape="circle" size="lg" icon={<HiOutlineUser className='' />} className='size-16' />
+            <Avatar shape="circle" src='https://elstar.themenate.net/img/avatars/thumb-1.jpg' icon={<HiOutlineUser className='' />} className='size-24' />
           </div>
-          <div className='flex flex-col gap-2 col-span-2'>
-            <IconText
-              icon={<MdPerson />}
-            >
-              Gopika Guduru
-            </IconText>
+          <div>
+            <p className='font-bold'>Gopika Guduru</p>
+          </div>
+          <div className='flex flex-col gap-2'>
             <IconText
               icon={<HiMail />}
             >
@@ -27,15 +25,13 @@ const MainDetails = () => {
             <IconText
               icon={<FaPhoneFlip />}
             >
-              Gopika Guduru
+              99999 88888
             </IconText>
           </div>
         </div>
-        <div>
-          <p>Admin</p>
-        </div>
+
       </Card >
-    </div >
+    </ >
   )
 }
 
