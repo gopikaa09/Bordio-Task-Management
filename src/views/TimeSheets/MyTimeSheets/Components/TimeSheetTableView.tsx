@@ -73,14 +73,14 @@ function TimeSheetTableView() {
 
       </div>
       <CustomTable
-        renderRowSubComponent={({ row }) => (
-          <Card>
-            <p>Details for {row.original.id}</p>
-          </Card>
-        )}
-        getRowCanExpand={(row) => row.original.projectName !== 'Excluded'}
-        initialData={timeSheetData[currentWeek].entries}
-        headers={headers}
+      // renderRowSubComponent={({ row }) => (
+      //   <Card>
+      //     <p>Details for {row.original.id}</p>
+      //   </Card>
+      // )}
+      // getRowCanExpand={(row) => row.original.projectName !== 'Excluded'}
+      // initialData={timeSheetData[currentWeek].entries}
+      // headers={headers}
       />
     </>
   );

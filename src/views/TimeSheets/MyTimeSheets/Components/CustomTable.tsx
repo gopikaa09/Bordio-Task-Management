@@ -1,300 +1,220 @@
-import { useMemo, Fragment, useState } from 'react';
-import Table from '@/components/ui/Table';
-import {
-  useReactTable,
-  getCoreRowModel,
-  getExpandedRowModel,
-  flexRender,
-} from '@tanstack/react-table';
-import { HiOutlineChevronRight, HiOutlineChevronDown, HiOutlineTrash, HiOutlineMinusCircle, HiOutlinePlusCircle } from 'react-icons/hi';
-import type { ColumnDef, Row } from '@tanstack/react-table';
-import type { ReactElement } from 'react';
-import { Button, Card, Input, Select } from '@/components/ui';
-import { TbClockPlus } from 'react-icons/tb';
-import { MdOutlineContentCopy } from 'react-icons/md';
+import { Button, Input } from '@/components/ui'
+import React, { useState } from 'react'
+import { HiChevronDown, HiOutlinePlusCircle, HiOutlineTrash } from 'react-icons/hi'
 
-type TimeSheet = {
-  id: string;
-  projectName: string;
-  task: string;
-  [key: string]: any; // To handle dynamic keys for dates
-};
+const CustomTable = () => {
+  // Define the number of days (columns)
+  const numDays = 6
 
-type ReactTableProps<T> = {
-  renderRowSubComponent: (props: { row: Row<T> }) => ReactElement;
-  getRowCanExpand: (row: Row<T>) => boolean;
-  initialData: T[];
-  headers: { date: string; hours: string }[];
-};
+  // Initial projects state
+  const initialProjects = [
+    {
+      id: 'Project1',
+      tasks: [
+        { name: 'Task1', hours: Array(numDays).fill(8) }
+      ]
+    },
+    {
+      id: 'Project2',
+      tasks: [
+        { name: 'Task2', hours: Array(numDays).fill(9) }
+      ]
+    }
+  ]
 
-function CustomTable<T extends TimeSheet>({
-  renderRowSubComponent,
-  getRowCanExpand,
-  initialData,
-  headers,
-}: ReactTableProps<T>) {
-  const [rows, setRows] = useState<T[]>(initialData);
+  // State to track which project rows are expanded
+  const [expandedProjects, setExpandedProjects] = useState<string[]>([initialProjects[0].id])
 
-  const ProjectDropDownOptions = [
-    { value: 'a', label: 'Project 1' },
-    { value: 'b', label: 'Project 2' },
-    { value: 'c', label: 'Project 3' },
-  ];
+  // State to manage hours for each task
+  const [projects, setProjects] = useState(initialProjects)
 
-  const TaskDropDownOptions = [
-    { value: 'a', label: 'Task 1' },
-    { value: 'b', label: 'Task 2' },
-    { value: 'c', label: 'Task 3' },
-  ];
-
-  const handleTimeInput = (rowId: string, columnKey: string, value: string) => {
-    setRows(prevRows =>
-      prevRows.map(row =>
-        row.id === rowId
-          ? { ...row, [columnKey]: value }
-          : row
+  // Handler to update hours
+  const updateHour = (projectId: string, taskIndex: number, dayIndex: number, value: number) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === projectId ? {
+          ...project,
+          tasks: project.tasks.map((task, tIndex) =>
+            tIndex === taskIndex ? {
+              ...task,
+              hours: task.hours.map((hour, hIndex) => hIndex === dayIndex ? value : hour)
+            } : task
+          )
+        } : project
       )
-    );
-  };
+    )
+  }
 
-  const calculateHorizontalTotal = (row: T) => {
-    return headers.reduce((total, header, index) => {
-      const time = row[`header_${index}`];
-      if (time) {
-        const [hours, minutes] = time.split(':').map(Number);
-        return total + (hours || 0) + (minutes || 0) / 60;
-      }
-      return total;
-    }, 0);
-  };
-
-  const calculateVerticalTotals = () => {
-    return headers.map((_, index) => {
-      const total = rows.reduce((sum, row) => {
-        const time = row[`header_${index}`];
-        if (time) {
-          const [hours, minutes] = time.split(':').map(Number);
-          return sum + (hours || 0) + (minutes || 0) / 60;
-        }
-        return sum;
-      }, 0);
-      const hours = Math.floor(total);
-      const minutes = Math.round((total - hours) * 60);
-      return `${hours}:${minutes.toString().padStart(2, '0')}`;
-    });
-  };
-
-  const columns = useMemo<ColumnDef<T>[]>(
-    () => [
-      {
-        header: ({ table }) => {
-          return (
-            <button
-              className="text-xl"
-              {...{
-                onClick:
-                  table.getToggleAllRowsExpandedHandler(),
-              }}
-            >
-              {table.getIsAllRowsExpanded() ? (
-                <HiOutlineMinusCircle />
-              ) : (
-                <HiOutlinePlusCircle />
-              )}
-            </button>
+  // Handler to update task name
+  const updateTaskName = (projectId: string, taskIndex: number, value: string) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === projectId ? {
+          ...project,
+          tasks: project.tasks.map((task, tIndex) =>
+            tIndex === taskIndex ? { ...task, name: value } : task
           )
-        }, // No header
-        id: 'expander', // It needs an ID
-        cell: ({ row, getValue }) => {
-          return (
-            <>
-              {row.getCanExpand() ? (
-                <button
-                  className="text-xl"
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                  }}
-                >
-                  {row.getIsExpanded() ? (
-                    <HiOutlineMinusCircle />
-                  ) : (
-                    <HiOutlinePlusCircle />
-                  )}
-                </button>
-              ) : null}
-              {getValue()}
-            </>
-          )
-        },
-        subCell: ({ row }) => {
-          return (
-            <table className="sub-table">
-              <thead>
-                <tr>
-                  {headers.map((header, index) => (
-                    <th key={index}>{header.date}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {headers.map((header, index) => (
-                    <td key={index}>
+        } : project
+      )
+    )
+  }
+
+  // Handler to add a new task to a project
+  const addTask = (projectId: string) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === projectId ? {
+          ...project,
+          tasks: [...project.tasks, { name: `New Task ${project.tasks.length + 1}`, hours: Array(numDays).fill(0) }]
+        } : project
+      )
+    )
+  }
+
+  // Handler to delete a task from a project
+  const deleteTask = (projectId: string, taskIndex: number) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === projectId ? {
+          ...project,
+          tasks: project.tasks.filter((_, tIndex) => tIndex !== taskIndex)
+        } : project
+      )
+    )
+  }
+
+  // Handler to add a new project
+  const addProject = () => {
+    const newProjectId = `Project${projects.length + 1}`
+    setProjects(prevProjects =>
+      [...prevProjects, {
+        id: newProjectId,
+        tasks: [{ name: `New Task 1`, hours: Array(numDays).fill(0) }]
+      }]
+    )
+    setExpandedProjects(prev => [...prev, newProjectId])
+  }
+
+  // Handler to delete a project
+  const deleteProject = (projectId: string) => {
+    setProjects(prevProjects =>
+      prevProjects.filter(project => project.id !== projectId)
+    )
+    setExpandedProjects(prev => prev.filter(id => id !== projectId))
+  }
+
+  // Calculate daily totals for each date
+  const calculateDailyTotals = () => {
+    const dailyTotals = Array(numDays).fill(0)
+
+    projects.forEach(project => {
+      project.tasks.forEach(task => {
+        task.hours.forEach((hours, index) => {
+          dailyTotals[index] += hours
+        })
+      })
+    })
+
+    return dailyTotals
+  }
+
+  const dailyTotals = calculateDailyTotals()
+
+  // Define the dates
+  const dates = [
+    '5 Aug 2024', '6 Aug 2024', '7 Aug 2024', '8 Aug 2024', '9 Aug 2024', '10 Aug 2024'
+  ]
+
+  return (
+    <div className="p-4 customTable">
+      <Button
+        variant='solid'
+        onClick={addProject}
+        className="my-2"
+      >
+        Add Project
+      </Button>
+      <table className="min-w-full divide-y divide-gray-200 bg-white border border-gray-200">
+        <thead className="bg-gray-100">
+          <tr className='Border'>
+            <th className="px-4 py-4 text-left">Project</th>
+            {dates.map((date, index) => (
+              <th key={date} className="px-4 py-2 text-center">
+                {date}
+                <div className="text-sm text-gray-600">
+                  {dailyTotals[index]}
+                </div>
+              </th>
+            ))}
+            <th className="px-4 py-2">Total</th>
+            <th className="px-4 py-2"></th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {projects.map(project => (
+            <React.Fragment key={project.id}>
+              <tr className="bg-gray-50 cursor-pointer" onClick={() => setExpandedProjects(prev =>
+                prev.includes(project.id) ? prev.filter(id => id !== project.id) : [...prev, project.id]
+              )}>
+
+                <td colSpan={dates.length + 2} className="px-4 py-2 font-semibold text-left ">
+                  <Button icon={<HiChevronDown />} variant='plain' size='xs'></Button>
+                  {project.id}</td>
+                {/* <td className="px-4 py-2">
+                  <button
+                    onClick={() => deleteProject(project.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Delete Project
+                  </button>
+                </td> */}
+              </tr>
+              {expandedProjects.includes(project.id) && project.tasks.map((task, taskIndex) => (
+                <tr key={task.name} className='Border'>
+                  <td className="px-4 py-2">
+                    <Button
+                      onClick={() => addTask(project.id)}
+                      variant='plain'
+                      size='xs'
+                      icon={<HiOutlinePlusCircle />}
+                    ></Button>
+                    <Input
+                      type="text"
+                      value={task.name}
+                      onChange={(e) => updateTaskName(project.id, taskIndex, e.target.value)}
+                      className="ml-2 p-1 border border-gray-300 rounded-md"
+                      style={{ width: '150px' }}
+                    />
+                  </td>
+                  {task.hours.map((hours, dayIndex) => (
+                    <td key={dayIndex} className="px-4 py-2">
                       <Input
-                        size='sm'
-                        type='time'
-                        placeholder='0:00'
-                        value={row.original[`header_${index}`] || ''}
-                        onChange={(e) => handleTimeInput(row.original.id, `header_${index}`, e.target.value)}
+                        type="number"
+                        value={hours}
+                        onChange={(e) => updateHour(project.id, taskIndex, dayIndex, Number(e.target.value))}
+                        className="w-16 p-1 border border-gray-300 rounded-md text-right"
                       />
                     </td>
                   ))}
-                </tr>
-              </tbody>
-            </table>
-          )
-        }, // No expander on an expanded row
-      },
-      {
-        header: 'Project 1',
-        accessorKey: 'projectName',
-        cell: ({ row }) => (
-          <Select
-            size='sm'
-            options={ProjectDropDownOptions}
-            placeholder="Select Project"
-            onChange={(value) => console.log('Selected Project:', value)}
-            value={row.getValue('projectName')}
-          />
-        ),
-      },
-      {
-        header: 'Task',
-        accessorKey: 'task',
-        cell: ({ row }) => (
-          <Select
-            size='sm'
-            options={TaskDropDownOptions}
-            placeholder="Select Task"
-            onChange={(value) => console.log('Selected Task:', value)}
-            value={row.getValue('task')}
-          />
-        ),
-      },
-      ...headers.map((header, index) => ({
-        header: header.date,
-        accessorKey: `header_${index}`,
-        cell: ({ row }) => (
-          <Input
-            size='sm'
-            type='time'
-            placeholder='0:00'
-            value={row.getValue(`header_${index}`) || ''}
-            onChange={(e) => handleTimeInput(row.original.id, `header_${index}`, e.target.value)}
-          />
-        ),
-      })),
-      {
-        header: 'Total',
-        accessorKey: 'total',
-        cell: ({ row }) => {
-          const total = calculateHorizontalTotal(row.original);
-          const hours = Math.floor(total);
-          const minutes = Math.round((total - hours) * 60);
-          return `${hours}:${minutes.toString().padStart(2, '0')}`;
-        },
-      },
-    ],
-    [headers, rows]
-  );
-
-  const table = useReactTable({
-    data: rows,
-    columns,
-    getRowCanExpand,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-  });
-
-  const handleAddRow = () => {
-    const newRow: T = {
-      id: (rows.length + 1).toString(),
-      projectName: '',
-      task: '',
-      ...headers.reduce((acc, header, index) => {
-        acc[`header_${index}`] = '';
-        return acc;
-      }, {} as Record<string, string>),
-    } as T;
-    setRows([...rows, newRow]);
-  };
-
-  const handleDeleteRow = (id: string) => {
-    setRows(rows.filter(row => row.id !== id));
-  };
-
-  const verticalTotals = calculateVerticalTotals();
-
-  return (
-    <div className='max-w-900px overflow-x-auto'>
-      <table className='custom-table'>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row, rowIndex) => {
-            return (
-              <Fragment key={row.id}>
-                <tr>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                  <td>
-                    <Button onClick={() => handleDeleteRow(row.original.id)} variant='twoTone' size='xs' color='red' shape='circle' icon={<HiOutlineTrash />}></Button>
+                  <td className="px-4 py-2">
+                    {task.hours.reduce((total, hours) => total + hours, 0)}
+                  </td>
+                  <td className="px-4 py-2">
+                    <Button
+                      onClick={() => deleteTask(project.id, taskIndex)}
+                      size='xs'
+                      variant='twoTone'
+                      icon={<HiOutlineTrash />}
+                    ></Button>
                   </td>
                 </tr>
-                {row.getIsExpanded() && (
-                  <tr>
-                    <td colSpan={row.getVisibleCells().length}>
-                      {renderRowSubComponent({ row })}
-                    </td>
-                  </tr>
-                )}
-              </Fragment>
-            )
-          })}
-          <tr className={`last-row`}>
-            <td colSpan={2}>
-              <div className='flex gap-4 my-4'>
-                <Button size='sm' icon={<TbClockPlus />} onClick={handleAddRow}>
-                  Add Task
-                </Button>
-                <Button size='sm' icon={<MdOutlineContentCopy />}>
-                  Copy Previous Timesheet
-                </Button>
-              </div>
-            </td>
-            {verticalTotals.map((total, index) => (
-              <td key={index}>{total}</td>
-            ))}
-          </tr>
+              ))}
+            </React.Fragment>
+          ))}
         </tbody>
       </table>
     </div>
-  );
+  )
 }
 
-export default CustomTable;
+export default CustomTable
