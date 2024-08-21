@@ -6,7 +6,7 @@ import {
   getExpandedRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import { HiOutlineChevronRight, HiOutlineChevronDown, HiOutlineTrash } from 'react-icons/hi';
+import { HiOutlineChevronRight, HiOutlineChevronDown, HiOutlineTrash, HiOutlineMinusCircle, HiOutlinePlusCircle } from 'react-icons/hi';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 import type { ReactElement } from 'react';
 import { Button, Card, Input, Select } from '@/components/ui';
@@ -87,7 +87,76 @@ function CustomTable<T extends TimeSheet>({
   const columns = useMemo<ColumnDef<T>[]>(
     () => [
       {
-        header: 'Project Name',
+        header: ({ table }) => {
+          return (
+            <button
+              className="text-xl"
+              {...{
+                onClick:
+                  table.getToggleAllRowsExpandedHandler(),
+              }}
+            >
+              {table.getIsAllRowsExpanded() ? (
+                <HiOutlineMinusCircle />
+              ) : (
+                <HiOutlinePlusCircle />
+              )}
+            </button>
+          )
+        }, // No header
+        id: 'expander', // It needs an ID
+        cell: ({ row, getValue }) => {
+          return (
+            <>
+              {row.getCanExpand() ? (
+                <button
+                  className="text-xl"
+                  {...{
+                    onClick: row.getToggleExpandedHandler(),
+                  }}
+                >
+                  {row.getIsExpanded() ? (
+                    <HiOutlineMinusCircle />
+                  ) : (
+                    <HiOutlinePlusCircle />
+                  )}
+                </button>
+              ) : null}
+              {getValue()}
+            </>
+          )
+        },
+        subCell: ({ row }) => {
+          return (
+            <table className="sub-table">
+              <thead>
+                <tr>
+                  {headers.map((header, index) => (
+                    <th key={index}>{header.date}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {headers.map((header, index) => (
+                    <td key={index}>
+                      <Input
+                        size='sm'
+                        type='time'
+                        placeholder='0:00'
+                        value={row.original[`header_${index}`] || ''}
+                        onChange={(e) => handleTimeInput(row.original.id, `header_${index}`, e.target.value)}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          )
+        }, // No expander on an expanded row
+      },
+      {
+        header: 'Project 1',
         accessorKey: 'projectName',
         cell: ({ row }) => (
           <Select
@@ -184,47 +253,43 @@ function CustomTable<T extends TimeSheet>({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row, rowIndex) => (
-            <Fragment key={row.id}>
-              <tr >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-                <td>
-                  <Button onClick={() => handleDeleteRow(row.original.id)} variant='twoTone' size='xs' color='red' shape='circle' icon={<HiOutlineTrash />}></Button>
-                </td>
-              </tr>
-              {row.getIsExpanded() && (
+          {table.getRowModel().rows.map((row, rowIndex) => {
+            return (
+              <Fragment key={row.id}>
                 <tr>
-                  <td colSpan={row.getVisibleCells().length}>
-                    {renderRowSubComponent({ row })}
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                  <td>
+                    <Button onClick={() => handleDeleteRow(row.original.id)} variant='twoTone' size='xs' color='red' shape='circle' icon={<HiOutlineTrash />}></Button>
                   </td>
                 </tr>
-              )}
-            </Fragment>
-          ))}
-          <tr className='last-row'>
+                {row.getIsExpanded() && (
+                  <tr>
+                    <td colSpan={row.getVisibleCells().length}>
+                      {renderRowSubComponent({ row })}
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            )
+          })}
+          <tr className={`last-row`}>
             <td colSpan={2}>
               <div className='flex gap-4 my-4'>
                 <Button size='sm' icon={<TbClockPlus />} onClick={handleAddRow}>
-                  Add TimeSheet Row
+                  Add Task
                 </Button>
                 <Button size='sm' icon={<MdOutlineContentCopy />}>
-                  Copy Previous Week
+                  Copy Previous Timesheet
                 </Button>
               </div>
             </td>
             {verticalTotals.map((total, index) => (
-              <td key={index}>
-                {total}
-              </td>
+              <td key={index}>{total}</td>
             ))}
-            <td>{verticalTotals.reduce((total, value) => {
-              const [hours, minutes] = value.split(':').map(Number);
-              return total + (hours || 0) + (minutes || 0) / 60;
-            }, 0).toFixed(2)}</td>
           </tr>
         </tbody>
       </table>

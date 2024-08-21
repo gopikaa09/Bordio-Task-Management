@@ -19,7 +19,7 @@ td, th {
 
 /* styles.css */
 .column-hover {
-  border-bottom: 3px solid #3498db; /* Add underline with a specific color */
+  border-bottom: 3px solid #3498db;
   transition: border-bottom 0.2s ease-in-out;
 }
 .custom-table table {
@@ -54,10 +54,10 @@ td, th {
   background-color: transparent;
  /* or adjust as needed */
 }
-table td{
+/* table td{
   padding: 4px;
   text-align: left !important ;
 }
 tr>td:last-child{
   text-align: right;
-}
+} */

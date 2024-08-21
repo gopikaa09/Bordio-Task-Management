@@ -14,21 +14,26 @@ const timeSheetData: Record<string, { week: string; entries: TimeSheet[] }> = {
   '2024-W32': {
     week: '2024-W32',
     entries: [
-      { id: '1', date: '5 Aug 2024', hours: '9:00' },
-      { id: '2', date: '6 Aug 2024', hours: '9:00' },
-      { id: '3', date: '7 Aug 2024', hours: '9:00' },
-      { id: '4', date: '8 Aug 2024', hours: '9:00' },
-      { id: '5', date: '9 Aug 2024', hours: '9:00' },
+      // { id: '1', date: '5 Aug 2024', hours: '9:00' },
+      // { id: '2', date: '6 Aug 2024', hours: '9:00' },
+      // { id: '3', date: '7 Aug 2024', hours: '9:00' },
+      // { id: '4', date: '8 Aug 2024', hours: '9:00' },
+      // { id: '5', date: '9 Aug 2024', hours: '9:00' },
+      // { id: '6', date: '10 Aug 2024', hours: '9:00' },
+      // { id: '7', date: '11 Aug 2024', hours: '9:00' },
+
     ],
   },
   '2024-W33': {
     week: '2024-W33',
     entries: [
-      { id: '1', date: '12 Aug 2024', hours: '9:00' },
-      { id: '2', date: '13 Aug 2024', hours: '9:00' },
-      { id: '3', date: '14 Aug 2024', hours: '9:00' },
-      { id: '4', date: '15 Aug 2024', hours: '9:00' },
-      { id: '5', date: '16 Aug 2024', hours: '9:00' },
+      // { id: '1', date: '12 Aug 2024', hours: '9:00' },
+      // { id: '2', date: '13 Aug 2024', hours: '9:00' },
+      // { id: '3', date: '14 Aug 2024', hours: '9:00' },
+      // { id: '4', date: '15 Aug 2024', hours: '9:00' },
+      // { id: '5', date: '16 Aug 2024', hours: '9:00' },
+      // { id: '6', date: '16 Aug 2024', hours: '9:00' },
+      // { id: '7', date: '16 Aug 2024', hours: '9:00' },
     ],
   },
 };
